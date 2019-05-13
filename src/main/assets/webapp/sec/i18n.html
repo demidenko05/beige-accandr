@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../img/favicon.png">
+
+  <title>Beige-WEB-Store</title>
+
+
+  <script src="../js/jquery-3.3.1.min.js"></script>
+  <script src="../js/bsNum.js"></script>
+  <script src="../js/bsInpNum.js"></script>
+  <script src="../js/bsForm.js"></script>
+  <script type="text/javascript">
+  BSNUMVS.decSep = ',';
+  BSNUMVS.decGrSep = ' ';
+  function calcTot() {
+    var pr = bsStrFlt($("#prNew")[0].value);
+    var qu = bsStrFlt($("#quNew")[0].value);
+    var tot = bsRound(pr * qu, 2);
+    $("#totNew")[0].value = bsNumStr(tot.toString(), 2);
+  };
+  function calcPrice() {
+    var tot = bsStrFlt($("#totNew")[0].value);
+    var qu = bsStrFlt($("#quNew")[0].value);
+    var pr = bsRound(tot / qu, 2);
+    $("#prNew")[0].value = bsNumStr(pr.toString(), 2);
+  };
+  var tt = 0;
+  var ttp = 0;
+  var ttf = 0;
+  function assertEquals(pV1, pV2, pStr) {
+    tt = tt + 1;
+    if (pV1 === pV2) {
+      ttp = ttp + 1;
+      $("#dtst").append("<b>passed</b>: " + pStr + " expected=" + pV1 + " result=" + pV2 + "<br>");
+    } else {
+      ttf = ttf + 1;
+      $("#dtst").append("<i style='color: red;'>failed</i>: " + pStr + " expected=" + pV1 + " result=" + pV2 + "<br>");
+    } 
+  };
+  $( document ).ready(function() {
+      $('.bsNum0').bsInpNum({step: 1, nmax: 20});
+      //$('.bsNum2m').bsInpNum({decPl: 2, nmin: -9999});
+      bsIniInpNum("2m,4m");
+      $('.bsNum0d25').bsInpNum({step: 0.25, adjustOnKeyUp: false});
+      $('#prNew').on('change', calcTot);
+      $('#quNew').on('change', calcTot);
+      $('#totNew').on('change', calcPrice);
+      $('#quNew').trigger('change');
+      //tests:
+      var dspw = BSNUMVS.decSep;
+      var dgspw = BSNUMVS.decGrSep;
+      var digw = BSNUMVS.digInGr;
+      //from Java:
+      var n5d5 = 5.5;
+      var n2d5 = 2.5;
+      var n1d6 = 1.6;
+      var n1d1 = 1.1;
+      var n1d0 = 1.0;
+      var nm5d5 = -5.5;
+      var nm2d5 = -2.5;
+      var nm1d6 = -1.6;
+      var nm1d1 = -1.1;
+      var nm1d0 = -1.0;
+      var UP = 0;
+      var DOWN = 1;
+      var CEILING = 2;
+      var FLOOR = 3;
+      var HALF_UP = 4;
+      var HALF_DOWN = 5;
+      var HALF_EVEN = 6;
+      $("#dtst").append("<b>Test bundle:</b><br>");
+      $("#dtst").append("from JavaDoc table:<br>");
+      assertEquals(6, bsRound(n5d5, 0, UP), "round UP " +n5d5);
+      assertEquals(5, bsRound(n5d5, 0, DOWN), "round DOWN " +n5d5);
+      assertEquals(6, bsRound(n5d5, 0, CEILING), "round CEILING " +n5d5);
+      assertEquals(5, bsRound(n5d5, 0, FLOOR), "round FLOOR " +n5d5);
+      assertEquals(6, bsRound(n5d5, 0, HALF_UP), "round HALF_UP " +n5d5);
+      assertEquals(5, bsRound(n5d5, 0, HALF_DOWN), "round HALF_DOWN " +n5d5);
+      assertEquals(6, bsRound(n5d5, 0, HALF_EVEN), "round HALF_EVEN " +n5d5);
+      assertEquals(3, bsRound(n2d5, 0, UP), "round UP " +n2d5);
+      assertEquals(2, bsRound(n2d5, 0, DOWN), "round DOWN " +n2d5);
+      assertEquals(3, bsRound(n2d5, 0, CEILING), "round CEILING " +n2d5);
+      assertEquals(2, bsRound(n2d5, 0, FLOOR), "round FLOOR " +n2d5);
+      assertEquals(3, bsRound(n2d5, 0, HALF_UP), "round HALF_UP " +n2d5);
+      assertEquals(2, bsRound(n2d5, 0, HALF_DOWN), "round HALF_DOWN " +n2d5);
+      assertEquals(2, bsRound(n2d5, 0, HALF_EVEN), "round HALF_EVEN " +n2d5);
+      assertEquals(2, bsRound(n1d6, 0, UP), "round UP " +n1d6);
+      assertEquals(1, bsRound(n1d6, 0, DOWN), "round DOWN " +n1d6);
+      assertEquals(2, bsRound(n1d6, 0, CEILING), "round CEILING " +n1d6);
+      assertEquals(1, bsRound(n1d6, 0, FLOOR), "round FLOOR " +n1d6);
+      assertEquals(2, bsRound(n1d6, 0, HALF_UP), "round HALF_UP " +n1d6);
+      assertEquals(2, bsRound(n1d6, 0, HALF_DOWN), "round HALF_DOWN " +n1d6);
+      assertEquals(2, bsRound(n1d6, 0, HALF_EVEN), "round HALF_EVEN " +n1d6);
+      assertEquals(2, bsRound(n1d1, 0, UP), "round UP " +n1d1);
+      assertEquals(1, bsRound(n1d1, 0, DOWN), "round DOWN " +n1d1);
+      assertEquals(2, bsRound(n1d1, 0, CEILING), "round CEILING " +n1d1);
+      assertEquals(1, bsRound(n1d1, 0, FLOOR), "round FLOOR " +n1d1);
+      assertEquals(1, bsRound(n1d1, 0, HALF_UP), "round HALF_UP " +n1d1);
+      assertEquals(1, bsRound(n1d1, 0, HALF_DOWN), "round HALF_DOWN " +n1d1);
+      assertEquals(1, bsRound(n1d1, 0, HALF_EVEN), "round HALF_EVEN " +n1d1);
+      assertEquals(1, bsRound(n1d0, 0, UP), "round UP " +n1d0);
+      assertEquals(1, bsRound(n1d0, 0, DOWN), "round DOWN " +n1d0);
+      assertEquals(1, bsRound(n1d0, 0, CEILING), "round CEILING " +n1d0);
+      assertEquals(1, bsRound(n1d0, 0, FLOOR), "round FLOOR " +n1d0);
+      assertEquals(1, bsRound(n1d0, 0, HALF_UP), "round HALF_UP " +n1d0);
+      assertEquals(1, bsRound(n1d0, 0, HALF_DOWN), "round HALF_DOWN " +n1d0);
+      assertEquals(1, bsRound(n1d0, 0, HALF_EVEN), "round HALF_EVEN " +n1d0);
+      assertEquals(-1, bsRound(nm1d0, 0, UP), "round UP " +nm1d0);
+      assertEquals(-1, bsRound(nm1d0, 0, DOWN), "round DOWN " +nm1d0);
+      assertEquals(-1, bsRound(nm1d0, 0, CEILING), "round CEILING " +nm1d0);
+      assertEquals(-1, bsRound(nm1d0, 0, FLOOR), "round FLOOR " +nm1d0);
+      assertEquals(-1, bsRound(nm1d0, 0, HALF_UP), "round HALF_UP " +nm1d0);
+      assertEquals(-1, bsRound(nm1d0, 0, HALF_DOWN), "round HALF_DOWN " +nm1d0);
+      assertEquals(-1, bsRound(nm1d0, 0, HALF_EVEN), "round HALF_EVEN " +nm1d0);
+      assertEquals(-2, bsRound(nm1d1, 0, UP), "round UP " +nm1d1);
+      assertEquals(-1, bsRound(nm1d1, 0, DOWN), "round DOWN " +nm1d1);
+      assertEquals(-1, bsRound(nm1d1, 0, CEILING), "round CEILING " +nm1d1);
+      assertEquals(-2, bsRound(nm1d1, 0, FLOOR), "round FLOOR " +nm1d1);
+      assertEquals(-1, bsRound(nm1d1, 0, HALF_UP), "round HALF_UP " +nm1d1);
+      assertEquals(-1, bsRound(nm1d1, 0, HALF_DOWN), "round HALF_DOWN " +nm1d1);
+      assertEquals(-1, bsRound(nm1d1, 0, HALF_EVEN), "round HALF_EVEN " +nm1d1);
+      assertEquals(-2, bsRound(nm1d6, 0, UP), "round UP " +nm1d6);
+      assertEquals(-1, bsRound(nm1d6, 0, DOWN), "round DOWN " +nm1d6);
+      assertEquals(-1, bsRound(nm1d6, 0, CEILING), "round CEILING " +nm1d6);
+      assertEquals(-2, bsRound(nm1d6, 0, FLOOR), "round FLOOR " +nm1d6);
+      assertEquals(-2, bsRound(nm1d6, 0, HALF_UP), "round HALF_UP " +nm1d6);
+      assertEquals(-2, bsRound(nm1d6, 0, HALF_DOWN), "round HALF_DOWN " +nm1d6);
+      assertEquals(-2, bsRound(nm1d6, 0, HALF_EVEN), "round HALF_EVEN " +nm1d6);
+      assertEquals(-3, bsRound(nm2d5, 0, UP), "round UP " +nm2d5);
+      assertEquals(-2, bsRound(nm2d5, 0, DOWN), "round DOWN " +nm2d5);
+      assertEquals(-2, bsRound(nm2d5, 0, CEILING), "round CEILING " +nm2d5);
+      assertEquals(-3, bsRound(nm2d5, 0, FLOOR), "round FLOOR " +nm2d5);
+      assertEquals(-3, bsRound(nm2d5, 0, HALF_UP), "round HALF_UP " +nm2d5);
+      assertEquals(-2, bsRound(nm2d5, 0, HALF_DOWN), "round HALF_DOWN " +nm2d5);
+      assertEquals(-2, bsRound(nm2d5, 0, HALF_EVEN), "round HALF_EVEN " +nm2d5);
+      assertEquals(-6, bsRound(nm5d5, 0, UP), "round UP " +nm5d5);
+      assertEquals(-5, bsRound(nm5d5, 0, DOWN), "round DOWN " +nm5d5);
+      assertEquals(-5, bsRound(nm5d5, 0, CEILING), "round CEILING " +nm5d5);
+      assertEquals(-6, bsRound(nm5d5, 0, FLOOR), "round FLOOR " +nm5d5);
+      assertEquals(-6, bsRound(nm5d5, 0, HALF_UP), "round HALF_UP " +nm5d5);
+      assertEquals(-5, bsRound(nm5d5, 0, HALF_DOWN), "round HALF_DOWN " +nm5d5);
+      assertEquals(-6, bsRound(nm5d5, 0, HALF_EVEN), "round HALF_EVEN " +nm5d5);
+      $("#dtst").append("Corners:<br>");
+      assertEquals(0.0, bsRound(0.000, 1, HALF_UP), "round HALF_UP " + 0.000);
+      assertEquals(0.0, bsRound(0.010, 1, HALF_UP), "round HALF_UP " + 0.010);
+      assertEquals(0.1, bsRound(0.0999, 1, HALF_UP), "round HALF_UP " + 0.0999);
+      assertEquals(-0.1, bsRound(-0.0999, 1, HALF_UP), "round HALF_UP -0.0999");
+      assertEquals(1.0, bsRound(0.999, 1, HALF_UP), "round HALF_UP " + 0.999);
+      assertEquals(-1.0, bsRound(-0.999, 1, HALF_UP), "round HALF_UP -0.999");
+      $("#dtst").append("Financial:<br>");
+      assertEquals(0.13, bsRound(0.1251, 2, HALF_UP), "round HALF_UP " + 0.1251);
+      assertEquals(-0.13, bsRound(-0.1251, 2, HALF_UP), "round HALF_UP -0.1251");
+      assertEquals(0.30, bsRound(0.3001, 2, HALF_UP), "round HALF_UP " + 0.3001);
+      assertEquals(20.30, bsRound(20.2959, 2, HALF_UP), "round HALF_UP " + 20.2959);
+      assertEquals(-20.30, bsRound(-20.2959, 2, HALF_UP), "round HALF_UP -20.2959");
+      assertEquals(20.29, bsRound(20.2949, 2, HALF_UP), "round HALF_UP " + 20.2949);
+      assertEquals(-20.29, bsRound(-20.2949, 2, HALF_UP), "round HALF_UP -20.2949");
+      var price1 = 20.24501;
+      var price2 = 20.24499;
+      var price3 = 20.245;
+      var dp = 2;
+      assertEquals(20.25, bsRound(price1, dp, HALF_UP), "round HALF_UP " + price1);
+      assertEquals(20.24, bsRound(price2, dp, HALF_UP), "round HALF_UP " + price2);      
+      assertEquals(20.25, bsRound(price3, dp, HALF_UP), "round HALF_UP " + price3);      
+      assertEquals(20.25, bsRound(price1, dp, HALF_DOWN), "round HALF_DOWN " + price1);
+      assertEquals(20.24, bsRound(price2, dp, HALF_DOWN), "round HALF_DOWN " + price2);      
+      assertEquals(20.24, bsRound(price3, dp, HALF_DOWN), "round HALF_DOWN " + price3);      
+      assertEquals("1 236 789,12", bsNumStr("1236789.1278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789.1278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      dp = 4;
+      assertEquals("1 236 789,1278", bsNumStr("1236789.1278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789.1278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      dp = 1;
+      assertEquals("1 236 789,1", bsNumStr("1236789.1278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789.1278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");      
+      dp = 0;
+      assertEquals("1 236 789", bsNumStr("1236789.1278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789.1278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");      
+      assertEquals("1 236 789", bsNumStr("1236789", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");      
+      dp = 2;
+      assertEquals("1 236 789,00", bsNumStr("1236789", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      assertEquals("-1 236 789,00", bsNumStr("-1236789", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "-1236789" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      BSNUMVS.decSep = ".";
+      BSNUMVS.decGrSep = ",";
+      assertEquals("1,236,789.12", bsNumStr("1236789.1278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789.1278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      assertEquals("-1,236,789.12", bsNumStr("-1236789.1278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "-1236789.1278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      dp = 4;
+      assertEquals("1,236,789.1278", bsNumStr("1236789.1278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "1236789.1278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      dp = 0;
+      BSNUMVS.digInGr = 2;
+      assertEquals("12,36,78,91,278", bsNumStr("12367891278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "12367891278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      assertEquals("-12,36,78,91,278", bsNumStr("-12367891278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "-12367891278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      dp = 2;
+      assertEquals("12,36,78,91,278.00", bsNumStr("12367891278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "12367891278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      assertEquals("-12,36,78,91,278.00", bsNumStr("-12367891278", dp), "number to string: [number/DP/DS/DGS/DIG] - [" + "-12367891278" + "/" + dp + "/" + BSNUMVS.decSep + "/" + BSNUMVS.decGrSep + "/" + BSNUMVS.digInGr + "]");
+      BSNUMVS.decSep = dspw;
+      BSNUMVS.decGrSep = dgspw;
+      BSNUMVS.digInGr = digw;
+      $("#dtst").append("Total tests: " + tt + "<br>");
+      $("#dtst").append("Total tests passed: " + ttp + "<br>");
+      $("#dtst").append("Total tests failed: " + ttf + "<br>");
+  });
+  </script>
+</head>
+
+<body>
+
+  <h3>Inputs:</h3>
+  <form>
+    <div>
+      <div>
+        <label>Price:</label>    
+      </div>
+      <div>
+        <input id="prNew" name="prNew" type="text" class="bsNum2m" value="1123.121">
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Quantity (init step 1):</label>    
+      </div>
+      <div>
+        <button type="button" onclick="$('.bsNum0').bsInpNum({step: 0.5});">change step to 0.5</button>
+      </div>
+      <div>
+        <button type="button" onclick="$('#quNew').trigger('decrease').trigger('change');">-</button>
+        <input id="quNew" name="quNew" type="text" class="bsNum0" value="1.34">
+        <button type="button" onclick="$('#quNew').trigger('increase').trigger('change');">+</button>
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Total:</label>    
+      </div>
+      <div>
+        <button type="button" onclick="$('#totNew').trigger('decrease').trigger('change');">-</button>
+        <input id="totNew" name="totNew" type="text" class="bsNum2m" value="2246.242">
+        <button type="button" onclick="$('#totNew').trigger('increase').trigger('change');">+</button>
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Step=3 min=3 max=9:</label>    
+      </div>
+      <div>
+        <button type="button" onclick="$('#ts3m3m9').trigger('decrease');">-</button>
+        <input id="ts3m3m9" name="ts3m3m9" type="text" class="bsNum339" value="2246.242">
+        <button type="button" onclick="$('#ts3m3m9').trigger('increase');">+</button>
+      </div>
+      <script>
+        $('#ts3m3m9').bsInpNum({nmin: -3, step: 3, nmax: 9});
+      </script>
+    </div>
+    <div>
+      <div>
+        <label>Step 0.25 (adjusting to step only after changing (exiting)):</label>    
+      </div>
+      <div>
+        <button type="button" onclick="$('#t025').trigger('decrease');">-</button>
+        <input id="t025" name="t025" type="text" class="bsNum0d25" value="2246.242">
+        <button type="button" onclick="$('#t025').trigger('increase');">+</button>
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Step=1.5 (adjusting to step only after changing (exiting)):</label>    
+      </div>
+      <div>
+        <button type="button" onclick="$('#inps1d5').trigger('decrease');">-</button>
+        <input id="inps1d5" name="inps1d5" type="text" value="2246.242">
+        <button type="button" onclick="$('#inps1d5').trigger('increase');">+</button>
+      </div>
+      <script>
+        jQuery("#inps1d5").bsInpNum({step: 1.5, adjustOnKeyUp: false});
+      </script>
+    </div>
+    <div>
+      <div>
+        <label>Step=1.5 (adjusting to step only after changing (exiting)), min 0, max 30:</label>    
+      </div>
+      <div>
+        <button type="button" onclick="$('#inps1d5b0t30').trigger('decrease');">-</button>
+        <input id="inps1d5b0t30" name="inps1d5b0t30" type="text" value="2246.242">
+        <button type="button" onclick="$('#inps1d5b0t30').trigger('increase');">+</button>
+      </div>
+      <script>
+        jQuery("#inps1d5b0t30").bsInpNum({step: 1.5, nmin: 0, nmax: 30, adjustOnKeyUp: false});
+      </script>
+    </div>
+    <div>
+      <div>
+        <label>DP=4, initial value is null:</label>    
+      </div>
+      <div>
+        <input class="bsNum4m" name="inpdp4null" type="text">
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>DP=0, initial value is null:</label>    
+      </div>
+      <div>
+        <input id="inpdp0ull" name=""inpdp0ull type="text">
+      </div>
+      <script>
+        jQuery("#inpdp0ull").bsInpNum({step: 1, nmin: -999999999999999, nmax: 999999999999999});
+      </script>
+    </div>
+    <div>
+      <div>
+        <label>Date from long:</label>    
+      </div>
+      <div>
+        <input name="dtl" type="number" onchange="document.getElementById('dtld').value=new Date(parseInt(this.value));">
+        <input id="dtld" type="text">
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Date:</label>    
+      </div>
+      <div>
+        <input name="dt" type="date" lang="en">
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Date time:</label>    
+      </div>
+      <div>
+        <input name="dttl" type="datetime-local" onchange="document.getElementById('dtldl').value=new Date(this.value).getTime();">
+        <input id="dtldl" type="text">
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Date time with seconds:</label>    
+      </div>
+      <div>
+        <input name="dtsc" type="datetime-local" step="1" onchange="document.getElementById('dtlds').value=new Date(this.value).getTime();">
+        <input id="dtlds" type="text">
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Date time with milliseconds:</label>    
+      </div>
+      <div>
+        <input name="dtmsc" type="datetime-local" step="0.001" onchange="document.getElementById('dtldms').value=new Date(this.value).getTime();">
+        <input id="dtldms" type="text">
+      </div>
+    </div>
+    <div>
+      <button type="submit" >Apply</button>
+    </div>
+  </form>
+<div id="dtst">
+</div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../static/img/favicon.png">
+
+    <title>Beigesoft™ Accounting All In One</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/theme.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <main role="main">
+
+<h3 align="center">Beigesoft™ Accounting Privacy Policy.</h3>
+<h4 align="center">All Beigesoft™ Accounting versions.</h4>
+<p>  
+  Beigesoft™ Accounting collects (stores) your data only inside database file.
+</p>
+<p>
+  If you set option <b>Show debug messages</b> to <b>ON</b> and <b>Debug detail level</b> to equals or grater than <b>30000</b>
+  then log files <b>beige-accounting0.log</b> and <b>beige-accounting1.log</b> will contain sensitive data.
+  In that case, if you are going to send these log files to a programmer (who customize this application),
+  then you must remove sensitive data from these files.
+</p>
+<p>
+  This is WEB-application, so you should use the newest version of WEB-browser. You should avoid to install any WEB-browser plugins.
+</p>
+
+<h4 align="center">Beigesoft™ Accounting standalone versions.</h4>
+<p>These versions are based on embedded private A-Jetty WEB-server.
+  This private WEB-server is not available from outside your computer (or Android device).
+  These versions require authorization with strong password (created by you). They allow maximum 6 fail login attempts.
+  The session will be blocked in 15 minutes after 6th fail login attempts.
+  You should periodically check file <b>secure.log</b> that contains authorization information.
+  These versions use modern encryption algorithms with strong keys for HTTPS connection and for safe encrypted file exchanging.
+  These are multi-database versions, you can create new and switch the database from WEB-interface.
+  If you a going to sent database file to another computer then you have to use WEB-interface for encrypting this file.
+</p>
+
+<h4 align="center">Beigesoft™ Accounting on embedded A-Jetty for ordinal computer.</h4>
+<p>
+  Your data is in database file, default is <b>webapp/beigeaccounting.sqlite</b>.
+  You are able to copy (backup) database to a private place by using ordinal file manager.
+  Keystore with secret keys for encryption is in <b>ks</b> folder. It is protected with strong password (created by you).
+  You should set strong password for your OS account. It's advisable to set startup BIOS password on your computer. 
+</p>
+
+<h4 align="center">Beigesoft™ Accounting on embedded A-Jetty for Android.</h4>
+<p>
+  Your data (SQLite databases), beige-accounting.log, secure.log, keystore (with secret keys) are in the private application storage.
+  There is no way to read these files from there. Only this application can read and write these files.
+  You can lost your data if you forget password (for keystore or/and application),
+  so you should backup database files by using WEB-interface.
+  This requires Beige-Accounting standalone version on another computer (or Android device),
+  cause application encrypts files with public key that belong to another Beige-Accounting.
+  Only another Beige-Accounting (whose public key used for encryption) can decrypts these encrypted files.
+  PDF reports will be downloaded into shared storage,
+  so avoid to install any unnecessary application that requires permission to this storage.
+</p>
+
+<h4 align="center">Beigesoft™ Accounting cloud version.</h4>
+<p>
+  Cloud (Internet available) version is more difficult to keep your data private, so use it only when it's necessary.
+  You must yourself handle strong passwords and reliable HTTPS connection.
+</p>
+
+<p align="center"><a href="privacypolicy-ru.html">Беижсофт™ Бухгалтерия. Политика конфиденциальности.</a></p>
+<p align="center"><a href="https://sites.google.com/site/beigesoftware/privacypolicy-en">Beigesoft™ Accounting Privacy Policy.</a></p>
+
+    </main>
+  </body>
+</html>

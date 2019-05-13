@@ -1,0 +1,426 @@
+@charset "UTF-8";
+/*
+BSD 2-Clause License
+
+Copyright (c) 2019, Beigesoft™
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+/*
+ * Common style.
+ * author Yury Demidenko
+ */
+
+body {
+  margin: 0px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+input, select {
+  width: 100%;
+  padding-top: .2rem;
+  margin-bottom: .2rem;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+form.filter input, select {
+  width: initial;
+}
+
+textarea {
+  width: 100%;
+}
+.picked-appearence {
+  width: 80%;
+}
+
+.input-line {
+  padding: .2rem;
+}
+
+.changed {
+  background-color: #FFE5E6;
+}
+
+.dialog-title {
+  text-align: center;
+  background-color: #3D80B9;
+  color: white;
+  padding: .4rem;
+}
+
+.form-actions {
+  margin-top: .5rem;
+  text-align: center;
+  text-decoration: initial;
+}
+
+.dlg-actions {
+  margin-bottom: .5rem;
+  text-align: center;
+  text-decoration: initial;
+}
+
+.btn, .page, .page-current, .page-inactive, .form-actions input, .form-actions button, .form-actions a {
+  width: initial;
+  background-color: #3D80B9;
+  border-color: #3D80B9;
+  padding: .2rem .35rem;
+  margin: .2rem;
+  color: white;
+  text-decoration: none;
+  font-size: medium;
+  border: 1px solid transparent;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+#listMainNew {
+  position: absolute;
+  right: 6rem;
+}
+
+.page-current {
+  background-color: #80AACE;
+}
+
+.page-inactive {
+  background-color: #F5F6F7;
+  color: black;
+  cursor: initial;
+  font-weight: bold;
+}
+
+.pages {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.new-panel {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  text-align: center;
+}
+
+.form-actions input, .form-actions button, .form-actions a {
+  margin-left: 1.5rem;
+}
+
+.btn:hover, .page:hover, .page-current:hover, .form-actions input:hover, .form-actions a:hover, .form-actions button:hover {
+  background-color: #3E6C92;
+}
+
+.btn:focus, .page:focus, .page-current:focus, .form-actions input:focus, .form-actions a:focus, .form-actions button:focus {
+  background-color: #3E6C92;
+}
+
+.alert-20 {
+  position: absolute;
+  top: 20%;
+  left:23%;
+  width:53%;
+  text-align: center;
+  color: red;
+  font-size: larger;
+}
+
+.form-std {
+  border: 1px solid #3D80B9;
+  border-radius: 3px;
+}
+.form-std form {
+  padding: .3rem;
+  margin-bottom: 0px;
+}
+
+.form-33-33 {
+  position: absolute;
+  left: 33%;
+  top: 33%;
+  width: 33%;
+}
+
+.form-70-33 {
+  position: absolute;
+  left: 15%;
+  top: 33%;
+  width: 70%;
+}
+
+.form-33-10 {
+  position: absolute;
+  left: 33%;
+  top: 10%;
+  width: 33%;
+}
+
+.tbl-fieldset, .tbl-fieldset td {
+  border: none;
+}
+
+.navbar {
+  background-color: #676262;
+}
+
+.nav-right {
+  float: right;
+}
+
+.navbar a {
+  padding: .9rem;
+  text-decoration: none;
+  color: white;
+  font-size: medium;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: -.3rem;
+}
+
+.navbar a:hover {
+  background-color: #111;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  white-space: nowrap;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2000;
+}
+
+.dropdown-content a {
+    background-color: white;
+    color: black;
+    padding: .8rem 1.1rem;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dlg {
+  border: none;
+  padding: 0px;
+  top: 4rem;
+  min-width: 65%;
+}
+
+.dlg-sub {
+  top: 5rem;
+  min-width: 60%;
+}
+
+.dlg-alert {
+  top: 8rem;
+  min-width: 10rem;
+}
+
+.dlg-notifier {
+  position: fixed;
+  top: 0;
+  right: 0;
+  min-width: 10rem;
+  z-index: 1000;
+  display: none;
+}
+
+.btn-close {
+  right: .3rem;
+  position: absolute;
+  background-color: #3D80B9;
+  color: white;
+  border: solid 1px #CCC;
+  cursor: pointer;
+}
+
+.btn-close:hover {
+  background-color: #3E6C92;
+}
+
+#lstMainPlace {
+  margin: .2rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 20rem;
+}
+
+table, td, th {    
+  border: 1px solid #ddd;
+}
+
+th {    
+  background-color: #3D80B9;
+  color: white;
+}
+
+tr:hover {
+  background-color: #eaf8f9;
+}
+
+.title-list {
+  text-align: center;
+  font-size: large;
+}
+
+.column-appearence {
+  width: 83%;
+  text-align: left;
+}
+
+.column-actions {
+  width: 17%;
+  text-align: center;
+}
+
+.error-title {
+  background-color: #F71E0E;
+}
+
+.warning-title {
+  background-color: #AF4841;
+}
+
+.confirm-title {
+  background-color: #72acde;
+}
+
+.success-title {
+  background-color: #629626;
+}
+
+.error {
+  color: red;
+  border-color: #F71E0E;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.btn-error {
+  background-color: #F71E0E;
+}
+
+.btn-error:hover {
+  background-color: #C71A0D;
+}
+
+.confirm {
+  border-color: #72acde;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.btn-act {
+  min-width: 4rem;
+}
+
+.btn-confirm {
+  background-color: #72acde;
+}
+
+.btn-confirm:hover {
+  background-color: #598fbd;
+}
+
+.warning {
+  border-color: #AF4841;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.btn-warning {
+  background-color: #AF4841;
+}
+
+.btn-warning:hover {
+  background-color: #691C17;
+}
+
+.success {
+  border-color: #629626;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.btn-success {
+  background-color: #629626;
+}
+
+.btn-success:hover {
+  background-color: #3A5D11;
+}
+
+.msg-place {
+  padding: 1.2rem;
+  font-size: large;
+  background-color: white;
+}
+
+.pubKeyStr {
+  word-wrap:break-word;
+}
+
+@media only screen and (max-width: 768px) {
+  .picked-appearence {
+    width: 75%;
+  }
+  .column-appearence {
+    width: 80%;
+  }
+  .column-actions {
+    width: 20%;
+  }
+  .alert-20 {
+    width: initial;
+  }
+  [class*="alert-"] {
+    position: initial;
+  }
+  [class*="form-"] {
+    position: initial;
+    width: initial;
+  }
+  [class*="frm-"] {
+    position: initial;
+    width: initial;
+  }
+}

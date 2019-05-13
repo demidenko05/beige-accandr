@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="app_name">Беижсофт™ Бухгалтерия</string>
+  <string name="port">Порт:</string>
+  <string name="start">Старт</string>
+  <string name="stop">Стоп</string>
+  <string name="starting">Запускается</string>
+  <string name="stopping">Останавливается</string>
+  <string name="started">Запущено</string>
+  <string name="stopped">Остановлено</string>
+  <string name="ksPassw">Пароль:</string>
+  <string name="ksPasswRep">Повторите пароль:</string>
+  <string name="ajettyNumber">А-Джетти номер:</string>
+  <string name="passwNoMatch">Пароли не совпадают!</string>
+  <string name="EnterAjettyNumber">Пожалуйста введите номер А-Джетти!</string>
+  <string name="ajettycacopied">А-Джетти ЦА сертификат и публичный ключ обмена файлами в файлах ajetty-ca.pem и ajetty-file-exch[А-Джетти#].kpub files.</string>
+  <string name="passwordWrong">Неправильный пароль!</string>
+  <string name="wait">Пожалуйста подождите!</string>
+  <string name="enterPassw">Пожалуйста введите пароль!</string>
+  <string name="sendingStart">Запускаю сервер, подождите...</string>
+  <string name="cantStart">Не могу запустить А-Джетти!</string>
+  <string name="cantInitCrypto">Не могу инициализировать крипто-сервис!</string>
+  <string name="cantCrDir">Не могу создать ks директорию!</string>
+  <string name="ksDirRules">KS должна содержать только ks файл!!!</string>
+  <string name="wasErr">Ошибка!</string>
+  <string name="newFlCop">Новые версии WEB static файлов скопированы!</string>
+  <string name="dirCrFlCop">Беижсофт директория создана и WEB static файлы скопированы!</string>
+</resources>

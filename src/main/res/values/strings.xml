@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="app_name">Beigesoft™ Accounting</string>
+  <string name="port">Port:</string>
+  <string name="start">Start</string>
+  <string name="stop">Stop</string>
+  <string name="starting">Starting</string>
+  <string name="stopping">Stopping</string>
+  <string name="started">Started</string>
+  <string name="stopped">Stopped</string>
+  <string name="ksPassw">Password:</string>
+  <string name="ksPasswRep">Confirm password:</string>
+  <string name="ajettyNumber">A-Jetty number:</string>
+  <string name="passwNoMatch">The passwords do not match!</string>
+  <string name="EnterAjettyNumber">Please enter A-Jetty number!</string>
+  <string name="ajettycacopied">A-Jetty CA certificate and file exchanger public key copied into external storage ajetty-ca.pem and ajetty-file-exch[A-Jetty#].kpub files.</string>
+  <string name="passwordWrong">Wrong password!</string>
+  <string name="wait">Please wait!</string>
+  <string name="enterPassw">Please enter password!</string>
+  <string name="sendingStart">Sending request to start server, please wait...</string>
+  <string name="cantStart">Can not start A-Jetty!</string>
+  <string name="cantInitCrypto">Can not initialize crypto service!</string>
+  <string name="cantCrDir">Can not create ks directory</string>
+  <string name="ksDirRules">KS directory must contains only ks file!!!</string>
+  <string name="wasErr">There was errors!</string>
+  <string name="newFlCop">New version of WEB static files has been copied!</string>
+  <string name="dirCrFlCop">Beige Accounting directory has been  successfully created and WEB static files has been copied!</string>
+</resources>

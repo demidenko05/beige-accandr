@@ -1,0 +1,2038 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--BSD 2-Clause License
+Copyright (c) 2019, Beigesoft™
+All rights reserved.
+See LICENSE in base folder
+ -->
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0"
+  metadata-complete="true">
+  <display-name>Beigesoft™ Accounting All In One</display-name>
+  <jsp-property-group>
+    <trim-directive-whitespaces>true</trim-directive-whitespaces>
+  </jsp-property-group>
+  <context-param>
+    <param-name>fctAppCls</param-name>
+    <param-value>org.beigesoft.accandr.FctAppAndr</param-value>
+  </context-param>
+  <context-param>
+    <param-name>newDbId</param-name>
+    <param-value>1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>logNm</param-name>
+    <param-value>logStd</param-value>
+  </context-param>
+  <context-param>
+    <param-name>logSize</param-name>
+    <param-value>5000000</param-value>
+  </context-param>
+  <context-param>
+    <param-name>lngCntr</param-name>
+    <param-value>en,US,ru,RU</param-value>
+  </context-param>
+  <context-param>
+    <param-name>wrReSpTr</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  <context-param>
+    <param-name>fastLoc</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>writeTi</param-name>
+    <param-value>1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>readTi</param-name>
+    <param-value>1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>writeReTi</param-name>
+    <param-value>1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbgSh</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbgFl</param-name>
+    <param-value>1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbgCl</param-name>
+    <param-value>100000</param-value>
+  </context-param>
+  <context-param>
+    <param-name>ormDir</param-name>
+    <param-value>sqlite</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbcpDir</param-name>
+    <param-value>dbcp</param-value>
+  </context-param>
+  <context-param>
+    <param-name>uvdDir</param-name>
+    <param-value>uvd</param-value>
+  </context-param>
+  <context-param>
+    <param-name>uplDir</param-name>
+    <param-value>upl</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.beigesoft.web.CntxLstn</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>pub</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WHndsJsp
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HnFirstUsr,HndI18nRq</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>defJsp</param-name>
+      <param-value>ind</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pub</servlet-name>
+    <url-pattern></url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>srv</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WHndsJsp
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,hnAcEnRq</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>defJsp</param-name>
+      <param-value>dsk</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>srv</servlet-name>
+    <url-pattern>/sec/srv/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ntrSec</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WHndsJsp
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,hnNtRqSc</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ntrSec</servlet-name>
+    <url-pattern>/sec/ntr/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>adm</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WHndsJsp
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,hnAdEnRq</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>defJsp</param-name>
+      <param-value>adm</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>adm</servlet-name>
+    <url-pattern>/adm/srv/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>uplAdm</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WUplSng
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,hnAdEnRq</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>defJsp</param-name>
+      <param-value>adm</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>2000000</max-file-size>
+      <max-request-size>3000000</max-request-size>
+      <file-size-threshold>2000000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>uplAdm</servlet-name>
+    <url-pattern>/adm/upl/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ntrAdm</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WHndsJsp
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,hnNtRqAd</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ntrAdm</servlet-name>
+    <url-pattern>/adm/ntr/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>rplTxt</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WWriter
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,hnNtRqAd</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <init-param>
+      <param-name>contTy</param-name>
+      <param-value>text/html; charset=UTF-8</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>rplTxt</servlet-name>
+    <url-pattern>/adm/txt/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>rplXml</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WWriter
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,hnNtRqAd</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <init-param>
+      <param-name>contTy</param-name>
+      <param-value>text/xml; charset=UTF-8</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>rplXml</servlet-name>
+    <url-pattern>/adm/xml/*</url-pattern>
+  </servlet-mapping>
+  
+<!--
+Automatically created by Apache Tomcat JspC.
+Place this fragment in the web.xml before all icon, display-name,
+description, distributable, and context-param elements.
+-->
+
+    <servlet>
+        <servlet-name>org.apache.jsp.err_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.err_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.dbc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.dbc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.afu_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.afu_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.prn_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.prn_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.laj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.laj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.abj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.abj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.rin_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.rin_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mndb_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mndb_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.esj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.esj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.esoj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.esoj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mng_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mng_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.edj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.edj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.lhj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.lhj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.phj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.phj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.eoj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.eoj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.doj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.doj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.dsk_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.dsk_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.dej_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.dej_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.adm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.adm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ind_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ind_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.upwd_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.upwd_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.pj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.eofj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.eofj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.lj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.lj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pi.usr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.pi.usr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pi.pic_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.pi.pic_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pi.piFo_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.pi.piFo_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtTm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtTm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.usr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.usr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ido_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ido_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.nmro_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.nmro_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.tmpl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.tmpl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ida_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ida_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.blnr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.blnr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.int_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.int_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.nme_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.nme_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.pri_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.pri_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtSc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtSc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.enm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.enm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ust_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ust_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.reo_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.reo_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.defl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.defl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.hdn_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.hdn_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.stpw_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.stpw_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.quan_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.quan_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtMs_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtMs_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.idec_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.idec_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dis_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dis_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ide_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ide_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.txt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.txt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.file_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.file_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.maFr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.maFr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.max_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.max_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.str_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.str_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.idi_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.idi_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ids_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ids_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.bln_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.bln_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.dtTm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.dtTm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.tmpl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.tmpl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.cst_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.cst_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.int_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.int_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.pri_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.pri_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.enm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.enm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.ent_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.ent_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.quan_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.quan_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.dt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.dt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.str_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.str_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.frcd_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.frcd_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.bln_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.bln_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.ceHe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.ceHe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.liFo_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.liFo_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.liHe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.liHe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.roHe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.roHe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.ceDe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.ceDe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.roDe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.roDe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.dtTm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.dtTm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.ida_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.ida_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.nme_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.nme_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.enm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.enm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.usRlTmc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.usRlTmc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.dt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.dt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.str_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.str_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.bln_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.bln_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.smp_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.smp_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.usTmc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.usTmc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.fmAc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fm.fmAc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.eml_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fm.eml_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.inWr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fm.inWr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.aco_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fm.aco_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.dlAc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fm.dlAc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.or.ord_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.or.ord_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.or.nme_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.or.nme_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dtTm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.dtTm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.usr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.usr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ido_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.ido_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.nmro_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.nmro_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.tmpl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.tmpl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ida_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.ida_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.blnr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.blnr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.int_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.int_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.nme_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.nme_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.pri_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.pri_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dtSc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.dtSc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.enm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.enm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ust_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.ust_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.reo_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.reo_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.defl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.defl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.hdn_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.hdn_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.stpw_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.stpw_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.quan_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.quan_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dtMs_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.dtMs_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.idec_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.idec_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dis_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.dis_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ide_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.ide_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.txt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.txt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.file_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.file_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.maFr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.maFr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.dt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.max_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.max_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.str_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.str_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.idi_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.idi_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ids_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.ids_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.bln_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.bln_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.dtTm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.dtTm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.tmpl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.tmpl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.cst_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.cst_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.int_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.int_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.pri_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.pri_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.enm_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.enm_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.ent_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.ent_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.quan_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.quan_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.dt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.dt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.str_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.str_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.frcd_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.frcd_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.bln_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.fl.bln_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.abo_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.abo_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.pic_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.pic_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.prn_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.prn_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.bum_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.bum_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.lsh_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.lsh_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.ed_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.ed_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.lst_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.lst_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.var_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.var_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.eoj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.eoj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.dj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.dj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.flOr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.flOr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.pih_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.pih_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.de_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.de_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.ceHe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.ceHe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.liFo_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.liFo_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.aca_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.aca_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.liHe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.liHe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.roHe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.roHe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.ceDe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.ceDe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.liAc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.liAc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.eml_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.eml_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.roDe_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ls.roDe_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.aca_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ow.aca_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.olf_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ow.olf_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.acd_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ow.acd_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.liAc_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ow.liAc_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.oflf_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ow.oflf_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.owl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ow.owl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.sec.lgnEr_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.sec.lgnEr_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.sec.lgn_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.sec.lgn_jsp</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.err_jsp</servlet-name>
+        <url-pattern>/err.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.dbc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/dbc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.afu_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/afu.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.prn_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/prn.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.laj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/laj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.abj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/abj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.rin_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/rin.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mndb_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mndb.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.esj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/esj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.esoj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/esoj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mng_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mng.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.edj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/edj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.lhj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/lhj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.phj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/phj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.eoj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/eoj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.doj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/doj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.dsk_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/dsk.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.dej_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/dej.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.adm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/adm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ind_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ind.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.upwd_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/upwd.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/pj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.eofj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/eofj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.lj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/lj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pi.usr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/pi/usr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pi.pic_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/pi/pic.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.pi.piFo_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/pi/piFo.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtTm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/dtTm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.usr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/usr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ido_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/ido.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.nmro_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/nmro.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.tmpl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/tmpl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ida_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/ida.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.blnr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/blnr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.int_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/int.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.nme_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/nme.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.pri_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/pri.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtSc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/dtSc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.enm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/enm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ust_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/ust.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.reo_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/reo.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.defl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/defl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.hdn_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/hdn.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.stpw_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/stpw.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.quan_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/quan.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dtMs_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/dtMs.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.idec_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/idec.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dis_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/dis.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ide_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/ide.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.txt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/txt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.file_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/file.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.maFr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/maFr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.dt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/dt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.max_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/max.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.str_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/str.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.idi_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/idi.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.ids_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/ids.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.bln_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/bln.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.dtTm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/dtTm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.tmpl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/tmpl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.cst_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/cst.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.int_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/int.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.pri_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/pri.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.enm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/enm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.ent_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/ent.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.quan_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/quan.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.dt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/dt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.str_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/str.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.frcd_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/frcd.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.fl.bln_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/fl/bln.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.ceHe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/ls/ceHe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.liFo_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/ls/liFo.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.liHe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/ls/liHe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.roHe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/ls/roHe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.ceDe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/ls/ceDe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.ls.roDe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/ls/roDe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.dtTm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/dtTm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.ida_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/ida.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.nme_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/nme.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.enm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/enm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.usRlTmc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/usRlTmc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.dt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/dt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.str_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/str.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.bln_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/bln.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.smp_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/smp.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.usTmc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/usTmc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.fmAc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fm/fmAc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.eml_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fm/eml.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.inWr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fm/inWr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.aco_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fm/aco.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fm.dlAc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fm/dlAc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.or.ord_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/or/ord.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.or.nme_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/or/nme.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dtTm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/dtTm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.usr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/usr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ido_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/ido.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.nmro_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/nmro.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.tmpl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/tmpl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ida_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/ida.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.blnr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/blnr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.int_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/int.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.nme_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/nme.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.pri_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/pri.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dtSc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/dtSc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.enm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/enm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ust_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/ust.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.reo_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/reo.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.defl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/defl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.hdn_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/hdn.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.stpw_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/stpw.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.quan_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/quan.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dtMs_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/dtMs.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.idec_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/idec.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dis_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/dis.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ide_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/ide.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.txt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/txt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.file_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/file.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.maFr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/maFr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/dt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.max_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/max.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.str_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/str.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.idi_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/idi.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ids_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/ids.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.bln_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/bln.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.dtTm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/dtTm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.tmpl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/tmpl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.cst_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/cst.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.int_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/int.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.pri_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/pri.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.enm_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/enm.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.ent_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/ent.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.quan_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/quan.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.dt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/dt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.str_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/str.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.frcd_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/frcd.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.fl.bln_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/fl/bln.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.abo_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/abo.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.pic_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/pic.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.prn_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/prn.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.bum_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/bum.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.lsh_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/lsh.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.ed_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/ed.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.lst_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/lst.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.var_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/var.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.eoj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/eoj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.dj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/dj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.flOr_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/flOr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.pih_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/pih.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.de_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/de.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.ceHe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/ceHe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.liFo_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/liFo.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.aca_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/aca.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.liHe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/liHe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.roHe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/roHe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.ceDe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/ceDe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.liAc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/liAc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.eml_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/eml.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ls.roDe_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ls/roDe.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.aca_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ow/aca.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.olf_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ow/olf.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.acd_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ow/acd.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.liAc_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ow/liAc.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.oflf_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ow/oflf.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ow.owl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/ow/owl.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.sec.lgnEr_jsp</servlet-name>
+        <url-pattern>/sec/lgnEr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.sec.lgn_jsp</servlet-name>
+        <url-pattern>/sec/lgn.jsp</url-pattern>
+    </servlet-mapping>
+
+<!--
+All session-config, mime-mapping, welcome-file-list, error-page, taglib,
+resource-ref, security-constraint, login-config, security-role,
+env-entry, and ejb-ref elements should follow this fragment.
+-->
+
+  <session-config>
+    <session-timeout>15</session-timeout>
+  </session-config>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/err.jsp</location>
+  </error-page>
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>JDBCRealm</realm-name>
+    <form-login-config>
+      <form-login-page>/sec/lgn.jsp</form-login-page>
+      <form-error-page>/sec/lgnEr.jsp</form-error-page>
+    </form-login-config>
+  </login-config>
+  <security-role>
+    <role-name>admin</role-name>
+  </security-role>
+  <security-role>
+    <role-name>user</role-name>
+  </security-role>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>All authorized only</web-resource-name>
+      <url-pattern>/sec/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Admin only</web-resource-name>
+      <url-pattern>/adm/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+    </auth-constraint>
+  </security-constraint>
+</web-app>
