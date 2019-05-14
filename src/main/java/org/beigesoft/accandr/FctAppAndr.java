@@ -37,6 +37,7 @@ import android.database.Cursor;
 
 import org.eclipse.jetty.security.DataBaseLoginService;
 
+import org.beigesoft.mdl.IRecSet;
 import org.beigesoft.fct.IFctNm;
 import org.beigesoft.fct.IFctAsm;
 import org.beigesoft.fct.FctBlc;
@@ -168,5 +169,39 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     ch.setKsPassword(passw.toCharArray());
     Integer ajettyIn = (Integer) pCtxAttrs.getAttr("ajettyIn");
     ch.setAjettyIn(ajettyIn);
+    boolean isDbgSh = this.fctBlc.lazLogStd(pRvs).getDbgSh(getClass())
+      && this.fctBlc.lazLogStd(pRvs).getDbgFl() < 13001 && this.fctBlc
+        .lazLogStd(pRvs).getDbgCl() > 12999;
+    if (isDbgSh) {
+      IRecSet<Cursor> rs = null;
+      StringBuffer sb = new StringBuffer(" compile_options:\n");
+      try {
+        rdb.setAcmt(false);
+        rdb.setTrIsl(IRdb.TRRUC);
+        rdb.begin();
+        rs = rdb.retRs("PRAGMA compile_options;");
+        if (rs.first()) {
+          do {
+            sb.append(rs.getStr("compile_options") + " | ");
+          } while (rs.next());
+        }
+        rs.close();
+        rs = rdb.retRs("PRAGMA locking_mode;");
+        if (rs.first()) {
+          sb.append("\nlocking_mode: " + rs.getStr("locking_mode"));
+        }
+        rs.close();
+        rdb.commit();
+        this.fctBlc.lazLogStd(pRvs).debug(pRvs, getClass(), "thread="
+          + Thread.currentThread().getId() + " SQLITE settings : " + sb);
+      } catch (Exception e) {
+        if (!rdb.getAcmt()) {
+          rdb.rollBack();
+        }
+        throw e;
+      } finally {
+        rdb.release();
+      }
+    }
   }
 }
