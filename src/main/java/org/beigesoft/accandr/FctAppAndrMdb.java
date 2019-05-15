@@ -37,13 +37,14 @@ import android.database.Cursor;
 
 import org.eclipse.jetty.security.DataBaseLoginService;
 
+import org.beigesoft.mdl.IRecSet;
 import org.beigesoft.fct.IFctNm;
 import org.beigesoft.fct.IFctAsm;
 import org.beigesoft.fct.FctBlc;
 import org.beigesoft.fct.FctDbCp;
 import org.beigesoft.prc.IPrc;
 import org.beigesoft.hld.IAttrs;
-import org.beigesoft.andr.FctRdb;
+import org.beigesoft.andr.FctRdbMdb;
 import org.beigesoft.rdb.IRdb;
 import org.beigesoft.rdb.Orm;
 import org.beigesoft.web.FctMail;
@@ -57,7 +58,7 @@ import org.beigesoft.ajetty.HpCrypt;
  *
  * @author Yury Demidenko
  */
-public class FctAppAndr implements IFctAsm<Cursor> {
+public class FctAppAndrMdb implements IFctAsm<Cursor> {
 
   /**
    * <p>Main only factory.</p>
@@ -68,7 +69,7 @@ public class FctAppAndr implements IFctAsm<Cursor> {
    * <p>Only constructor.</p>
    * @throws Exception - an exception
    */
-  public FctAppAndr() throws Exception {
+  public FctAppAndrMdb() throws Exception {
     this.fctBlc = new FctBlc<Cursor>();
     this.fctBlc.setIsAndr(true);
   }
@@ -145,7 +146,7 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     FctAndr fctAndr = new FctAndr();
     fctAndr.setCntx(cntx);
     this.fctBlc.getFctsAux().add(fctAndr);
-    FctRdb frdb = new FctRdb();
+    FctRdbMdb frdb = new FctRdbMdb();
     frdb.setCntx(cntx);
     this.fctBlc.getFctsAux().add(frdb);
     //creating/upgrading DB on start:
@@ -169,5 +170,39 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     ch.setKsPassword(passw.toCharArray());
     Integer ajettyIn = (Integer) pCtxAttrs.getAttr("ajettyIn");
     ch.setAjettyIn(ajettyIn);
+    boolean isDbgSh = this.fctBlc.lazLogStd(pRvs).getDbgSh(getClass())
+      && this.fctBlc.lazLogStd(pRvs).getDbgFl() < 13001 && this.fctBlc
+        .lazLogStd(pRvs).getDbgCl() > 12999;
+    if (isDbgSh) {
+      IRecSet<Cursor> rs = null;
+      StringBuffer sb = new StringBuffer(" compile_options:\n");
+      try {
+        rdb.setAcmt(false);
+        rdb.setTrIsl(IRdb.TRRUC);
+        rdb.begin();
+        rs = rdb.retRs("PRAGMA compile_options;");
+        if (rs.first()) {
+          do {
+            sb.append(rs.getStr("compile_options") + " | ");
+          } while (rs.next());
+        }
+        rs.close();
+        rs = rdb.retRs("PRAGMA locking_mode;");
+        if (rs.first()) {
+          sb.append("\nlocking_mode: " + rs.getStr("locking_mode"));
+        }
+        rs.close();
+        rdb.commit();
+        this.fctBlc.lazLogStd(pRvs).debug(pRvs, getClass(), "thread="
+          + Thread.currentThread().getId() + " SQLITE settings : " + sb);
+      } catch (Exception e) {
+        if (!rdb.getAcmt()) {
+          rdb.rollBack();
+        }
+        throw e;
+      } finally {
+        rdb.release();
+      }
+    }
   }
 }
