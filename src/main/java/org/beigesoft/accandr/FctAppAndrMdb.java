@@ -71,7 +71,7 @@ public class FctAppAndrMdb implements IFctAsm<Cursor> {
    */
   public FctAppAndrMdb() throws Exception {
     this.fctBlc = new FctBlc<Cursor>();
-    this.fctBlc.setIsAndr(true);
+    this.fctBlc.getFctDt().setIsAndr(true);
   }
 
   /**
@@ -135,12 +135,12 @@ public class FctAppAndrMdb implements IFctAsm<Cursor> {
     fctPrcNtrAj.setFctApp(this);
     fctPrcNtrAj.setCntx(cntx);
     fpasad.add(fctPrcNtrAj);
-    this.fctBlc.setFctsPrcAd(fpasad);
+    this.fctBlc.getFctDt().setFctsPrcAd(fpasad);
     HashSet<IFctNm<IPrc>> fpas = new HashSet<IFctNm<IPrc>>();
     FctPrcNtr<Cursor> fctPrcNtrAjb = new FctPrcNtr<Cursor>();
     fctPrcNtrAjb.setFctApp(this);
     fpas.add(fctPrcNtrAjb);
-    this.fctBlc.setFctsPrc(fpas);
+    this.fctBlc.getFctDt().setFctsPrc(fpas);
     this.fctBlc.getFctsAux().add(new FctDbCp<Cursor>());
     this.fctBlc.getFctsAux().add(new FctMail<Cursor>());
     FctAndr fctAndr = new FctAndr();

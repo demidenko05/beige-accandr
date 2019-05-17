@@ -56,7 +56,7 @@ See LICENSE in base folder
   </context-param>
   <context-param>
     <param-name>dbgSh</param-name>
-    <param-value>true</param-value>
+    <param-value>false</param-value>
   </context-param>
   <context-param>
     <param-name>dbgFl</param-name>

@@ -103,7 +103,7 @@ public class FctPrcNtrAd implements IFctNm<IPrc> {
     MngDb<Cursor> mngDb = new MngDb<Cursor>();
     mngDb.setFctApp(this.fctApp);
     mngDb.setHpCrypt(ch);
-    File webAppDir = new File(this.fctApp.getFctBlc().getAppPth());
+    File webAppDir = new File(this.fctApp.getFctBlc().getFctDt().getAppPth());
     mngDb.setLogDir(webAppDir);
     mngDb.setDbDir(this.cntx.getFilesDir().getAbsolutePath()
       .replace("files", "databases"));
