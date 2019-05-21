@@ -66,8 +66,8 @@ import android.util.Log;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 
 import org.beigesoft.exc.ExcCode;
-import org.beigesoft.ajetty.FactoryAppBeansEmbedded;
-import org.beigesoft.ajetty.BootStrapEmbeddedHttps;
+import org.beigesoft.ajetty.FctAppEmb;
+import org.beigesoft.ajetty.BootEmbed;
 import org.beigesoft.ajetty.crypto.CryptoService;
 import org.beigesoft.log.ILog;
 import org.beigesoft.log.LogFile;
@@ -123,14 +123,14 @@ public class Bsa extends Activity implements OnClickListener {
   /**
    * <p>A-Jetty application beans factory.</p>
    **/
-  private final FactoryAppBeansEmbedded jettyFactoryAppBeans =
-    new FactoryAppBeansEmbedded();
+  private final FctAppEmb jettyFactoryAppBeans =
+    new FctAppEmb();
 
   /**
    * <p>Bootstrap.</p>
    **/
-  private final BootStrapEmbeddedHttps bootStrapEmbeddedHttps =
-    new BootStrapEmbeddedHttps();
+  private final BootEmbed bootStrapEmbeddedHttps =
+    new BootEmbed();
 
   /**
    * <p>A-Jetty instance number.</p>
@@ -184,8 +184,7 @@ public class Bsa extends Activity implements OnClickListener {
   @Override
   public final void onCreate(final Bundle pSavedInstanceState) {
     super.onCreate(pSavedInstanceState);
-    //Only way to publish this project in central Maven repository
-    //TODO cause missing Google dependencies ???
+    //Simple reflection way to avoid additional compile libraries
     if (android.os.Build.VERSION.SDK_INT >= 23) {
       try {
         Class[] argTypes = new Class[] {String.class};
@@ -326,7 +325,7 @@ public class Bsa extends Activity implements OnClickListener {
       this.log.error(null, Bsa.class, msg);
       Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
-    this.beansMap.put(BootStrapEmbeddedHttps.class.getCanonicalName(),
+    this.beansMap.put(BootEmbed.class.getCanonicalName(),
       this.bootStrapEmbeddedHttps);
   }
 

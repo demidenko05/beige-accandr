@@ -6,9 +6,9 @@
   <version>1.0-SNAPSHOT</version>
   <artifactId>beige-accandr</artifactId>
   <packaging>apk</packaging>
-  <name>Beigesoft™ accountion all in one standalone WEB-application for Android.</name>
+  <name>Beigesoft™ accounting all in one standalone WEB-application for Android.</name>
 
-  <description>Beigesoft™ accountion all in one is standalone JEE web application that runs on embedded A-Jetty for Android.
+  <description>Beigesoft™ accounting all in one is standalone JEE web application that runs on embedded A-Jetty for Android.
     Web-Store is included for study and tests purposes and you are also able to make full DB copy from cloud version,
     and you can make price lists (in different price categories) and export it in CSV file to your customers or POS.</description>
   <url>https://sites.google.com/site/beigesoftware</url>
@@ -212,11 +212,6 @@
   <dependencies>
     <dependency>
       <groupId>org.beigesoft</groupId>
-      <artifactId>beige-andr</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.beigesoft</groupId>
       <artifactId>beige-accjet</artifactId>
       <version>1.0-SNAPSHOT</version>
       <exclusions>
@@ -237,16 +232,12 @@
           <artifactId>a-jetty-swing</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.beigesoft</groupId>
-          <artifactId>beige-jdbc</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>com.sun.mail</groupId>
           <artifactId>javax.mail</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.beigesoft</groupId>
-          <artifactId>beige-log-slf4j</artifactId>
+          <artifactId>beige-logging-slf4j</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -277,8 +268,8 @@
     </dependency>
     <dependency>
       <groupId>org.beigesoft</groupId>
-      <artifactId>beige-log-andr</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <artifactId>beige-logging-android</artifactId>
+      <version>1.0.3-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>com.sun.mail</groupId>
@@ -306,13 +297,14 @@
 
   <build>
     <finalName>${project.artifactId}</finalName>
-    <resources>
-      <!--Android Maven plugin will chooses these resources ordered by Maven Resource plugin
-        and removes other duplicates from jars:-->
+    <!--<resources>
+      Duplicates problem. maven-shade-plugin is useless. Dependences order does matter for "the first file occurrence", but not always - cmnst.xml is wrong?!
+      This project's files must be at the target APK, but it is not! Files from JAR dependences sometimes have high priority!?
+      Coping (either into final project or these resources entries) - cmnst.xml is still wrong (from blc-test.jar)!?
       <resource>
-        <directory>${user.home}${file.separator}git${file.separator}beige-andr${file.separator}src${file.separator}main${file.separator}resources</directory>
+        <directory>..${file.separator}beige-blc${file.separator}src${file.separator}test${file.separator}resources</directory>
       </resource>
-    </resources>
+    </resources>-->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

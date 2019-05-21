@@ -108,7 +108,7 @@ public class FctPrcNtrAd implements IFctNm<IPrc> {
     mngDb.setDbDir(this.cntx.getFilesDir().getAbsolutePath()
       .replace("files", "databases"));
     File bkDir = new File(Environment.getExternalStorageDirectory()
-      .getAbsolutePath() + "/BeigeAccountingBackup");
+      .getAbsolutePath() + "/BsaBk");
     if (!bkDir.exists() && !bkDir.mkdir()) {
       throw new Exception("Can't create directory: " + bkDir);
     }

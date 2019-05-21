@@ -34,7 +34,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import org.beigesoft.ajetty.BootStrapEmbeddedHttps;
+import org.beigesoft.ajetty.BootEmbed;
 
 /**
  * <p>A-Jetty Android service.</p>
@@ -139,13 +139,13 @@ public class SrvAccJet extends Service {
    * It invoked by start/stop threads.</p>
    * @return BootStrapEmbedded BootStrapEmbedded
    */
-  private BootStrapEmbeddedHttps getBootStrap() {
-    BootStrapEmbeddedHttps bootStrap = null;
+  private BootEmbed getBootStrap() {
+    BootEmbed bootStrap = null;
     // this.beansMap already synchronized
     Object bootStrapO = this.beansMap
-      .get(BootStrapEmbeddedHttps.class.getCanonicalName());
+      .get(BootEmbed.class.getCanonicalName());
     if (bootStrapO != null) {
-      bootStrap = (BootStrapEmbeddedHttps) bootStrapO;
+      bootStrap = (BootEmbed) bootStrapO;
     } else {
       //already stopped
       stopSelf();
@@ -161,7 +161,7 @@ public class SrvAccJet extends Service {
     @Override
     public void run() {
       synchronized (SrvAccJet.this.beansMap) {
-        BootStrapEmbeddedHttps bootStrap = getBootStrap();
+        BootEmbed bootStrap = getBootStrap();
         if (bootStrap != null && !bootStrap.getIsStarted()) {
           try {
             if (bootStrap.getServer() == null) {
@@ -189,7 +189,7 @@ public class SrvAccJet extends Service {
     @Override
     public void run() {
       synchronized (SrvAccJet.this.beansMap) {
-        BootStrapEmbeddedHttps bootStrap = SrvAccJet.this
+        BootEmbed bootStrap = SrvAccJet.this
           .getBootStrap();
         if (bootStrap != null && bootStrap.getIsStarted()) {
           try {

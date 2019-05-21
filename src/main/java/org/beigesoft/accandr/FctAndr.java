@@ -144,7 +144,7 @@ public class FctAndr implements IFctAux<Cursor> {
     HpCrypt rz = new HpCrypt();
     rz.setKsDirPath(this.cntx.getFilesDir().getAbsolutePath() + "/ks");
     File bkDir = new File(Environment.getExternalStorageDirectory()
-      .getAbsolutePath() + "/BeigeAccountingBackup");
+      .getAbsolutePath() + "/BsaBk");
     if (!bkDir.exists() && !bkDir.mkdirs()) {
       throw new Exception("Can't create directory: " + bkDir);
     }

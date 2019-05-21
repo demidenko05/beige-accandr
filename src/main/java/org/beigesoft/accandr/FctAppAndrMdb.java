@@ -129,6 +129,8 @@ public class FctAppAndrMdb implements IFctAsm<Cursor> {
   @Override
   public final void init(final Map<String, Object> pRvs,
     final IAttrs pCtxAttrs) throws Exception {
+    //cause android-maven-plugin duplicates problem:
+    this.fctBlc.getFctDt().setDbUrl("bsa.sqlite");
     Context cntx = (Context) pCtxAttrs.getAttr("AndrCtx");
     HashSet<IFctNm<IPrc>> fpasad = new HashSet<IFctNm<IPrc>>();
     FctPrcNtrAd fctPrcNtrAj = new FctPrcNtrAd();
