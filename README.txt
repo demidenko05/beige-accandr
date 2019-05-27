@@ -1,12 +1,12 @@
 site: https://sites.google.com/site/beigesoftware
 
-Beigesoft™ Accounting is standalone JEE web application that runs on embedded A-Jetty.
+Beigesoft™ Enterprise Information System is standalone JEE web application that runs on embedded A-Jetty.
 This is Android version.
 It requires Google Chrome browser.
 
-Beigesoft Accounting is always in secure enabled mode (protected from scams). It requires user authentication with strong password. It uses encryption for HTTPS and file exchange - modern algorithms asymmetric RSA 2048bit key size and symmetric AES 256bit size.
+Beigesoft™ Enterprise Information System is always in secure enabled mode (protected from scams). It requires user authentication with strong password. It uses encryption for HTTPS and file exchange - modern algorithms asymmetric RSA 2048bit key size and symmetric AES 256bit size.
 -------------------------------------------------------------------------------------------------------------
-At first you should better read article <a href="https://sites.google.com/site/beigesoftware/bobs-pizza/acc-android">Beigesoft™ Accounting on Android:</a> https://sites.google.com/site/beigesoftware/bobs-pizza/acc-android
+At first you should better read article Beigesoft™ Accounting: https://sites.google.com/site/beigesoftware/bobs-pizza/acc-android
 
 This application never waste your time because of:
   1. It provides sufficient functionality:  
@@ -19,7 +19,7 @@ This application never waste your time because of:
 * Manufacturing - automatically cost calculation from used materials and direct labor (and other) costs.
 * Multi-databases (organizations).
 * Embedded Web-Store
-* There is Beigesoft™ Accounting version for MS Windows/Mac/*Nix and SQLite database, so you can work with the same database anywhere.
+* There is Beigesoft™ Enterprise Information System version for MS Windows/Mac/*Nix and SQLite database, so you can work with the same database anywhere.
 
 You can check functionality without installation by reading the articles (see above).
   
@@ -34,7 +34,7 @@ You can make price lists (in different price categories) and export it in CSV fi
 This is enterprise application, database consist of 200 tables, so it requires a time to initialize itself and to create and upgrade database.
 
 --------------------------------------------------------------------------------------------------------------
-Вам лучше прочесть для начала <a href="https://sites.google.com/site/beigesoftware/acc-iv">Пример использования Беижсофт Бухгалтерии:</a> https://sites.google.com/site/beigesoftware/acc-iv
+Вам лучше прочесть для начала Пример использования Беижсофт Бухгалтерии: https://sites.google.com/site/beigesoftware/acc-iv
 
 Преимущества Беижсофт Бухгалтерии:
 

@@ -6,9 +6,9 @@
   <version>1.0-SNAPSHOT</version>
   <artifactId>beige-accandr</artifactId>
   <packaging>apk</packaging>
-  <name>Beigesoft™ accounting all in one standalone WEB-application for Android.</name>
+  <name>Beigesoft™ Enterprise Information System standalone WEB-application for Android.</name>
 
-  <description>Beigesoft™ accounting all in one is standalone JEE web application that runs on embedded A-Jetty for Android.
+  <description>Beigesoft™ Enterprise Information System is standalone JEE web application that runs on embedded A-Jetty for Android.
     Web-Store is included for study and tests purposes and you are also able to make full DB copy from cloud version,
     and you can make price lists (in different price categories) and export it in CSV file to your customers or POS.</description>
   <url>https://sites.google.com/site/beigesoftware</url>

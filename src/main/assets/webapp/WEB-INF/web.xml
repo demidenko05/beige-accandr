@@ -10,13 +10,17 @@ See LICENSE in base folder
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
   version="3.0"
   metadata-complete="true">
-  <display-name>Beigesoft™ Accounting All In One</display-name>
+  <display-name>Beigesoft™ Enterprise Information System<</display-name>
   <jsp-property-group>
     <trim-directive-whitespaces>true</trim-directive-whitespaces>
   </jsp-property-group>
   <context-param>
     <param-name>fctAppCls</param-name>
     <param-value>org.beigesoft.accandr.FctAppAndrMdb</param-value>
+  </context-param>
+  <context-param>
+    <param-name>iniBdFctCls</param-name>
+    <param-value>org.beigesoft.eis.IniBdFct</param-value>
   </context-param>
   <context-param>
     <param-name>newDbId</param-name>
@@ -119,7 +123,7 @@ See LICENSE in base folder
     </servlet-class>
     <init-param>
       <param-name>hndNms</param-name>
-      <param-value>HndI18nRq,hnAcEnRq</param-value>
+      <param-value>HndI18nRq,HndAcc,hnAcEnRq</param-value>
     </init-param>
     <init-param>
       <param-name>dirJsp</param-name>
@@ -150,7 +154,7 @@ See LICENSE in base folder
     </servlet-class>
     <init-param>
       <param-name>hndNms</param-name>
-      <param-value>HndI18nRq,hnNtRqSc</param-value>
+      <param-value>HndI18nRq,HndAcc,hnNtRqSc</param-value>
     </init-param>
     <init-param>
       <param-name>dirJsp</param-name>
