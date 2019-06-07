@@ -28,7 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.beigesoft.accandr;
 
+import java.util.Set;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.security.KeyStore;
 
@@ -37,17 +39,26 @@ import android.database.Cursor;
 
 import org.eclipse.jetty.security.DataBaseLoginService;
 
-import org.beigesoft.fct.IFctNm;
+import org.beigesoft.mdl.IRecSet;
+import org.beigesoft.fct.IFctPrc;
+import org.beigesoft.fct.IFctPrcEnt;
+import org.beigesoft.fct.IFctPrcFl;
 import org.beigesoft.fct.IFctAsm;
 import org.beigesoft.fct.FctBlc;
 import org.beigesoft.fct.FctDbCp;
-import org.beigesoft.prc.IPrc;
+import org.beigesoft.fct.FctFlRep;
 import org.beigesoft.hld.IAttrs;
+import org.beigesoft.hld.IHlNmClSt;
 import org.beigesoft.andr.FctRdb;
 import org.beigesoft.rdb.IRdb;
 import org.beigesoft.rdb.Orm;
 import org.beigesoft.web.FctMail;
-import org.beigesoft.ajetty.FctPrcNtr;
+import org.beigesoft.acc.fct.FctAcc;
+import org.beigesoft.acc.fct.FcEnPrAc;
+import org.beigesoft.acc.fct.FcPrNtAc;
+import org.beigesoft.acc.fct.FcPrFlAc;
+import org.beigesoft.acc.hld.HlAcEnPr;
+import org.beigesoft.ajetty.FcPrNtAj;
 import org.beigesoft.ajetty.GetUsrCrd;
 import org.beigesoft.ajetty.IHpCrypt;
 import org.beigesoft.ajetty.HpCrypt;
@@ -128,26 +139,46 @@ public class FctAppAndr implements IFctAsm<Cursor> {
   @Override
   public final void init(final Map<String, Object> pRvs,
     final IAttrs pCtxAttrs) throws Exception {
+    //cause android-maven-plugin duplicates problem:
+    this.fctBlc.getFctDt().setDbUrl("bsa.sqlite");
     Context cntx = (Context) pCtxAttrs.getAttr("AndrCtx");
-    HashSet<IFctNm<IPrc>> fpasad = new HashSet<IFctNm<IPrc>>();
-    FctPrcNtrAd fctPrcNtrAj = new FctPrcNtrAd();
-    fctPrcNtrAj.setFctApp(this);
-    fctPrcNtrAj.setCntx(cntx);
-    fpasad.add(fctPrcNtrAj);
-    this.fctBlc.getFctDt().setFctsPrcAd(fpasad);
-    HashSet<IFctNm<IPrc>> fpas = new HashSet<IFctNm<IPrc>>();
-    FctPrcNtr<Cursor> fctPrcNtrAjb = new FctPrcNtr<Cursor>();
-    fctPrcNtrAjb.setFctApp(this);
-    fpas.add(fctPrcNtrAjb);
-    this.fctBlc.getFctDt().setFctsPrc(fpas);
     this.fctBlc.getFctsAux().add(new FctDbCp<Cursor>());
     this.fctBlc.getFctsAux().add(new FctMail<Cursor>());
+    this.fctBlc.getFctsAux().add(new FctAcc<Cursor>());
+    this.fctBlc.getFctsAux().add(new FctFlRep<Cursor>());
     FctAndr fctAndr = new FctAndr();
     fctAndr.setCntx(cntx);
     this.fctBlc.getFctsAux().add(fctAndr);
     FctRdb frdb = new FctRdb();
     frdb.setCntx(cntx);
     this.fctBlc.getFctsAux().add(frdb);
+    Set<IFctPrcEnt> fcsenpr = new HashSet<IFctPrcEnt>();
+    FcEnPrAc<Cursor> fcep = new FcEnPrAc<Cursor>();
+    fcep.setFctBlc(this.fctBlc);
+    fcsenpr.add(fcep);
+    this.fctBlc.getFctDt().setFctsPrcEnt(fcsenpr);
+    Set<IHlNmClSt> hldsBsEnPr = new LinkedHashSet<IHlNmClSt>();
+    hldsBsEnPr.add(new HlAcEnPr());
+    this.fctBlc.getFctDt().setHldsBsEnPr(hldsBsEnPr);
+    HashSet<IFctPrc> fpas = new HashSet<IFctPrc>();
+    FcPrNtAj<Cursor> fctPrcNtrAjb = new FcPrNtAj<Cursor>();
+    fctPrcNtrAjb.setFctApp(this);
+    fpas.add(fctPrcNtrAjb);
+    FcPrNtAc<Cursor> fctPrcNtrAc = new FcPrNtAc<Cursor>();
+    fctPrcNtrAc.setFctApp(this);
+    fpas.add(fctPrcNtrAc);
+    this.fctBlc.getFctDt().setFctsPrc(fpas);
+    HashSet<IFctPrc> fpasad = new HashSet<IFctPrc>();
+    FcPrNtAdAn fctPrcNtrAj = new FcPrNtAdAn();
+    fctPrcNtrAj.setFctApp(this);
+    fctPrcNtrAj.setCntx(cntx);
+    fpasad.add(fctPrcNtrAj);
+    this.fctBlc.getFctDt().setFctsPrcAd(fpasad);
+    Set<IFctPrcFl> fcspf = new HashSet<IFctPrcFl>();
+    FcPrFlAc<Cursor> fcpf = new FcPrFlAc<Cursor>();
+    fcpf.setFctBlc(this.fctBlc);
+    fcspf.add(fcpf);
+    this.fctBlc.getFctDt().setFctrsPrcFl(fcspf);
     //creating/upgrading DB on start:
     Orm<Cursor> orm = this.fctBlc.lazOrm(pRvs);
     orm.init(pRvs);
@@ -169,5 +200,39 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     ch.setKsPassword(passw.toCharArray());
     Integer ajettyIn = (Integer) pCtxAttrs.getAttr("ajettyIn");
     ch.setAjettyIn(ajettyIn);
+    boolean isDbgSh = this.fctBlc.lazLogStd(pRvs).getDbgSh(getClass())
+      && this.fctBlc.lazLogStd(pRvs).getDbgFl() < 13001 && this.fctBlc
+        .lazLogStd(pRvs).getDbgCl() > 12999;
+    if (isDbgSh) {
+      IRecSet<Cursor> rs = null;
+      StringBuffer sb = new StringBuffer(" compile_options:\n");
+      try {
+        rdb.setAcmt(false);
+        rdb.setTrIsl(IRdb.TRRUC);
+        rdb.begin();
+        rs = rdb.retRs("PRAGMA compile_options;");
+        if (rs.first()) {
+          do {
+            sb.append(rs.getStr("compile_options") + " | ");
+          } while (rs.next());
+        }
+        rs.close();
+        rs = rdb.retRs("PRAGMA locking_mode;");
+        if (rs.first()) {
+          sb.append("\nlocking_mode: " + rs.getStr("locking_mode"));
+        }
+        rs.close();
+        rdb.commit();
+        this.fctBlc.lazLogStd(pRvs).debug(pRvs, getClass(), "thread="
+          + Thread.currentThread().getId() + " SQLITE settings : " + sb);
+      } catch (Exception e) {
+        if (!rdb.getAcmt()) {
+          rdb.rollBack();
+        }
+        throw e;
+      } finally {
+        rdb.release();
+      }
+    }
   }
 }

@@ -26,9 +26,51 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+//Opens subacc picker:
+function bsPickSac(pFdNm, pSaNm, pAdPr) {
+  var acId=document.getElementById("Entr" + pFdNm + "Id").value;
+  if(acId!="") {
+    bsPick("Sacnt", "Entr", pSaNm, "&fopownrVlId=" + acId + "&fopownrOpr=eq&fopfrcd=ownr"+ pAdPr);
+  } else {
+    bsShwErr(BSMSG["choose_account_first"]);
+  }
+};
+
+//Clears subacc picker:
+function bsClearSac(pSaNm) {
+  document.getElementById("Entr" + pSaNm + "Id").value = "";
+  var saApVsb = document.getElementById("Entr"  + pSaNm + "ApVsb");
+  saApVsb.value = "";
+  bsInpChn(saApVsb);
+};
+
+//Selects/sets account by picker:
+function bsSelAcc(pEntId, pEntAp, pIdDmPi, pSaId) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
+  var pref = whoPicking["pigEnt"] + whoPicking["piFld"];
+  document.getElementById(pref +"Id").value = pEntId;
+  var inpAp = document.getElementById(pref + "Ap");
+  if (inpAp != null) { //invisible appearance to be sent
+    inpAp.value=pEntAp;
+  }
+  var inpApVsb = document.getElementById(pref + "ApVsb");
+  inpApVsb.value = pEntAp;
+  bsInpChn(inpApVsb);
+  var btSaPi = document.getElementById(pref + "SaPi");
+  if (btSaPi != null) { //buttons subacc pick/clear:
+    var btsSaDis = (pSaId == null);
+    var btSaCl = document.getElementById(pref + "SaCl");
+    btSaCl.onclick();
+    btSaPi.disabled = btsSaDis;
+    btSaCl.disabled = btsSaDis;
+  }
+  document.getElementById(pIdDmPi+"Dlg").close();
+};
+
+
 //set known or from returned invoice line cost for picked item, cost is already rounded and internationalized string value
-function setCost(pCost, idDomBasePicker) {
-  var whoPicking = BSSTATE["WhoPi"][idDomBasePicker];
+function setCost(pCost, pIdDmPi) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
   var inpCostVsb = document.getElementById(whoPicking["pigEnt"] + "itsCostVsb");
   var inpCost = document.getElementById(whoPicking["pigEnt"] + "itsCost");
   if (inpCost.value != pCost) {
@@ -43,8 +85,8 @@ function setCost(pCost, idDomBasePicker) {
 };
 
 //set UOM for picked item (goods)
-function setUom(uomId, uomName, idDomBasePicker) {
-  var whoPicking = BSSTATE["WhoPi"][idDomBasePicker];
+function setUom(uomId, uomName, pIdDmPi) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
   var inpUomId = document.getElementById(whoPicking["pigEnt"] + "unitOfMeasureId");
   if (inpUomId != null) {
     inpUomId.value = uomId;
@@ -54,35 +96,24 @@ function setUom(uomId, uomName, idDomBasePicker) {
   }
   var btnTaxDestination = document.getElementById(whoPicking["pigEnt"] + "btnTaxDestination");
   if (btnTaxDestination != null) {
-    //revialing dest tax cat:
+    //revealing dest tax cat:
     btnTaxDestination.style.display="block";
   }
 };
 
-
-function openPickerSubacc(entitySimpleName, accName, subaccName, paramsAdd) {
-  var inpAccId = document.getElementById(entitySimpleName + accName + "Id");
-  if (inpAccId.value == "") {
-    showError(BSMSG['choose_account_first']);
-  } else {
-    openEntityPicker('SubaccountLine', entitySimpleName, subaccName, "&fltordPitsOwnerValId="
-      + inpAccId.value + "&fltordPitsOwnerOpr=eq&fltordPforcedFor=itsOwner" + paramsAdd);
-  }
-};
-
-function selectSubacc(subaccId, subaccType, subaccAp, idDomBasePicker) {
-  var whoPicking = BSSTATE["WhoPi"][idDomBasePicker];
+function selectSubacc(subaccId, subaccType, subaccAp, pIdDmPi) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
   document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Ap").value = subaccAp;
   document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Ty").value = subaccType;
   document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Id").value = subaccId;
   var inpVsb = document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "ApVsb");
   inpVsb.value = subaccAp;
   inpVsb.onchange();
-  document.getElementById(idDomBasePicker+"Dlg").close();
+  document.getElementById(pIdDmPi+"Dlg").close();
 };
 
-function selectChooseableSpecType(typeId, typeAp, idDomBasePicker) {
-  whoPicking = BSSTATE["WhoPi"][idDomBasePicker];
+function selectChooseableSpecType(typeId, typeAp, pIdDmPi) {
+  whoPicking = BSSTATE["WhoPi"][pIdDmPi];
   document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] +"TyId").setAttribute("value", typeId);
   var inpAp = document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "TyAp");
   inpAp.setAttribute("value", typeAp);
@@ -91,38 +122,20 @@ function selectChooseableSpecType(typeId, typeAp, idDomBasePicker) {
   inpApVsb.onchange();
 };
 
-/**
- * <p>Select sub-account simple implementation.
- * Sub-account picker is enable if account is chosen despite of
- * it no has sub-account.
- * </p>
- **/
-function clearSubacc(entitySimpleName, accName, subaccName) {
-  var isDisabled = (document.getElementById(entitySimpleName + accName + "Id").value == '');
-  document.getElementById(entitySimpleName + subaccName + "Choose").disabled = isDisabled;
-  document.getElementById(entitySimpleName + subaccName + "Clear").disabled = isDisabled;
-  document.getElementById(entitySimpleName + subaccName + "Ap").value = "";
-  document.getElementById(entitySimpleName + subaccName + "Ty").value = "";
-  document.getElementById(entitySimpleName + subaccName + "Id").value = "";
-  var inpVsb = document.getElementById(entitySimpleName + subaccName + "ApVsb");
-  inpVsb.value = "";
-  inpVsb.onchange();
-};
-
 function clearSubaccLine(entitySimpleName) {
   document.getElementById(entitySimpleName + "subaccId").setAttribute("value", "");
   document.getElementById(entitySimpleName + "subaccNameAp").setAttribute("value", "");
   document.getElementById(entitySimpleName + "subaccNameApVsb").setAttribute("value", "");
 };
 
-function selectAccSubacc(entityId, entityAp, idDomBasePicker) {
-  var whoPicking = BSSTATE["WhoPi"][idDomBasePicker];
-  document.getElementById(whoPicking["pigEnt"] +"subaccId").setAttribute("value", entityId);
-  document.getElementById(whoPicking["pigEnt"] +"subaccNameAp").setAttribute("value", entityAp);
+function selectAccSubacc(pEntId, pEntAp, pIdDmPi) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
+  document.getElementById(whoPicking["pigEnt"] +"subaccId").setAttribute("value", pEntId);
+  document.getElementById(whoPicking["pigEnt"] +"subaccNameAp").setAttribute("value", pEntAp);
   var inpApVsb = document.getElementById(whoPicking["pigEnt"] + "subaccNameApVsb");
-  inpApVsb.value = entityAp;
+  inpApVsb.value = pEntAp;
   inpApVsb.onchange();
-  document.getElementById(idDomBasePicker+"Dlg").close();
+  document.getElementById(pIdDmPi+"Dlg").close();
 };
 
 function makeTotalTax(pInp, nameEntity, totalGross, pTaxDp, pTaxRm) {
@@ -147,8 +160,8 @@ function clearWageTaxes(nameEntity) {
   bsInpChn(inpTotalWageTaxesVsb);
 };
 
-function tryToSetPercentagePlusAmount(itsPercentage, plusAmount, idDomBasePicker) {
-  var whoPicking = BSSTATE["WhoPi"][idDomBasePicker];
+function tryToSetPercentagePlusAmount(itsPercentage, plusAmount, pIdDmPi) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
   var inpPercentage = document.getElementById(whoPicking["pigEnt"] + "itsPercentage");
   if(inpPercentage != null) {
     var inpPlusAmount = document.getElementById(whoPicking["pigEnt"] + "plusAmount");

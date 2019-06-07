@@ -37,6 +37,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.beigesoft.exc.ExcCode;
+import org.beigesoft.mdl.IHasId;
 import org.beigesoft.mdl.IRecSet;
 import org.beigesoft.mdl.ColVals;
 import org.beigesoft.rdb.SrvClVl;
@@ -266,6 +267,7 @@ public class RdbMdb extends ARdb<Cursor> {
    * <p>Executes SQL UPDATE that returns affected rows.
    * It is to adapt Android insert/update/delete interface.
    * </p>
+   * @param <T> entity type
    * @param pCls entity class
    * @param pCv type-safe map column name - column value
    * @param pWhe where conditions e.g. "itsId=2"
@@ -273,8 +275,8 @@ public class RdbMdb extends ARdb<Cursor> {
    * @throws ExcCode - if an exception occured
    **/
   @Override
-  public final int update(final Class<?> pCls, final ColVals pCv,
-    final String pWhe) throws Exception {
+  public final <T extends IHasId<?>> int update(final Class<T> pCls,
+    final ColVals pCv, final String pWhe) throws Exception {
     boolean isDbgSh = getLog().getDbgSh(getClass())
       && getLog().getDbgFl() < 11007 && getLog().getDbgCl() > 11005;
     try {
@@ -298,13 +300,14 @@ public class RdbMdb extends ARdb<Cursor> {
    * <p>Executes SQL INSERT that returns affected rows.
    * It is to adapt Android insert/update/delete interface.
    * </p>
+   * @param <T> entity type
    * @param pCls entity class
    * @param pCv type-safe map column name - column value
    * @return Number inserted row (auto-generated or not) or -1 if error
    * @throws ExcCode - if an exception occured
    **/
   @Override
-  public final long insert(final Class<?> pCls,
+  public final <T extends IHasId<?>> long insert(final Class<T> pCls,
     final ColVals pCv) throws Exception {
     boolean isDbgSh = getLog().getDbgSh(getClass())
       && getLog().getDbgFl() < 11008 && getLog().getDbgCl() > 11006;
@@ -379,13 +382,14 @@ public class RdbMdb extends ARdb<Cursor> {
   /**
    * <p>Converts org.beigesoft.mdl.ColVals
    * to android.content.ContentValues for insert.</p>
+   * @param <T> entity type
    * @param pCls entity class
    * @param pCv Columns Values
    * @return ContentValues
    * @throws Exception - an exception
    **/
-  public final ContentValues cnvToCntValsIns(final Class<?> pCls,
-    final ColVals pCv) throws Exception {
+  public final <T extends IHasId<?>> ContentValues cnvToCntValsIns(
+    final Class<T> pCls, final ColVals pCv) throws Exception {
     ContentValues cntVals = new ContentValues();
     List<String> idNms = this.srvClVl.getSetng().lazIdFldNms(pCls);
     if (pCv.getInts() != null) {
@@ -423,13 +427,14 @@ public class RdbMdb extends ARdb<Cursor> {
   /**
    * <p>Converts org.beigesoft.mdl.ColVals
    * to android.content.ContentValues for update.</p>
+   * @param <T> entity type
    * @param pCls entity class
    * @param pCv Columns Values
    * @return ContentValues
    * @throws Exception - an exception
    **/
-  public final ContentValues cnvToCntValsUpd(final Class<?> pCls,
-    final ColVals pCv) throws Exception {
+  public final <T extends IHasId<?>> ContentValues cnvToCntValsUpd(
+    final Class<T> pCls, final ColVals pCv) throws Exception {
     ContentValues cntVals = new ContentValues();
     List<String> idNms = this.srvClVl.getSetng().lazIdFldNms(pCls);
     if (pCv.getInts() != null) {

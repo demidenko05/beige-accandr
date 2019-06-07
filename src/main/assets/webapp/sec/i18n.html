@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 
 <head>
   <meta charset="utf-8">
@@ -351,6 +351,15 @@
       <div>
         <input name="dtmsc" type="datetime-local" step="0.001" onchange="document.getElementById('dtldms').value=new Date(this.value).getTime();">
         <input id="dtldms" type="text">
+      </div>
+    </div>
+    <div>
+      <div>
+        <label>Month:</label>    
+      </div>
+      <div>
+        <input name="dtmnth" type="month" onchange="document.getElementById('dtlmnth').value=new Date(this.value).getTime();">
+        <input id="dtlmnth" type="text">
       </div>
     </div>
     <div>

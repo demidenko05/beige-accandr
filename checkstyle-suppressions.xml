@@ -6,5 +6,5 @@
 
 <suppressions>
   <suppress checks="MagicNumberCheck"
-    files="Bsa|SrvAccJet|FctAppAndrMdb|Rdb"/>
+    files="Bsa|SrvAccJet|FctAppAndr|FctAppAndrMdb|Rdb"/>
 </suppressions>

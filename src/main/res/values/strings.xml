@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">Beigesoft™ Accounting</string>
+  <string name="app_name">Beigesoft™ EIS</string>
   <string name="port">Port:</string>
   <string name="start">Start</string>
   <string name="stop">Stop</string>

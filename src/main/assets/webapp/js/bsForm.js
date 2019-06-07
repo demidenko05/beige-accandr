@@ -26,8 +26,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- * implements logic "form has been changed" "nothing to send"
- * author Yury Demidenko
+ * implements logic "form has been changed", "nothing to send", send form with AJAX...
+ * @author Yury Demidenko
  */
  
 //Conversation state variables:
@@ -304,30 +304,31 @@ function bsFlUpChd(pInp, pInpFileUpPathNm, pInpParNmFlUpNm) {
   bsInpChn(pInp);
 };
 //Selects/sets entity by picker:
-function bsSelEnt(entityId, entityAp, idDomBasePicker) {
-  whoPicking = BSSTATE["WhoPi"][idDomBasePicker];
-  document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] +"Id").setAttribute("value", entityId);
-  var inpAp = document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Ap");
-  if (inpAp != null) { //invisible appearence to be sent
-    inpAp.setAttribute("value", entityAp);
+function bsSelEnt(pEntId, pEntAp, pIdDmPi) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
+  var pref = whoPicking["pigEnt"] + whoPicking["piFld"];
+  document.getElementById(pref +"Id").value = pEntId;
+  var inpAp = document.getElementById(pref + "Ap");
+  if (inpAp != null) { //invisible appearance to be sent
+    inpAp.value = pEntAp;
   }
-  var inpApVsb = document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "ApVsb");
-  inpApVsb.value = entityAp;
-  inpApVsb.onchange();
-  document.getElementById(idDomBasePicker+"Dlg").close();
+  var inpApVsb = document.getElementById(pref + "ApVsb");
+  inpApVsb.value = pEntAp;
+  bsInpChn(inpApVsb);
+  document.getElementById(pIdDmPi+"Dlg").close();
 };
 //Clears pickable entity:
 function bsClrSelEnt(idDomBaseProperty) {
   var inpId = document.getElementById(idDomBaseProperty + "Id");
   if (inpId.value != "") {
-    inpId.setAttribute("value", "");
+    inpId.value = "";
     var inpAp = document.getElementById(idDomBaseProperty + "Ap");
     if (inpAp != null) { //invisible appearence to be sent
-      inpAp.setAttribute("value", "");
+      inpAp.value="";
     }
     var inpApVsb = document.getElementById(idDomBaseProperty + "ApVsb");
     inpApVsb.value = "";
-    inpApVsb.onchange();
+    bsInpChn(inpApVsb);
   }
 };
 //Opens entity picker:

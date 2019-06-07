@@ -32,3 +32,6 @@ BSMSG["nothingToSend"]="There is nothing to send!";
 BSMSG['select_child']="Select entity!";
 BSMSG["2_pickers_opened_already_for"]="2 pickers already opened for ";
 BSMSG['enterEitherAlreadyOrLoadNew']="Enter either URL already uploaded file or choose new one to upload!";
+BSMSG['choose_subacc_type']="Choose subaccount type first!";
+BSMSG['account_successful']="Document has been accounted!";
+BSMSG['choose_account_first']="Choose account first!";

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">Беижсофт™ Бухгалтерия</string>
+  <string name="app_name">Беижсофт™ ИСП</string>
   <string name="port">Порт:</string>
   <string name="start">Старт</string>
   <string name="stop">Стоп</string>
