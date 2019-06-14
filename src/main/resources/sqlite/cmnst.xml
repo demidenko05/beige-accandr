@@ -7,8 +7,8 @@ See LICENSE in base folder
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Beigesoft ORM common settings</comment>
-<entry key="appInf">Beige-BLC ver1.0</entry>
-<entry key="dbUrl">bsa.sqlite</entry>
+<entry key="appInf">Beige-EIF ver1.0</entry>
+<entry key="dbUrl">bseif.sqlite</entry>
 <entry key="checkTbl">select * from SQLITE_MASTER where TBL_NAME=':tblNm';</entry>
 <entry key="lastId">select last_insert_rowid() as LASTID;</entry>
 </properties>

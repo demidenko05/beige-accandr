@@ -82,6 +82,8 @@ public class FctAppAndrMdb implements IFctAsm<Cursor> {
   public FctAppAndrMdb() throws Exception {
     this.fctBlc = new FctBlc<Cursor>();
     this.fctBlc.getFctDt().setIsAndr(true);
+    //TODO cause android-maven-plugin duplicates problem:
+    this.fctBlc.getFctDt().setDbUrl("bseif.sqlite");
   }
 
   /**
@@ -139,8 +141,6 @@ public class FctAppAndrMdb implements IFctAsm<Cursor> {
   @Override
   public final void init(final Map<String, Object> pRvs,
     final IAttrs pCtxAttrs) throws Exception {
-    //cause android-maven-plugin duplicates problem:
-    this.fctBlc.getFctDt().setDbUrl("bsa.sqlite");
     Context cntx = (Context) pCtxAttrs.getAttr("AndrCtx");
     this.fctBlc.getFctsAux().add(new FctDbCp<Cursor>());
     this.fctBlc.getFctsAux().add(new FctMail<Cursor>());

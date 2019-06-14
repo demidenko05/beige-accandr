@@ -30,6 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Print style EIS.
  * author Yury Demidenko
  */
+.rdBlnc {
+ color: red;
+}
 .customerData {
   margin-left: 30px;
 }

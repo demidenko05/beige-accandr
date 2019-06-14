@@ -27,19 +27,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 //Opens subacc picker:
-function bsPickSac(pFdNm, pSaNm, pAdPr) {
-  var acId=document.getElementById("Entr" + pFdNm + "Id").value;
+function bsPickSac(pFdNm, pPikng, pSaNm, pAdPr) {
+  var acId=document.getElementById(pPikng + pFdNm + "Id").value;
   if(acId!="") {
-    bsPick("Sacnt", "Entr", pSaNm, "&fopownrVlId=" + acId + "&fopownrOpr=eq&fopfrcd=ownr"+ pAdPr);
+    bsPick("Sacnt", pPikng, pSaNm, "&fopownrVlId=" + acId + "&fopownrOpr=eq&fopfrcd=ownr"+ pAdPr);
   } else {
     bsShwErr(BSMSG["choose_account_first"]);
   }
 };
 
 //Clears subacc picker:
-function bsClearSac(pSaNm) {
-  document.getElementById("Entr" + pSaNm + "Id").value = "";
-  var saApVsb = document.getElementById("Entr"  + pSaNm + "ApVsb");
+function bsClearSac(pPikng, pSaNm) {
+  document.getElementById(pPikng + pSaNm + "Id").value = "";
+  document.getElementById(pPikng + pSaNm + "Ap").value = "";
+  var saApVsb = document.getElementById(pPikng  + pSaNm + "ApVsb");
   saApVsb.value = "";
   bsInpChn(saApVsb);
 };
