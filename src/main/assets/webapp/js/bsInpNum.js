@@ -128,7 +128,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return;
       }
       //Handle decimal separator:
-      if (e.keyCode === 110 || e.key === BSNUMVS.decSep) {
+      if (e.key === '.' || e.key === ',' || e.key === BSNUMVS.decSep) {
         if (e.target.decPl === 0) {
           e.preventDefault();
           return;

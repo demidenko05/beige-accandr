@@ -155,6 +155,9 @@ function bsRound(pNumber, pDecPl, pMode) {
   if (dotIdx == -1) {
     return pNumber;
   }
+  if (nums.length == dotIdx + pDecPl + 1) {
+    return pNumber;
+  }
   var rez = parseFloat(nums.substring(0, dotIdx + pDecPl + 1));
   rst = parseFloat(nums.substring(dotIdx + pDecPl + 1, dotIdx + pDecPl + 2) + "." + nums.substring(dotIdx + pDecPl + 2));
   if (rst == zf) {

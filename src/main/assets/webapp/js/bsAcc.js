@@ -35,7 +35,6 @@ function bsPickSac(pFdNm, pPikng, pSaNm, pAdPr) {
     bsShwErr(BSMSG["choose_account_first"]);
   }
 };
-
 //Clears subacc picker:
 function bsClearSac(pPikng, pSaNm) {
   document.getElementById(pPikng + pSaNm + "Id").value = "";
@@ -44,7 +43,6 @@ function bsClearSac(pPikng, pSaNm) {
   saApVsb.value = "";
   bsInpChn(saApVsb);
 };
-
 //Selects/sets account by picker:
 function bsSelAcc(pEntId, pEntAp, pIdDmPi, pSaId) {
   var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
@@ -67,49 +65,52 @@ function bsSelAcc(pEntId, pEntAp, pIdDmPi, pSaId) {
   }
   document.getElementById(pIdDmPi+"Dlg").close();
 };
-
-
 //set known or from returned invoice line cost for picked item, cost is already rounded and internationalized string value
-function setCost(pCost, pIdDmPi) {
+function bsSetCost(pCost, pIdDmPi) {
   var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
-  var inpCostVsb = document.getElementById(whoPicking["pigEnt"] + "itsCostVsb");
-  var inpCost = document.getElementById(whoPicking["pigEnt"] + "itsCost");
+  var inpCostVsb = document.getElementById(whoPicking["pigEnt"] + "priVsb");
+  var inpCost = document.getElementById(whoPicking["pigEnt"] + "pri");
   if (inpCost.value != pCost) {
     inpCost.value = pCost;
     if (inpCostVsb != null) {
       inpCostVsb.value = pCost;
-      inpCostVsb.onchange();
+      bsInpChn(inpCostVsb);
     } else {
-      inpCost.onchange();
+      bsInpChn(inpCost);
     }
   }
 };
-
-//set UOM for picked item (goods)
-function setUom(uomId, uomName, pIdDmPi) {
+//set UOM for picked item:
+function bsSetUom(uomId, uomName, pIdDmPi) {
   var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
-  var inpUomId = document.getElementById(whoPicking["pigEnt"] + "unitOfMeasureId");
+  var inpUomId = document.getElementById(whoPicking["pigEnt"] + "uomId");
   if (inpUomId != null) {
     inpUomId.value = uomId;
-    var unitOfMeasureApVsb = document.getElementById(whoPicking["pigEnt"] + "unitOfMeasureApVsb");
-    unitOfMeasureApVsb.value = uomName;
-    unitOfMeasureApVsb.onchange();
+    var uomApVsb = document.getElementById(whoPicking["pigEnt"] + "uomApVsb");
+    uomApVsb.value = uomName;
+    bsInpChn(uomApVsb);
   }
-  var btnTaxDestination = document.getElementById(whoPicking["pigEnt"] + "btnTaxDestination");
-  if (btnTaxDestination != null) {
+  var btTxDs = document.getElementById(whoPicking["pigEnt"] + "btTxDs");
+  if (btTxDs != null) {
     //revealing dest tax cat:
-    btnTaxDestination.style.display="block";
+    btTxDs.style.display="block";
   }
 };
+//clears subacc:
+function bsClrSal(entitySimpleName) {
+  document.getElementById(entitySimpleName + "saId").setAttribute("value", "");
+  document.getElementById(entitySimpleName + "saNmAp").setAttribute("value", "");
+  document.getElementById(entitySimpleName + "saNmApVsb").setAttribute("value", "");
+};
 
-function selectSubacc(subaccId, subaccType, subaccAp, pIdDmPi) {
+function bsSelSac(saId, subaccType, subaccAp, pIdDmPi) {
   var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
   document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Ap").value = subaccAp;
   document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Ty").value = subaccType;
-  document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Id").value = subaccId;
+  document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "Id").value = saId;
   var inpVsb = document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "ApVsb");
   inpVsb.value = subaccAp;
-  inpVsb.onchange();
+  bsInpChn(inpVsb);
   document.getElementById(pIdDmPi+"Dlg").close();
 };
 
@@ -120,74 +121,74 @@ function selectChooseableSpecType(typeId, typeAp, pIdDmPi) {
   inpAp.setAttribute("value", typeAp);
   var inpApVsb = document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "TyApVsb");
   inpApVsb.value = typeAp;
-  inpApVsb.onchange();
-};
-
-function clearSubaccLine(entitySimpleName) {
-  document.getElementById(entitySimpleName + "subaccId").setAttribute("value", "");
-  document.getElementById(entitySimpleName + "subaccNameAp").setAttribute("value", "");
-  document.getElementById(entitySimpleName + "subaccNameApVsb").setAttribute("value", "");
+  bsInpChn(inpApVsb);
 };
 
 function selectAccSubacc(pEntId, pEntAp, pIdDmPi) {
   var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
-  document.getElementById(whoPicking["pigEnt"] +"subaccId").setAttribute("value", pEntId);
-  document.getElementById(whoPicking["pigEnt"] +"subaccNameAp").setAttribute("value", pEntAp);
-  var inpApVsb = document.getElementById(whoPicking["pigEnt"] + "subaccNameApVsb");
+  document.getElementById(whoPicking["pigEnt"] +"saId").setAttribute("value", pEntId);
+  document.getElementById(whoPicking["pigEnt"] +"saNmAp").setAttribute("value", pEntAp);
+  var inpApVsb = document.getElementById(whoPicking["pigEnt"] + "saNmApVsb");
   inpApVsb.value = pEntAp;
-  inpApVsb.onchange();
+  bsInpChn(inpApVsb);
   document.getElementById(pIdDmPi+"Dlg").close();
 };
 
-function makeTotalTax(pInp, nameEntity, totalGross, pTaxDp, pTaxRm) {
-  var inpAllowance = document.getElementById(nameEntity + "allowance");
-  var inpPlusAmount = document.getElementById(nameEntity + "plusAmount");
-  var inpPercentage = document.getElementById(nameEntity + "itsPercentage");
-  var allowance = strToFloat(inpAllowance.value);
-  var plusAmount = strToFloat(inpPlusAmount.value);
-  var itsPercentage = strToFloat(inpPercentage.value);
-  var inpTotal = document.getElementById(nameEntity + "itsTotal");
-  var total = numRound(plusAmount + (totalGross - allowance) * itsPercentage / 100, pTaxDp, pTaxRm);
-  inpTotal.value = numToStr(total.toString(), pTaxDp);
+function bsMkWgToTx(pInp, pEntNm, totalGross, pTxDp, pTxRm) {
+  var inpAllowance = document.getElementById(pEntNm + "alwc");
+  var inpPlusAmount = document.getElementById(pEntNm + "plAm");
+  var inpPercentage = document.getElementById(pEntNm + "rate");
+  var alwc = bsStrFlt(inpAllowance.value);
+  var plAm = bsStrFlt(inpPlusAmount.value);
+  var rate = bsStrFlt(inpPercentage.value);
+  var inpTotal = document.getElementById(pEntNm + "tot");
+  var total = bsRound(plAm + (totalGross - alwc) * rate / 100, pTxDp, pTxRm);
+  inpTotal.value = bsNumStr(total.toString(), pTxDp);
   bsInpChn(inpTotal);
   bsInpChn(pInp);
 };
 
-function clearWageTaxes(nameEntity) {
-  var inpTotalWageTaxes = document.getElementById(nameEntity + "totalWageTaxes");
-  var inpTotalWageTaxesVsb = document.getElementById(nameEntity + "totalWageTaxesVsb");
+function bsClrWgTxs(pEntNm) {
+  var inpTotalWageTaxes = document.getElementById(pEntNm + "toWgTx");
+  var inpTotalWageTaxesVsb = document.getElementById(pEntNm + "toWgTxVsb");
   inpTotalWageTaxes.value = 0;
   inpTotalWageTaxesVsb.value = 0;
   bsInpChn(inpTotalWageTaxesVsb);
 };
 
-function tryToSetPercentagePlusAmount(itsPercentage, plusAmount, pIdDmPi) {
+function bsSelWgRtPlAm(rate, plAm, pIdDmPi) {
   var whoPicking = BSSTATE["WhoPi"][pIdDmPi];
-  var inpPercentage = document.getElementById(whoPicking["pigEnt"] + "itsPercentage");
+  var inpPercentage = document.getElementById(whoPicking["pigEnt"] + "rate");
   if(inpPercentage != null) {
-    var inpPlusAmount = document.getElementById(whoPicking["pigEnt"] + "plusAmount");
+    var inpPlusAmount = document.getElementById(whoPicking["pigEnt"] + "plAm");
     if(inpPlusAmount != null) {
-      inpPlusAmount.value = plusAmount;
+      inpPlusAmount.value = plAm;
       bsInpChn(inpPlusAmount);
     }
-    inpPercentage.value = itsPercentage;
-    inpPercentage.onchange();
+    inpPercentage.value = rate;
+    bsInpChn(inpPercentage);
   }
 };
-
-function makeFltrPaymentTot(pInp, pIdSelFlt) {
+//makes filter invoice total payment:
+function bsMkFltPaTo(pInp, pIdSelFlt) {
   var fldWas;
   var fldIs;
-  if (pInp.options[pInp.selectedIndex].value == "ITSTOTAL") {
-    fltIs = "ITSTOTAL";
-    fltWas = "FOREIGNTOTAL";
+  if (pInp.options[pInp.selectedIndex].value == "TOT") {
+    toIs = "TOT";
+    paIs = "TOPA";
+    toWas = "TOFC";
+    paWas = "PAFC";
   } else {
-    fltIs = "FOREIGNTOTAL";
-    fltWas = "ITSTOTAL";
+    toIs = "TOFC";
+    paIs = "PAFC";
+    toWas = "TOT";
+    paWas = "TOPA";
   }
   var selFlt = document.getElementById(pIdSelFlt);
   for (var i=0; i < selFlt.options.length; i++) {
-    selFlt.options[i].value = selFlt.options[i].value.replace(fltWas, fltIs);
+    var nv = selFlt.options[i].value.replace(toWas, toIs);
+    nv = nv.replace(paWas, paIs);
+    selFlt.options[i].value = nv;
   }  
 };
 
@@ -321,51 +322,51 @@ function bnStLnDocTypeChanged(pInp) {
 };
 
 function selectCsvPath(pVal, pPathAppr) {
-  var CsvColumndataIndex = document.getElementById("CsvColumndataIndex");
-  var CsvColumnfieldPath = document.getElementById("CsvColumnfieldPath");
+  var CsvCldtIdx = document.getElementById("CsvCldtIdx");
+  var CsvClfldPh = document.getElementById("CsvClfldPh");
   var dataPath = document.getElementById("dataPath");
   var scIdx = pVal.indexOf(";");
   if (scIdx == -1) {
-    CsvColumndataIndex.value = pVal;
-    CsvColumnfieldPath.value = "";
+    CsvCldtIdx.value = pVal;
+    CsvClfldPh.value = "";
   } else {
     var arr = pVal.split(";");
-    CsvColumndataIndex.value = arr[0];
-    CsvColumnfieldPath.value = arr[1];
+    CsvCldtIdx.value = arr[0];
+    CsvClfldPh.value = arr[1];
   }
   dataPath.value = pPathAppr;
-  dataPath.onchange();
+  bsInpChn(dataPath);
 };
 
 function clearCsvPath() {
-  var CsvColumndataIndex = document.getElementById("CsvColumndataIndex");
+  var CsvCldtIdx = document.getElementById("CsvCldtIdx");
   var dataPath = document.getElementById("dataPath");
-  var CsvColumnfieldPath = document.getElementById("CsvColumnfieldPath");
-  CsvColumnfieldPath.value = "";
-  CsvColumndataIndex.value = "";
+  var CsvClfldPh = document.getElementById("CsvClfldPh");
+  CsvClfldPh.value = "";
+  CsvCldtIdx.value = "";
   dataPath.value = "";
-  dataPath.onchange();
+  bsInpChn(dataPath);
 };
 
 function openCsvPathPicker(pPath, pReadNm) {
-  var picker = document.getElementById("pickersCsvPath" + pReadNm + "Dlg");
+  var picker = document.getElementById("picCsvPth" + pReadNm + "Dlg");
   if (picker != null) {
       picker.showModal();
   } else {
     bsGtAjx('GET', pPath + pReadNm);
   }
 };
-
-function calcPriceTax(pInp, nameEntity, pPriceNm, pPriceDp, pPriceRm, pIsTaxIncluded, pTaxDp, pTaxRm) {
-  var inpTotal = document.getElementById(nameEntity + "itsTotal");
-  var total = strToFloat(inpTotal.value);
-  calcTax(nameEntity, total, pIsTaxIncluded, pTaxDp, pTaxRm);
-  var inpQuantity = document.getElementById(nameEntity + "itsQuantity");
-  var quantity = strToFloat(inpQuantity.value);
-  var inpPrice = document.getElementById(nameEntity + pPriceNm);
-  var price = numRound(total/quantity, pPriceDp, pPriceRm);
-  inpPrice.value = numToStr(price.toString(), pPriceDp);
-  var inpPriceVsb = document.getElementById(nameEntity + pPriceNm + "Vsb");
+//calculate price and tax cause total/quantity changed:
+function bsClcPriTx(pInp, pEntNm, pPriNm, pPrDp, pPriceRm, pInTx, pTxDp, pTxRm) {
+  var inpTotal = document.getElementById(pEntNm + "tot");
+  var total = bsStrFlt(inpTotal.value);
+  bsClcTx(pEntNm, total, pInTx, pTxDp, pTxRm);
+  var inpQuantity = document.getElementById(pEntNm + "quan");
+  var quantity = bsStrFlt(inpQuantity.value);
+  var inpPrice = document.getElementById(pEntNm + pPriNm);
+  var price = bsRound(total/quantity, pPrDp, pPriceRm);
+  inpPrice.value = bsNumStr(price.toString(), pPrDp);
+  var inpPriceVsb = document.getElementById(pEntNm + pPriNm + "Vsb");
   if (inpPriceVsb != null) {
     inpPriceVsb.value = inpPrice.value;
     bsInpChn(inpPriceVsb);
@@ -374,16 +375,16 @@ function calcPriceTax(pInp, nameEntity, pPriceNm, pPriceDp, pPriceRm, pIsTaxIncl
   }
   bsInpChn(pInp);
 };
-
-function calcTotalTax(pInp, nameEntity, pPriceNm, pPriceDp, pPriceRm, pIsTaxIncluded, pTaxDp, pTaxRm) {
-  var inpPrice = document.getElementById(nameEntity + pPriceNm);
-  var price = strToFloat(inpPrice.value);
-  var inpQuantity = document.getElementById(nameEntity + "itsQuantity");
-  var quantity = strToFloat(inpQuantity.value);
-  var inpTotal = document.getElementById(nameEntity + "itsTotal");
-  var total = numRound(price * quantity, pPriceDp, pPriceRm);
-  inpTotal.value = numToStr(total.toString(), pPriceDp);
-  var inpTotalVsb = document.getElementById(nameEntity + "itsTotalVsb");
+//calculate total and tax cause price/quantity changed:
+function bsClcToTx(pInp, pEntNm, pPriNm, pPrDp, pPriceRm, pInTx, pTxDp, pTxRm) {
+  var inpPrice = document.getElementById(pEntNm + pPriNm);
+  var price = bsStrFlt(inpPrice.value);
+  var inpQuantity = document.getElementById(pEntNm + "quan");
+  var quantity = bsStrFlt(inpQuantity.value);
+  var inpTotal = document.getElementById(pEntNm + "tot");
+  var total = bsRound(price * quantity, pPrDp, pPriceRm);
+  inpTotal.value = bsNumStr(total.toString(), pPrDp);
+  var inpTotalVsb = document.getElementById(pEntNm + "totVsb");
   if (inpTotalVsb != null) {
     inpTotalVsb.value = inpTotal.value;
     bsInpChn(inpTotalVsb);
@@ -391,67 +392,105 @@ function calcTotalTax(pInp, nameEntity, pPriceNm, pPriceDp, pPriceRm, pIsTaxIncl
     bsInpChn(inpTotal);
   }
   bsInpChn(pInp);
-  calcTax(nameEntity, total, pIsTaxIncluded, pTaxDp, pTaxRm);
+  bsClcTx(pEntNm, total, pInTx, pTxDp, pTxRm);
 };
-
-function setTaxCat(pTcRate, pTcNm, pIdDomBasePicker, pIsTaxIncluded, pTaxDp, pTaxRm, pPriceDp) {
-  var whoPicking = BSSTATE["WhoPi"][pIdDomBasePicker];
-  var btnTaxDestination = document.getElementById(whoPicking["pigEnt"] + "btnTaxDestination");
-  var inpTaxNm = document.getElementById(whoPicking["pigEnt"] + "taxCategory");
-  var inpTaxRate = document.getElementById(whoPicking["pigEnt"] + "itsPercentage");
-  if (btnTaxDestination == null) {
+//set tax category from selected item:
+function bsSetTxCt(pRate, pTcNm, pIdDom, pInTx, pTxDp, pTxRm, pPrDp) {
+  var whoPicking = BSSTATE["WhoPi"][pIdDom];
+  var btTxDs = document.getElementById(whoPicking["pigEnt"] + "btTxDs");
+  var inpTaxNm = document.getElementById(whoPicking["pigEnt"] + "txCt");
+  var inpTaxRate = document.getElementById(whoPicking["pigEnt"] + "rate");
+  if (btTxDs == null) {
     inpTaxNm.value = pTcNm;
     if (inpTaxRate != null) { // aggregate or only rate
-      inpTaxRate.value = numToStr(pTcRate.toString(), pTaxDp);
-      calcTaxFromTot(whoPicking["pigEnt"], pIsTaxIncluded, pPriceDp, pTaxRm);
+      inpTaxRate.value = bsNumStr(pRate.toString(), pTxDp);
+      bsClcTxFrTo(whoPicking["pigEnt"], pInTx, pPrDp, pTxRm);
       bsInpChn(inpTaxRate);
     }
   } else {
-    btnTaxDestination.style.display="inherit";
+    btTxDs.style.display="inherit";
     inpTaxNm.value = "";
     if (inpTaxRate != null) { // aggregate or only rate
       inpTaxRate.value = "";
-      calcTaxFromTot(whoPicking["pigEnt"], pIsTaxIncluded, pPriceDp, pTaxRm);
+      bsClcTxFrTo(whoPicking["pigEnt"], pInTx, pPrDp, pTxRm);
       bsInpChn(inpTaxRate);
     }
   }
   bsInpChn(inpTaxNm);
 };
-
-function setDestTaxCat(pTcRate, pTcNm, pEntityName, pIsTaxIncluded, pTaxDp, pTaxRm, pPriceDp) {
-  var inpTaxNm = document.getElementById(pEntityName + "taxCategory");
+//set revealed tax category from tax destination:
+function bsSetDstTx(pRate, pTcNm, pEntNm, pInTx, pTxDp, pTxRm, pPrDp) {
+  var inpTaxNm = document.getElementById(pEntNm + "txCt");
   inpTaxNm.value = pTcNm;
   bsInpChn(inpTaxNm);
-  var inpTaxRate = document.getElementById(pEntityName + "itsPercentage");
+  var inpTaxRate = document.getElementById(pEntNm + "rate");
   if (inpTaxRate != null) { // aggregate or only rate
-    inpTaxRate.value = numToStr(pTcRate.toString(), pTaxDp);
+    inpTaxRate.value = bsNumStr(pRate.toString(), pTxDp);
     bsInpChn(inpTaxRate);
-    calcTaxFromTot(pNameEntity, pIsTaxIncluded, pPriceDp, pTaxRm);
+    bsClcTxFrTo(pEntNm, pInTx, pPrDp, pTxRm);
   }
-  var btnTaxDestination = document.getElementById(pEntityName + "btnTaxDestination");
-  btnTaxDestination.style.display="none";
+  var btTxDs = document.getElementById(pEntNm + "btTxDs");
+  btTxDs.style.display="none";
 };
-
-function calcTaxFromTot(nameEntity, pIsTaxIncluded, pPriceDp, pTaxRm) {
-  var inpTotal = document.getElementById(nameEntity + "itsTotal");
-  var total = strToFloat(inpTotal.value);
-  calcTax(nameEntity, total, pIsTaxIncluded, pPriceDp, pTaxRm);
+//calculate tax after setting tax category:
+function bsClcTxFrTo(pEntNm, pInTx, pPrDp, pTxRm) {
+  var inpTotal = document.getElementById(pEntNm + "tot");
+  var total = bsStrFlt(inpTotal.value);
+  bsClcTx(pEntNm, total, pInTx, pPrDp, pTxRm);
 };
-
-function calcTax(pNameEntity, pTotal, pIsTaxIncluded, pPriceDp, pTaxRm) {
-  var inpTaxRate = document.getElementById(pNameEntity + "itsPercentage");
-  var inpTaxTotal = document.getElementById(pNameEntity + "totalTaxes");
+//calculate tax:
+function bsClcTx(pEntNm, pTot, pInTx, pPrDp, pTxRm) {
+  var inpTaxRate = document.getElementById(pEntNm + "rate");
+  var inpTaxTotal = document.getElementById(pEntNm + "toTx");
   var taxTotal;
   if (inpTaxRate.value == "") {
     taxTotal = 0.0;
   } else {
-    var taxRate = strToFloat(inpTaxRate.value);
-    if (pIsTaxIncluded) {
-      taxTotal = numRound(pTotal-(pTotal/(1.0+taxRate/100.0)),  pPriceDp, pTaxRm);
+    var taxRate = bsStrFlt(inpTaxRate.value);
+    if (pInTx) {
+      taxTotal = bsRound(pTot-(pTot/(1.0+taxRate/100.0)),  pPrDp, pTxRm);
     } else {
-      taxTotal = numRound(pTotal*taxRate/100.0,  pPriceDp, pTaxRm);
+      taxTotal = bsRound(pTot*taxRate/100.0,  pPrDp, pTxRm);
     }
   }
-  inpTaxTotal.value = numToStr(taxTotal.toString(), pPriceDp);
+  inpTaxTotal.value = bsNumStr(taxTotal.toString(), pPrDp);
   bsInpChn(inpTaxTotal);
+};
+//calculate total = price*quantity
+function bsClcTot(pInp, pEntNm, pPriNm, pDecPl, pRm) {
+  var inpPrice = document.getElementById(pEntNm + pPriNm);
+  var price = bsStrFlt(inpPrice.value);
+  var inpQuantity = document.getElementById(pEntNm + "quan");
+  var quantity = bsStrFlt(inpQuantity.value);
+  var inpTotal = document.getElementById(pEntNm + "tot");
+  var total = bsRound(price * quantity, pDecPl, pRm);
+  var totals = bsNumStr(total.toString(), pDecPl);
+  inpTotal.value = totals;
+  var inpTotalVisible = document.getElementById(pEntNm + "totVsb");
+  if (inpTotalVisible != null) {
+    inpTotalVisible.value = totals;
+    bsInpChn(inpTotalVisible);
+  } else {
+    bsInpChn(inpTotal);
+  }
+  bsInpChn(pInp);
+};
+//calculate price = total/quantity
+function bsClcPri(pInp, pEntNm, pPriNm, pDecPl, pRm) {
+  var inpTotal = document.getElementById(pEntNm + "tot");
+  var total = bsStrFlt(inpTotal.value);
+  var inpQuantity = document.getElementById(pEntNm + "quan");
+  var quantity = bsStrFlt(inpQuantity.value);
+  var inpPrice = document.getElementById(pEntNm + pPriNm);
+  var price = bsRound(total/quantity, pDecPl, pRm);
+  var prices = bsNumStr(price.toString(), pDecPl);
+  inpPrice.value = prices;
+  var inpPriceVisible = document.getElementById(pEntNm + pPriNm + "Vsb");
+  if (inpPriceVisible != null) {
+    inpPriceVisible.value = prices;
+    bsInpChn(inpPriceVisible);
+  } else {
+    bsInpChn(inpPrice);
+  }
+  bsInpChn(pInp);
 };
