@@ -212,7 +212,7 @@ public class Bsa extends Activity implements OnClickListener {
       try {
         LogFile lg = new LogFile();
         lg.setPath(Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + "/starter");
+          .getAbsolutePath() + "/bseisst");
         lg.setClsImm(true);
         this.log = lg;
       } catch (Exception e) {
@@ -451,7 +451,7 @@ public class Bsa extends Activity implements OnClickListener {
       }
       if (certCa != null) {
         File pemFl = new File(Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + File.separator + "ajetty-ca.pem");
+    .getAbsolutePath() + File.separator + "ajetty-ca" + this.ajettyIn + ".pem");
         JcaPEMWriter pemWriter = null;
         try {
           OutputStreamWriter osw = new OutputStreamWriter(

@@ -41,7 +41,7 @@ public class LoggerFileAndroid extends AILoggerLog {
   protected final void createLogger() {
     LogFileAdp logger = new LogFileAdp();
     String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
-    logger.setPath(dir + "/ajetty-bsa");
+    logger.setPath(dir + "/ajetty-eis");
     Log.i("A-Jetty", "> Log file path: " + logger.getPath());
     setLogger(logger);
   }
