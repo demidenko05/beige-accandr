@@ -400,8 +400,17 @@ tr:hover {
 }
 
 @media only screen and (max-width: 768px) {
+  .tbl-fieldset {
+    width: 99%;
+  }
+  .form-std form {
+    padding-top: .3rem;
+    padding-bottom: .3rem;
+    padding-left: initial;
+    padding-right: initial;
+  }
   .dropdown-content a {
-      padding: .6rem .3rem;
+    padding: .6rem .3rem;
   }
   .picked-appearence {
     width: 75%;

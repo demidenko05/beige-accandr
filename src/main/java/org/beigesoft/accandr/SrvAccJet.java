@@ -131,7 +131,13 @@ public class SrvAccJet extends Service {
    */
   @Override
   public final void onDestroy() {
-    //nothing;
+    synchronized (this) {
+      if (!this.isActionPerforming) {
+        this.isActionPerforming = true;
+        StopThread stThread = new StopThread();
+        stThread.start();
+      }
+    }
   }
 
   /**

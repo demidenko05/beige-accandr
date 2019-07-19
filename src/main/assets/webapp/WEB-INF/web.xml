@@ -43,10 +43,6 @@ See LICENSE in base folder
     <param-value>true</param-value>
   </context-param>
   <context-param>
-    <param-name>fastLoc</param-name>
-    <param-value>true</param-value>
-  </context-param>
-  <context-param>
     <param-name>writeTi</param-name>
     <param-value>1</param-value>
   </context-param>
@@ -681,11 +677,6 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.itub_jsp</servlet-name>
-        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.itub_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.blnr_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.blnr_jsp</servlet-class>
     </servlet>
@@ -861,6 +852,16 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.aict_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.aict_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.cost_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.cost_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.max_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.max_jsp</servlet-class>
     </servlet>
@@ -891,6 +892,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.prqt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.prqt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.gnc_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.gnc_jsp</servlet-class>
     </servlet>
@@ -918,11 +924,6 @@ description, distributable, and context-param elements.
     <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.omTxi_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.omTxi_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.itad_jsp</servlet-name>
-        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.mbl.in.itad_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -1156,6 +1157,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.dits_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.dits_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.bln_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.bln_jsp</servlet-class>
     </servlet>
@@ -1253,11 +1259,6 @@ description, distributable, and context-param elements.
     <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ida_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.ida_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.itub_jsp</servlet-name>
-        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.itub_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -1436,6 +1437,16 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.aict_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.aict_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.cost_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.cost_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.max_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.max_jsp</servlet-class>
     </servlet>
@@ -1466,6 +1477,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.prqt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.prqt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.gnc_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.gnc_jsp</servlet-class>
     </servlet>
@@ -1493,11 +1509,6 @@ description, distributable, and context-param elements.
     <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.omTxi_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.omTxi_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.itad_jsp</servlet-name>
-        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.itad_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -2226,11 +2237,6 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.itub_jsp</servlet-name>
-        <url-pattern>/WEB-INF/jsp/mbl/in/itub.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.blnr_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/mbl/in/blnr.jsp</url-pattern>
     </servlet-mapping>
@@ -2406,6 +2412,16 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.aict_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/aict.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.cost_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/cost.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.max_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/mbl/in/max.jsp</url-pattern>
     </servlet-mapping>
@@ -2436,6 +2452,11 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.prqt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/mbl/in/prqt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.gnc_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/mbl/in/gnc.jsp</url-pattern>
     </servlet-mapping>
@@ -2463,11 +2484,6 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.omTxi_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/mbl/in/omTxi.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.mbl.in.itad_jsp</servlet-name>
-        <url-pattern>/WEB-INF/jsp/mbl/in/itad.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -2701,6 +2717,11 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.dits_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/dits.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.bln_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/st/bln.jsp</url-pattern>
     </servlet-mapping>
@@ -2798,11 +2819,6 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.ida_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/ida.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.itub_jsp</servlet-name>
-        <url-pattern>/WEB-INF/jsp/in/itub.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -2981,6 +2997,16 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.aict_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/aict.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.cost_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/cost.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.max_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/max.jsp</url-pattern>
     </servlet-mapping>
@@ -3011,6 +3037,11 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.prqt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/prqt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.gnc_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/gnc.jsp</url-pattern>
     </servlet-mapping>
@@ -3038,11 +3069,6 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.omTxi_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/omTxi.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.itad_jsp</servlet-name>
-        <url-pattern>/WEB-INF/jsp/in/itad.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
