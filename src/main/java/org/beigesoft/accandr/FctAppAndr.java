@@ -58,6 +58,7 @@ import org.beigesoft.web.FctMail;
 import org.beigesoft.acc.fct.FctAcc;
 import org.beigesoft.acc.fct.FcEnPrAc;
 import org.beigesoft.acc.fct.FcPrNtAc;
+import org.beigesoft.acc.fct.FcPrNtAd;
 import org.beigesoft.acc.fct.FcPrFlAc;
 import org.beigesoft.acc.fct.FcCnToStAi;
 import org.beigesoft.acc.fct.FcFlFdAi;
@@ -177,6 +178,9 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     fctPrcNtrAj.setFctApp(this);
     fctPrcNtrAj.setCntx(cntx);
     fpasad.add(fctPrcNtrAj);
+    FcPrNtAd<Cursor> fctPrcNtrAd = new FcPrNtAd<Cursor>();
+    fctPrcNtrAd.setFctBlc(this.fctBlc);
+    fpasad.add(fctPrcNtrAd);
     this.fctBlc.getFctDt().setFctsPrcAd(fpasad);
     Set<IFctPrcFl> fcspf = new HashSet<IFctPrcFl>();
     FcPrFlAc<Cursor> fcpf = new FcPrFlAc<Cursor>();
