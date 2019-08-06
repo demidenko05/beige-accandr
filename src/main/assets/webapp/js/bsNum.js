@@ -117,11 +117,7 @@ function bsNumStr(pNumber, pDecPl) {
  */
 function bsStrFlt(pNumber) {
   if (BSNUMVS.decGrSep !== "") {
-    var sa = pNumber.split(BSNUMVS.decGrSep);
-    pNumber = "";
-    for (i = 0; i < sa.length; i++) {
-      pNumber = pNumber + sa[i];
-    }
+    pNumber = pNumber.replace(new RegExp(BSNUMVS.decGrSep, "g"), "");
   }
   if (BSNUMVS.decSep !== ".") {
     pNumber = pNumber.replace(BSNUMVS.decSep, ".");

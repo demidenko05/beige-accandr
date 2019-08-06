@@ -87,6 +87,7 @@ public class FctAppAndr implements IFctAsm<Cursor> {
   public FctAppAndr() throws Exception {
     this.fctBlc = new FctBlc<Cursor>();
     this.fctBlc.getFctDt().setIsAndr(true);
+    this.fctBlc.getFctDt().setClsImm(true);
     //TODO cause android-maven-plugin duplicates problem:
     this.fctBlc.getFctDt().setDbUrl("bseisa.sqlite");
   }
