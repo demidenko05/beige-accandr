@@ -212,10 +212,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               //adding group separator:
               e.target.selectionStart = ss + 1;
               e.target.selectionEnd = ss + 1;
-            } else if (ss != 0 && e.target.value.length - e.target.prevVal.length == -2) {
+            } else if (ss > 1 && e.target.value.length - e.target.prevVal.length == -2) {
               //deleting group separator except digit before zero:
               e.target.selectionStart = ss - 1;
               e.target.selectionEnd = ss - 1;
+            } else if (ss == 0 && e.target.value.startsWith("0")) {
+              e.target.selectionStart = 1;
+              e.target.selectionEnd = 1;
             } else {
               e.target.selectionStart = ss;
               e.target.selectionEnd = ss;
