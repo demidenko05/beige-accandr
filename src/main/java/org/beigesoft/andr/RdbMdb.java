@@ -220,15 +220,14 @@ public class RdbMdb extends ARdb<Cursor> {
   @Override
   public final IRecSet<Cursor> retRs(
     final String pSelect) throws ExcCode {
-    boolean isDbgSh = getLog().getDbgSh(getClass())
-      && getLog().getDbgFl() < 11005 && getLog().getDbgCl() > 11003;
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16000);
     try {
-      if (isDbgSh) {
+      if (dbgSh) {
         getLog().debug(null, getClass(), "try to retrieve records: " + pSelect);
       }
       Cursor rs = lazDb().rawQuery(pSelect, null);
       RecSet rsa = new RecSet(rs);
-      if (isDbgSh) {
+      if (dbgSh) {
         getLog().debug(null, getClass(), "Recordset: " + rsStr(rsa));
       }
       return rsa;
@@ -248,10 +247,9 @@ public class RdbMdb extends ARdb<Cursor> {
    **/
   @Override
   public final void exec(final String pQuery) throws Exception {
-    boolean isDbgSh = getLog().getDbgSh(getClass())
-      && getLog().getDbgFl() < 11006 && getLog().getDbgCl() > 11004;
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16001);
     try {
-      if (isDbgSh) {
+      if (dbgSh) {
         getLog().debug(null, getClass(), "try to execute query: " + pQuery);
       }
       lazDb().execSQL(pQuery);
@@ -277,11 +275,10 @@ public class RdbMdb extends ARdb<Cursor> {
   @Override
   public final <T extends IHasId<?>> int update(final Class<T> pCls,
     final ColVals pCv, final String pWhe) throws Exception {
-    boolean isDbgSh = getLog().getDbgSh(getClass())
-      && getLog().getDbgFl() < 11007 && getLog().getDbgCl() > 11005;
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16002);
     try {
       ContentValues cntVals = cnvToCntValsUpd(pCls, pCv);
-      if (isDbgSh) {
+      if (dbgSh) {
         getLog().debug(null, getClass(), "try to update : " + pCls + " where: "
         + pWhe + " cv: " + this.srvClVl.str(pCls, pCv) + ", ACV: " + cntVals);
       }
@@ -309,17 +306,16 @@ public class RdbMdb extends ARdb<Cursor> {
   @Override
   public final <T extends IHasId<?>> long insert(final Class<T> pCls,
     final ColVals pCv) throws Exception {
-    boolean isDbgSh = getLog().getDbgSh(getClass())
-      && getLog().getDbgFl() < 11008 && getLog().getDbgCl() > 11006;
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16003);
     try {
       ContentValues cntVals = cnvToCntValsIns(pCls, pCv);
-      if (isDbgSh) {
+      if (dbgSh) {
         getLog().debug(null, getClass(), "try to insert : " + pCls + " cv: "
           + this.srvClVl.str(pCls, pCv) + " ACV: " + cntVals);
       }
       long result = lazDb()
         .insert(pCls.getSimpleName().toUpperCase(), null, cntVals);
-      if (isDbgSh) {
+      if (dbgSh) {
         getLog().debug(null, getClass(), "result insert: " + result);
       }
       if (result == -1) {
@@ -348,10 +344,9 @@ public class RdbMdb extends ARdb<Cursor> {
   @Override
   public final int delete(final String pTbl,
     final String pWhe) throws Exception {
-    boolean isDbgSh = getLog().getDbgSh(getClass())
-      && getLog().getDbgFl() < 11009 && getLog().getDbgCl() > 11007;
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16004);
     try {
-      if (isDbgSh) {
+      if (dbgSh) {
         getLog().debug(null, getClass(), "try to delete t: " + pTbl
           + " where: " + pWhe);
       }
