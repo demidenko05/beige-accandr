@@ -67,6 +67,7 @@ import org.beigesoft.ajetty.FcPrNtAj;
 import org.beigesoft.ajetty.GetUsrCrd;
 import org.beigesoft.ajetty.IHpCrypt;
 import org.beigesoft.ajetty.HpCrypt;
+import org.beigesoft.ws.fct.FctWs;
 
 /**
  * <p>Final configuration factory for Android.</p>
@@ -151,6 +152,7 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     this.fctBlc.getFctsAux().add(new FctDbCp<Cursor>());
     this.fctBlc.getFctsAux().add(new FctMail<Cursor>());
     this.fctBlc.getFctsAux().add(new FctAcc<Cursor>());
+    this.fctBlc.getFctsAux().add(new FctWs<Cursor>());
     this.fctBlc.getFctsAux().add(new FctFlRep<Cursor>());
     FctAndr fctAndr = new FctAndr();
     fctAndr.setCntx(cntx);

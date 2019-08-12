@@ -233,13 +233,48 @@ See LICENSE in base folder
     <url-pattern>/sec/pdf/*</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>csvRepAd</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WReport
+    </servlet-class>
+    <init-param>
+      <param-name>hndNm</param-name>
+      <param-value>HndCsvWri</param-value>
+    </init-param>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,HndAcc</param-value>
+    </init-param>
+    <init-param>
+      <param-name>fileEx</param-name>
+      <param-value>csv</param-value>
+    </init-param>
+    <init-param>
+      <param-name>contTy</param-name>
+      <param-value>application/csv</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>csvRepAd</servlet-name>
+    <url-pattern>/adm/csv/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>adm</servlet-name>
     <servlet-class>
       org.beigesoft.web.WHndsJsp
     </servlet-class>
     <init-param>
       <param-name>hndNms</param-name>
-      <param-value>HndI18nRq,hnAdEnRq</param-value>
+      <param-value>HndI18nRq,HndAcc,hnAdEnRq</param-value>
     </init-param>
     <init-param>
       <param-name>dirJsp</param-name>
@@ -270,7 +305,7 @@ See LICENSE in base folder
     </servlet-class>
     <init-param>
       <param-name>hndNms</param-name>
-      <param-value>HndI18nRq,hnAdEnRq</param-value>
+      <param-value>HndI18nRq,HndAcc,hnAdEnRq</param-value>
     </init-param>
     <init-param>
       <param-name>dirJsp</param-name>
@@ -301,7 +336,7 @@ See LICENSE in base folder
     </servlet-class>
     <init-param>
       <param-name>hndNms</param-name>
-      <param-value>HndI18nRq,hnNtRqAd</param-value>
+      <param-value>HndI18nRq,HndAcc,hnNtRqAd</param-value>
     </init-param>
     <init-param>
       <param-name>dirJsp</param-name>
@@ -410,6 +445,11 @@ description, distributable, and context-param elements.
     <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ind_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.ind_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.prilj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.prilj_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -540,6 +580,11 @@ description, distributable, and context-param elements.
     <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.lj_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.lj_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.csvpj_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.csvpj_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -903,6 +948,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.mafnv_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.mafnv_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dis_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.dis_jsp</servlet-class>
     </servlet>
@@ -1140,6 +1190,11 @@ description, distributable, and context-param elements.
     <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.invh_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.invh_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.csvp_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.csvp_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -1403,6 +1458,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.i18n_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.i18n_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.pinl_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.st.pinl_jsp</servlet-class>
     </servlet>
@@ -1518,6 +1578,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.csvp_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.csvp_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.abo_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.tml.abo_jsp</servlet-class>
     </servlet>
@@ -1557,6 +1622,11 @@ description, distributable, and context-param elements.
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.rep.blnsf_jsp</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.rep.prilf_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.rep.prilf_jsp</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>org.apache.jsp.err_jsp</servlet-name>
         <url-pattern>/err.jsp</url-pattern>
@@ -1585,6 +1655,11 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.ind_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/ind.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.prilj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/prilj.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -1715,6 +1790,11 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.lj_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/lj.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.csvpj_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/csvpj.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -2078,6 +2158,11 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.mafnv_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/mafnv.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.dis_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/dis.jsp</url-pattern>
     </servlet-mapping>
@@ -2315,6 +2400,11 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.invh_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/invh.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.csvp_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/csvp.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -2578,6 +2668,11 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.i18n_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/st/i18n.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.st.pinl_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/st/pinl.jsp</url-pattern>
     </servlet-mapping>
@@ -2693,6 +2788,11 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.csvp_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/tml/csvp.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.tml.abo_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/tml/abo.jsp</url-pattern>
     </servlet-mapping>
@@ -2730,6 +2830,11 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.rep.blnsf_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/rep/blnsf.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.rep.prilf_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/rep/prilf.jsp</url-pattern>
     </servlet-mapping>
 
 <!--
