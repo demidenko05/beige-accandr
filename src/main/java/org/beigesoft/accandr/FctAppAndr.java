@@ -68,6 +68,8 @@ import org.beigesoft.ajetty.GetUsrCrd;
 import org.beigesoft.ajetty.IHpCrypt;
 import org.beigesoft.ajetty.HpCrypt;
 import org.beigesoft.ws.fct.FctWs;
+import org.beigesoft.ws.fct.FcEnPrTr;
+import org.beigesoft.ws.hld.HlTrEnPr;
 
 /**
  * <p>Final configuration factory for Android.</p>
@@ -164,6 +166,9 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     FcEnPrAc<Cursor> fcep = new FcEnPrAc<Cursor>();
     fcep.setFctBlc(this.fctBlc);
     fcsenpr.add(fcep);
+    FcEnPrTr<Cursor> fcepws = new FcEnPrTr<Cursor>();
+    fcepws.setFctBlc(this.fctBlc);
+    fcsenpr.add(fcepws);
     this.fctBlc.getFctDt().setFctsPrcEnt(fcsenpr);
     Set<IHlNmClSt> hldsBsEnPr = new LinkedHashSet<IHlNmClSt>();
     hldsBsEnPr.add(new HlAcEnPr());
@@ -200,6 +205,9 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     ffdst.setFctBlc(this.fctBlc);
     fcsFlFdSt.add(ffdst);
     this.fctBlc.getFctDt().setFcsFlFdSt(fcsFlFdSt);
+    Set<IHlNmClSt> hldsAdEnPr = new LinkedHashSet<IHlNmClSt>();
+    hldsAdEnPr.add(new HlTrEnPr());
+    this.fctBlc.getFctDt().setHldsAdEnPr(hldsAdEnPr);
     //creating/upgrading DB on start:
     Orm<Cursor> orm = this.fctBlc.lazOrm(pRvs);
     orm.init(pRvs);
