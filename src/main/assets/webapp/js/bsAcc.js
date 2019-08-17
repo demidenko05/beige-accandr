@@ -321,42 +321,6 @@ function bsBslDcTyChg(pInp) {
     if (bslEnrMtc != null) { bslEnrMtc.style.display="none"; }
   }
 };
-
-function selectCsvPath(pVal, pPathAppr) {
-  var CsvCldtIdx = document.getElementById("CsvCldtIdx");
-  var CsvClfldPh = document.getElementById("CsvClfldPh");
-  var dataPath = document.getElementById("dataPath");
-  var scIdx = pVal.indexOf(";");
-  if (scIdx == -1) {
-    CsvCldtIdx.value = pVal;
-    CsvClfldPh.value = "";
-  } else {
-    var arr = pVal.split(";");
-    CsvCldtIdx.value = arr[0];
-    CsvClfldPh.value = arr[1];
-  }
-  dataPath.value = pPathAppr;
-  bsInpChn(dataPath);
-};
-
-function clearCsvPath() {
-  var CsvCldtIdx = document.getElementById("CsvCldtIdx");
-  var dataPath = document.getElementById("dataPath");
-  var CsvClfldPh = document.getElementById("CsvClfldPh");
-  CsvClfldPh.value = "";
-  CsvCldtIdx.value = "";
-  dataPath.value = "";
-  bsInpChn(dataPath);
-};
-
-function openCsvPathPicker(pPath, pReadNm) {
-  var picker = document.getElementById("picCsvPth" + pReadNm + "Dlg");
-  if (picker != null) {
-      picker.showModal();
-  } else {
-    bsGtAjx('GET', pPath + pReadNm);
-  }
-};
 //calculate price and tax cause total/quantity changed:
 function bsClcPriTx(pInp, pEntNm, pPriNm, pPrDp, pPriceRm, pInTx, pTxDp, pTxRm) {
   var inpTotal = document.getElementById(pEntNm + "tot");

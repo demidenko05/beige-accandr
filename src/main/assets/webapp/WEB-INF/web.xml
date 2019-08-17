@@ -92,7 +92,7 @@ See LICENSE in base folder
     </servlet-class>
     <init-param>
       <param-name>hndNms</param-name>
-      <param-value>HnFirstUsr,HndI18nRq</param-value>
+      <param-value>HnFirstUsr,HndI18nRq,HndTrd</param-value>
     </init-param>
     <init-param>
       <param-name>dirJsp</param-name>
@@ -409,6 +409,68 @@ See LICENSE in base folder
   <servlet-mapping>
     <servlet-name>rplXml</servlet-name>
     <url-pattern>/adm/xml/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>sel</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WHndsJsp
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,HndAcc,HndTrd,hnSeEnRq</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>defJsp</param-name>
+      <param-value>sel</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>10000</max-file-size>
+      <max-request-size>50000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sel</servlet-name>
+    <url-pattern>/sel/srv/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>uplSel</servlet-name>
+    <servlet-class>
+      org.beigesoft.web.WUplSng
+    </servlet-class>
+    <init-param>
+      <param-name>hndNms</param-name>
+      <param-value>HndI18nRq,HndAcc,HndTrd,hnSeEnRq</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirJsp</param-name>
+      <param-value>/WEB-INF/jsp/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>defJsp</param-name>
+      <param-value>sel</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logNm</param-name>
+      <param-value>logStd</param-value>
+    </init-param>
+    <multipart-config>
+      <max-file-size>2000000</max-file-size>
+      <max-request-size>3000000</max-request-size>
+      <file-size-threshold>2000000</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>uplSel</servlet-name>
+    <url-pattern>/sel/upl/*</url-pattern>
   </servlet-mapping>
   
 <!--
@@ -998,6 +1060,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.colCnt_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.colCnt_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.usr_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.usr_jsp</servlet-class>
     </servlet>
@@ -1070,6 +1137,11 @@ description, distributable, and context-param elements.
     <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.cost_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.cost_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.pwd_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.pwd_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -2208,6 +2280,11 @@ description, distributable, and context-param elements.
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.colCnt_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/colCnt.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.usr_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/usr.jsp</url-pattern>
     </servlet-mapping>
@@ -2280,6 +2357,11 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.cost_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/cost.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.pwd_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/pwd.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -2864,13 +2946,26 @@ env-entry, and ejb-ref elements should follow this fragment.
   <security-role>
     <role-name>user</role-name>
   </security-role>
+  <security-role>
+    <role-name>seller</role-name>
+  </security-role>
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name>All authorized only</web-resource-name>
+      <web-resource-name>S.E.Seller only</web-resource-name>
+      <url-pattern>/sel/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>seller</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Users and admins only</web-resource-name>
       <url-pattern>/sec/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>*</role-name>
+      <role-name>admin</role-name>
+      <role-name>user</role-name>
     </auth-constraint>
   </security-constraint>
   <security-constraint>

@@ -480,3 +480,39 @@ function bsIniInpNumStep(pUsedSteps, pParent) {
     }
   });
 };
+//selects/sets CSV path
+function bsSetCsvPth(pVal, pPathAppr) {
+  var CsvCldtIdx = document.getElementById("CsvCldtIdx");
+  var CsvClfldPh = document.getElementById("CsvClfldPh");
+  var dataPath = document.getElementById("dataPath");
+  var scIdx = pVal.indexOf(";");
+  if (scIdx == -1) {
+    CsvCldtIdx.value = pVal;
+    CsvClfldPh.value = "";
+  } else {
+    var arr = pVal.split(";");
+    CsvCldtIdx.value = arr[0];
+    CsvClfldPh.value = arr[1];
+  }
+  dataPath.value = pPathAppr;
+  bsInpChn(dataPath);
+};
+//Clears CSV path:
+function bsClCsvPth() {
+  var CsvCldtIdx = document.getElementById("CsvCldtIdx");
+  var dataPath = document.getElementById("dataPath");
+  var CsvClfldPh = document.getElementById("CsvClfldPh");
+  CsvClfldPh.value = "";
+  CsvCldtIdx.value = "";
+  dataPath.value = "";
+  bsInpChn(dataPath);
+};
+//picks CSV path:
+function bsPickCsvPth(pPath,pReadNm) {
+  var picker = document.getElementById("piCsvPth" + pReadNm + "Dlg");
+  if (picker != null) {
+      picker.showModal();
+  } else {
+    bsGtAjx('GET', pPath + pReadNm);
+  }
+};
