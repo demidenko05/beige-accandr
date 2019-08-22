@@ -113,8 +113,8 @@ function bsSelSac(saId, subaccType, subaccAp, pIdDmPi) {
   bsInpChn(inpVsb);
   document.getElementById(pIdDmPi+"Dlg").close();
 };
-
-function selectChooseableSpecType(typeId, typeAp, pIdDmPi) {
+//Select chooseable specifics type
+function bsSelChoSpTy(typeId, typeAp, pIdDmPi) {
   whoPicking = BSSTATE["WhoPi"][pIdDmPi];
   document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] +"TyId").setAttribute("value", typeId);
   var inpAp = document.getElementById(whoPicking["pigEnt"] + whoPicking["piFld"] + "TyAp");
