@@ -360,7 +360,7 @@ function bsPick(pidEnt, pigEnt, piFld, adPr){
           bsShwErr(BSMSG['2_pickers_opened_already_for'] + pidEnt);
         }
       } else {
-        piRnd = "pdhj";
+        piRnd = "pdj";
       }
     }
   } else {

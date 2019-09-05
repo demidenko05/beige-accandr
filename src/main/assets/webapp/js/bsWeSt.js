@@ -25,8 +25,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-function setCartItem(pItTyp, pItId, pItNm, pPrice, pQuant, pAvQuan, pLnId, pUomId, pUomNm, pUStep, pPriceDp, pPriceRm) {
+//Opens cart to edit or add item:
+function bsSetCartItm(pItTyp, pItId, pItNm, pPri, pQuan, pAvQuan, pLnId, pUomId, pUomNm, pUnSt, pPriDp, pPriRm) {
   var pref = "";
   if (pLnId != null) {
     pref = "Edit";
@@ -38,70 +38,70 @@ function setCartItem(pItTyp, pItId, pItNm, pPrice, pQuant, pAvQuan, pLnId, pUomI
   }
   var itNm = document.getElementById("itNm" + pref);
   itNm.value = pItNm;
-  var quant = document.getElementById("quant" + pref);
-  $(quant).bsInpNum({step: pUStep, nmax: pAvQuan});
-  var price = document.getElementById("price" + pref);
-  price.value = numToStr(pPrice.toString(), pPriceDp);
+  var quan = document.getElementById("quan" + pref);
+  $(quan).bsInpNum({step: pUnSt, nmax: pAvQuan});
+  var pri = document.getElementById("pri" + pref);
+  pri.value = bsNumStr(pPri.toString(), pPriDp);
   var uomNm = document.getElementById("uomNm" + pref);
   uomNm.value = pUomNm;
   var uomId = document.getElementById("uomId" + pref);
   uomId.value = pUomId;
-  quant.value = numToStr(pQuant.toString(), quant.decPl);
+  quan.value = bsNumStr(pQuan.toString(), quan.decPl);
   var avQuan = document.getElementById("avQuan" + pref);
   avQuan.value = pAvQuan;
-  var unStep = document.getElementById("unStep" + pref);
-  unStep.value = pUStep;
+  var unSt = document.getElementById("unSt" + pref);
+  unSt.value = pUnSt;
   var itTyp = document.getElementById("itTyp" + pref);
   itTyp.value = pItTyp;
   var itId = document.getElementById("itId" + pref);
   itId.value = pItId;
-  refreshCartItemTotal(pref, pPriceDp, pPriceRm);
+  bsRefCaItTo(pref, pPriDp, pPriRm);
 };
-
-function refreshCartItemTotal(pPref, pPriceDp, pPriceRm) {
-  var price = document.getElementById("price" + pPref);
-  var quant = document.getElementById("quant" + pPref);
-  var total = document.getElementById("total" + pPref);
-  var pr = strToFloat(price.value);
-  var qu = strToFloat(quant.value);
-  var tot = numRound(pr * qu, pPriceDp, pPriceRm);
-  total.value = numToStr(tot.toString(), pPriceDp);
+//refreshes cart item total:
+function bsRefCaItTo(pPref, pPriDp, pPriRm) {
+  var pri = document.getElementById("pri" + pPref);
+  var quan = document.getElementById("quan" + pPref);
+  var tot = document.getElementById("tot" + pPref);
+  var pr = bsStrFlt(pri.value);
+  var qu = bsStrFlt(quan.value);
+  var to = bsRound(pr * qu, pPriDp, pPriRm);
+  tot.value = bsNumStr(to.toString(), pPriDp);
 };
-
-function delCartItem(pItTyp, pItId, pItNm, pPrice, pQuant, pLnId, pPriceDp) {
+//deletes item from cart:
+function bsDelCartItm(pItTyp, pItId, pItNm, pPri, pQuan, pLnId, pPriDp) {
   var itNm = document.getElementById("itNmDel");
   itNm.value = pItNm;
-  var price = document.getElementById("priceDel");
-  price.value = pPrice;
-  var quant = document.getElementById("quantDel");
-  quant.value = pQuant;
-  var total = document.getElementById("totalDel");
-  var tot = pPrice * pQuant;
-  total.value = numToStr(tot.toString(), pPriceDp);
+  var pri = document.getElementById("priDel");
+  pri.value = pPri;
+  var quan = document.getElementById("quanDel");
+  quan.value = pQuan;
+  var tot = document.getElementById("totDel");
+  var to = pPri * pQuan;
+  tot.value = bsNumStr(to.toString(), pPriDp);
   var lnId = document.getElementById("lnIdDel");
   lnId.value = pLnId;
 };
-
-function onFilterNumberOperChanged(pSelect, pVal1Id, pVal2Id) {
+//handles on filter number operator changed event:
+function bsFltNumOpChg(pSelect, pVal1Id, pVal2Id) {
   var isDisabledV1 = pSelect.options[pSelect.selectedIndex].value == "";
   document.getElementById(pVal1Id).disabled = isDisabledV1;
   var isDisabledV2 = pSelect.options[pSelect.selectedIndex].value != "BETWEEN_INCLUDE";
   document.getElementById(pVal2Id).disabled = isDisabledV2;
 };
-
-function onCatalogOperChanged(pSelect, pFltCtValId, pRowCatId) {
+//handles on catalog operator changed event:
+function bsCatOprChg(pSelect, pFltCtValId, pRowCatId) {
   var fltCtVal = document.getElementById(pFltCtValId);
   var rowCat = document.getElementById(pRowCatId);
-  onFltCatalogChanged(pSelect, fltCtVal, rowCat);
+  bsFltCatChg(pSelect, fltCtVal, rowCat);
 };
-
-function onCatalogValChanged(pSelect, pFltCtOpId, pRowCatId) {
+//handles on catalog value changed event:
+function bsCatValChg(pSelect, pFltCtOpId, pRowCatId) {
   var fltCtOp = document.getElementById(pFltCtOpId);
   var rowCat = document.getElementById(pRowCatId);
-  onFltCatalogChanged(fltCtOp, pSelect, rowCat);
+  bsFltCatChg(fltCtOp, pSelect, rowCat);
 };
-
-function onFltCatalogChanged(pFltCtOp, pFltCtVal, pRowCat) {
+//handles on filter catalog changed event:
+function bsFltCatChg(pFltCtOp, pFltCtVal, pRowCat) {
   var isDisabledCatalog = pFltCtOp.options[pFltCtOp.selectedIndex].value != "";
   if (!isDisabledCatalog) {
     var i;

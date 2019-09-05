@@ -1,0 +1,100 @@
+.pagination {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+main {
+  padding: 3rem;
+}
+
+.oi-horh {
+  margin-top: 0.4rem;
+}
+
+.cat-name {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.first-cont {
+  margin-top: 1rem;
+}
+
+#toTop {
+  display: none;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  border: none;
+  background-color: #007bffba;
+  font-size: x-large;
+  color: white;
+  padding-left: .8rem;
+  padding-right: .8rem;
+  border-radius: 1.4rem;
+}
+
+#toTop:hover {
+  background-color: #084180ba;
+}
+
+.dimmed {
+  background-color: gray;
+}
+
+.navbar {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.navbar-brand-img {
+  padding-bottom: 0px;
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0.5rem;
+}
+.navbar-brand > img {
+  height: 2.6rem;
+  width: auto;
+}
+
+.subcatalog {
+  font-weight: bold;
+}
+
+.row {
+  margin-bottom: .3rem;
+}
+
+.specifics {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border: 1px solid;
+  border-color: #bfc7c7;
+}
+
+.embed-html {
+  border: groove;
+}
+
+@media only screen and (max-width: 768px) {
+  #toTop {
+    bottom: .5rem;
+    right: .5rem;
+  }
+  .cat-name {
+    margin-top: 3rem;
+  }
+  .navbar {
+    padding: 0.3rem;
+  }
+  main {
+    padding: 1rem;
+  }
+  .specifics {
+    padding-left: initial;
+    padding-right: initial;
+  }
+}
