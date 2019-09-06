@@ -236,11 +236,11 @@ public class Rdb extends ARdb<Cursor> {
    * <p>Retrieves records from DB.</p>
    * @param pSelect query SELECT
    * @return IRecSet record set
-   * @throws ExcCode - if an exception occured
+   * @throws Exception - if an exception occurred
    **/
   @Override
   public final synchronized IRecSet<Cursor> retRs(
-    final String pSelect) throws ExcCode {
+    final String pSelect) throws Exception {
     boolean dbgSh = getLog().getDbgSh(this.getClass(), 16000);
     try {
       if (dbgSh) {
@@ -264,7 +264,7 @@ public class Rdb extends ARdb<Cursor> {
    * <p>Executes any SQL query that returns no data.
    * E.g. PRAGMA, etc.</p>
    * @param pQuery query
-   * @throws ExcCode - if an exception occured
+   * @throws Exception - if an exception occurred
    **/
   @Override
   public final synchronized void exec(final String pQuery) throws Exception {
@@ -291,7 +291,7 @@ public class Rdb extends ARdb<Cursor> {
    * @param pCv type-safe map column name - column value
    * @param pWhe where conditions e.g. "itsId=2"
    * @return row count affected
-   * @throws ExcCode - if an exception occured
+   * @throws Exception - if an exception occurred
    **/
   @Override
   public final synchronized <T extends IHasId<?>> int update(
@@ -323,7 +323,7 @@ public class Rdb extends ARdb<Cursor> {
    * @param pCls entity class
    * @param pCv type-safe map column name - column value
    * @return Number inserted row (auto-generated or not) or -1 if error
-   * @throws ExcCode - if an exception occured
+   * @throws Exception - if an exception occurred
    **/
   @Override
   public final synchronized <T extends IHasId<?>> long insert(
@@ -361,7 +361,7 @@ public class Rdb extends ARdb<Cursor> {
    * @param pTbl table name
    * @param pWhe where conditions e.g. "itsId=2" or NULL -delete all
    * @return row count affected
-   * @throws ExcCode - if an exception occured
+   * @throws Exception - if an exception occurred
    **/
   @Override
   public final synchronized int delete(final String pTbl,
