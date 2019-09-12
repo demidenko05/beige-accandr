@@ -29,11 +29,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.beigesoft.accandr;
 
 import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 import android.app.Service;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.Context;
 import android.os.IBinder;
 
+import org.beigesoft.loga.Loga;
 import org.beigesoft.ajetty.BootEmbed;
 
 /**
@@ -66,10 +73,15 @@ public class SrvAccJet extends Service {
   private boolean isActionPerforming = false;
 
   /**
+   * <p>Loga.</p>
+   **/
+  private Loga loga = new Loga();
+
+  /**
    * <p>on create.</p>
    **/
   @Override
-  public final void onCreate() {
+  public final synchronized void onCreate() {
     AppPlus appPlus = (AppPlus) getApplicationContext();
     this.beansMap = appPlus.getBeansMap();
   }
@@ -80,7 +92,7 @@ public class SrvAccJet extends Service {
    * @return IBinder IBinder
    **/
   @Override
-  public final IBinder onBind(final Intent pIntent) {
+  public final synchronized IBinder onBind(final Intent pIntent) {
     return null;
   }
 
@@ -95,34 +107,84 @@ public class SrvAccJet extends Service {
    * @return int status
    */
   @Override
-  public final int onStartCommand(final Intent pIntent,
+  public final synchronized int onStartCommand(final Intent pIntent,
     final int pFlags, final int pStartId) {
     String action = pIntent.getAction();
     if (action.equals(ACTION_START)) {
-      synchronized (this) {
-        if (!this.isActionPerforming) {
-          this.isActionPerforming = true;
-          StartThread stThread = new StartThread();
-          stThread.start();
+      if (!this.isActionPerforming) {
+        this.isActionPerforming = true;
+        StartThread stThread = new StartThread();
+        stThread.start();
+      }
+      CharSequence text = getText(R.string.srvStrt);
+      PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+        new Intent(this, Bsa.class), 0);
+      Notification.Builder nfBld;
+      //Simple reflection way to avoid additional compile libraries
+      if (android.os.Build.VERSION.SDK_INT >= 26) {
+        try {
+          final String ntfChnlId = "BSEISCH";
+          NotificationManager notfMan = (NotificationManager)
+            getSystemService(NOTIFICATION_SERVICE);
+          Class[] argTypes = new Class[] {String.class, CharSequence.class,
+            Integer.TYPE};
+          Class ntfCnlCls = Class.forName("android.app.NotificationChannel");
+          Constructor ntfChnl = ntfCnlCls.getConstructor(argTypes);
+          argTypes = new Class[] {ntfCnlCls};
+          Method crNtfChnl = NotificationManager.class
+            .getDeclaredMethod("createNotificationChannel", argTypes);
+          int impDef = 3; //from source 29
+          crNtfChnl.invoke(notfMan, ntfChnl.newInstance(ntfChnlId,
+            ntfChnlId, impDef));
+          /*notfMan.createNotificationChannel(new NotificationChannel(
+                  ntfChnlId, ntfChnlId,
+                  NotificationManager.IMPORTANCE_DEFAULT));*/
+          argTypes = new Class[] {Context.class, String.class};
+          Constructor<Notification.Builder> nfBldCn = Notification.Builder.class
+            .getConstructor(argTypes);
+          nfBld = nfBldCn.newInstance(this, ntfChnlId);
+          //nfBld = new Notification.Builder(this, ntfChnlId);
+        } catch (Exception e) {
+          this.loga.error(null, getClass(), "Cant start service", e);
+          throw new RuntimeException(e);
         }
+      } else {
+        nfBld = new Notification.Builder(this);
+      }
+      // Set the info for the views that show in the ntfc panel.
+      Notification ntfc = nfBld.setSmallIcon(R.drawable.bsnotf)  // the icon
+        .setTicker(text)  // the status text
+        .setWhen(System.currentTimeMillis())  // the time stamp
+        .setContentTitle(getText(R.string.app_name))  // the label
+        .setContentText(text)  // the contents of the entry
+        .setContentIntent(contentIntent)  // The intent to send when clicked
+        .build();
+      if (android.os.Build.VERSION.SDK_INT >= 26) {
+        try {
+          Class[] argTypes = new Class[] {Integer.TYPE, Notification.class};
+          Method stFrg = Service.class
+            .getDeclaredMethod("startForeground", argTypes);
+          stFrg.invoke(this, R.string.srvStrt, ntfc);
+          //startForeground(R.string.srvStrt, ntfc);
+        } catch (Exception e) {
+          this.loga.error(null, getClass(), "Cant start service", e);
+          throw new RuntimeException(e);
+        }
+      } else {
+        startForeground(R.string.srvStrt, ntfc);
       }
     } else if (action.equals(ACTION_STOP)) {
-      synchronized (this) {
-        if (!this.isActionPerforming) {
-          this.isActionPerforming = true;
-          StopThread stThread = new StopThread();
-          stThread.start();
-        }
+      if (!this.isActionPerforming) {
+        this.isActionPerforming = true;
+        StopThread stThread = new StopThread();
+        stThread.start();
       }
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+      stopForeground(true);
       stopSelf();
     }
-    return START_NOT_STICKY; // Means we started the service, but don't want
-                             //it to restart in case it's killed.
+    // We want this service to continue running until it is explicitly
+    // stopped, so return sticky.
+    return START_STICKY;
   }
 
   /**
@@ -130,13 +192,11 @@ public class SrvAccJet extends Service {
    * @see android.app.Service#onDestroy().</p>
    */
   @Override
-  public final void onDestroy() {
-    synchronized (this) {
-      if (!this.isActionPerforming) {
-        this.isActionPerforming = true;
-        StopThread stThread = new StopThread();
-        stThread.start();
-      }
+  public final synchronized void onDestroy() {
+    if (!this.isActionPerforming) {
+      this.isActionPerforming = true;
+      StopThread stThread = new StopThread();
+      stThread.start();
     }
   }
 
@@ -145,7 +205,7 @@ public class SrvAccJet extends Service {
    * It invoked by start/stop threads.</p>
    * @return BootStrapEmbedded BootStrapEmbedded
    */
-  private BootEmbed getBootStrap() {
+  private synchronized BootEmbed getBootStrap() {
     BootEmbed bootStrap = null;
     // this.beansMap already synchronized
     Object bootStrapO = this.beansMap

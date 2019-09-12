@@ -215,10 +215,8 @@ public class FctAppAndrMdb implements IFctAsm<Cursor> {
     ch.setKsPassword(passw.toCharArray());
     Integer ajettyIn = (Integer) pCtxAttrs.getAttr("ajettyIn");
     ch.setAjettyIn(ajettyIn);
-    boolean isDbgSh = this.fctBlc.lazLogStd(pRvs).getDbgSh(getClass())
-      && this.fctBlc.lazLogStd(pRvs).getDbgFl() < 13001 && this.fctBlc
-        .lazLogStd(pRvs).getDbgCl() > 12999;
-    if (isDbgSh) {
+    boolean dbgSh = this.fctBlc.lazLogStd(pRvs).getDbgSh(getClass(), 16100);
+    if (dbgSh) {
       IRecSet<Cursor> rs = null;
       StringBuffer sb = new StringBuffer(" compile_options:\n");
       try {

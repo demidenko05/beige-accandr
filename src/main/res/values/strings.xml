@@ -26,4 +26,6 @@
   <string name="wasErr">There was errors!</string>
   <string name="newFlCop">New version of WEB static files has been copied!</string>
   <string name="dirCrFlCop">Beige Accounting directory has been  successfully created and WEB static files has been copied!</string>
+  <string name="srvStrt">WEB-server A-Jetty has been started.</string>
+  <string name="srvStop">WEB-server A-Jetty has been stopped.</string>
 </resources>

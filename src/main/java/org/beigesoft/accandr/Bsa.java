@@ -173,9 +173,14 @@ public class Bsa extends Activity implements OnClickListener {
   private boolean isKeystoreCreated;
 
   /**
-   * <p>Loga.</p>
+   * <p>Log.</p>
    **/
   private ILog log;
+
+  /**
+   * <p>Loga.</p>
+   **/
+  private Loga loga = new Loga();
 
   /**
    * <p>Called when the activity is first created or recreated.</p>
@@ -204,8 +209,9 @@ public class Bsa extends Activity implements OnClickListener {
           requestPermissions.invoke(this, (Object) args,
             PERMISSIONS_REQUESTS);
         }
-      } catch (Exception x) {
-          x.printStackTrace();
+      } catch (Exception e) {
+        this.loga.error(null, getClass(),
+          "Cant get permissions", e);
       }
     }
     if (this.log == null) {
@@ -217,7 +223,7 @@ public class Bsa extends Activity implements OnClickListener {
         this.log = lg;
       } catch (Exception e) {
         this.log = new Loga();
-        log.error(null, Bsa.class,
+        this.log.error(null, getClass(),
           "Cant create starter file log", e);
       }
     }
@@ -244,7 +250,7 @@ public class Bsa extends Activity implements OnClickListener {
       this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
     } catch (Exception e) {
-      log.error(null, Bsa.class,
+      log.error(null, getClass(),
         "Cant create interface", e);
     }
     try {
@@ -259,7 +265,7 @@ public class Bsa extends Activity implements OnClickListener {
       if (!jettyBase.exists()) { //new install
         if (!jettyBase.mkdirs()) {
           String msg = "Can't create dir " + jettyBase;
-          this.log.error(null, Bsa.class, msg);
+          this.log.error(null, getClass(), msg);
           throw new ExcCode(ExcCode.WR, msg);
         }
         copyAssets(APP_BASE);
@@ -268,14 +274,14 @@ public class Bsa extends Activity implements OnClickListener {
             Toast.LENGTH_SHORT).show();
         if (!fileVersion.createNewFile()) {
           String msg = "Cant't create file " + fileVersion;
-          this.log.error(null, Bsa.class, msg);
+          this.log.error(null, getClass(), msg);
           throw new ExcCode(ExcCode.WR, msg);
         }
       } else if (!fileVersion.exists()) { // upgrade
         copyAssets(APP_BASE); // refresh from upgrade package
         if (!fileVersion.createNewFile()) {
           String msg = "Cant't create file " + fileVersion;
-          this.log.error(null, Bsa.class, msg);
+          this.log.error(null, getClass(), msg);
           throw new ExcCode(ExcCode.WR, msg);
         }
         Toast.makeText(getApplicationContext(),
@@ -283,11 +289,11 @@ public class Bsa extends Activity implements OnClickListener {
             Toast.LENGTH_SHORT).show();
       }
     } catch (ExcCode e) {
-      this.log.error(null, Bsa.class, null, e);
+      this.log.error(null, getClass(), null, e);
       Toast.makeText(getApplicationContext(),
         e.getShMsg(), Toast.LENGTH_SHORT).show();
     } catch (Exception e) {
-      this.log.error(null, Bsa.class, null, e);
+      this.log.error(null, getClass(), null, e);
       Toast.makeText(getApplicationContext(),
         getResources().getString(R.string.wasErr),
           Toast.LENGTH_SHORT).show();
@@ -296,7 +302,7 @@ public class Bsa extends Activity implements OnClickListener {
     File ksDir = new File(getFilesDir().getAbsolutePath() + "/ks");
     if (!ksDir.exists() && !ksDir.mkdir()) {
       String msg = getResources().getString(R.string.cantCrDir) + ": " + ksDir;
-      this.log.error(null, Bsa.class, msg);
+      this.log.error(null, getClass(), msg);
       Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
     File[] lstFl = ksDir.listFiles();
@@ -305,7 +311,7 @@ public class Bsa extends Activity implements OnClickListener {
       if (lstFl.length > 1
         || lstFl.length == 1 && !lstFl[0].isFile()) {
         String msg = getResources().getString(R.string.ksDirRules);
-        this.log.error(null, Bsa.class, msg);
+        this.log.error(null, getClass(), msg);
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
       } else if (lstFl.length == 1 && lstFl[0].isFile()
         && lstFl[0].getName().startsWith(nmpref)) {
@@ -322,7 +328,7 @@ public class Bsa extends Activity implements OnClickListener {
       this.cryptoService.init();
     } catch (Exception e) {
       String msg = getResources().getString(R.string.cantInitCrypto);
-      this.log.error(null, Bsa.class, msg);
+      this.log.error(null, getClass(), msg);
       Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
     this.beansMap.put(BootEmbed.class.getCanonicalName(),
@@ -358,7 +364,7 @@ public class Bsa extends Activity implements OnClickListener {
           startAjetty();
         } catch (Exception e) {
           String msg = getResources().getString(R.string.cantStart);
-          this.log.error(null, Bsa.class, msg, e);
+          this.log.error(null, getClass(), msg, e);
           Toast.makeText(getApplicationContext(), msg,
             Toast.LENGTH_LONG).show();
         }
@@ -445,7 +451,7 @@ public class Bsa extends Activity implements OnClickListener {
           try {
             fis.close();
           } catch (Exception e2) {
-            this.log.error(null, Bsa.class, null, e2);
+            this.log.error(null, getClass(), null, e2);
           }
         }
       }
@@ -464,7 +470,7 @@ public class Bsa extends Activity implements OnClickListener {
             try {
               pemWriter.close();
             } catch (Exception e2) {
-              this.log.error(null, Bsa.class, null, e2);
+              this.log.error(null, getClass(), null, e2);
             }
           }
         }
@@ -483,7 +489,7 @@ public class Bsa extends Activity implements OnClickListener {
             try {
               fos.close();
             } catch (Exception e2) {
-              this.log.error(null, Bsa.class, null, e2);
+              this.log.error(null, getClass(), null, e2);
             }
           }
         }
@@ -496,13 +502,13 @@ public class Bsa extends Activity implements OnClickListener {
         pkcs12Store.load(fis, ksPassword);
       } catch (Exception e) {
         pkcs12Store = null;
-        this.log.error(null, Bsa.class, null, e);
+        this.log.error(null, getClass(), null, e);
       } finally {
         if (fis != null) {
           try {
             fis.close();
           } catch (Exception e2) {
-            this.log.error(null, Bsa.class, null, e2);
+            this.log.error(null, getClass(), null, e2);
           }
         }
       }
@@ -640,10 +646,10 @@ public class Bsa extends Activity implements OnClickListener {
         if (!subdir.exists()) {
           if (!subdir.mkdirs()) {
             String msg = "Cant't create dir " + subdir;
-            this.log.error(null, Bsa.class, msg);
+            this.log.error(null, getClass(), msg);
             throw new ExcCode(ExcCode.WR, msg);
           } else {
-            Log.i(Bsa.class.getSimpleName(),
+            Log.i(getClass().getSimpleName(),
               "Created : " + subdir);
           }
         }
@@ -661,7 +667,7 @@ public class Bsa extends Activity implements OnClickListener {
             outs.write(data, 0, count);
           }
           outs.flush();
-          Log.i(Bsa.class.getSimpleName(),
+          Log.i(getClass().getSimpleName(),
             "Copied: " + pCurrDir + "/" + fileName);
         } finally {
           if (ins != null) {
