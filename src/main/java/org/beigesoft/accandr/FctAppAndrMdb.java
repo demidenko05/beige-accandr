@@ -49,7 +49,7 @@ import org.beigesoft.fct.FctDbCp;
 import org.beigesoft.fct.FctFlRep;
 import org.beigesoft.hld.IAttrs;
 import org.beigesoft.hld.IHlNmClSt;
-import org.beigesoft.andr.FctRdbMdb;
+import org.beigesoft.andr.FctRdba;
 import org.beigesoft.rdb.IRdb;
 import org.beigesoft.rdb.Orm;
 import org.beigesoft.web.FctMail;
@@ -155,7 +155,7 @@ public class FctAppAndrMdb implements IFctAsm<Cursor> {
     FctAndr fctAndr = new FctAndr();
     fctAndr.setCntx(cntx);
     this.fctBlc.getFctsAux().add(fctAndr);
-    FctRdbMdb frdb = new FctRdbMdb();
+    FctRdba frdb = new FctRdba(); //QUICK web.xml TODO
     frdb.setCntx(cntx);
     this.fctBlc.getFctsAux().add(frdb);
     Set<IFctPrcEnt> fcsenpr = new HashSet<IFctPrcEnt>();

@@ -51,6 +51,11 @@ import org.beigesoft.ajetty.BootEmbed;
 public class SrvAccJet extends Service {
 
   /**
+   * <p>Notification ID.</p>
+   **/
+  public static final int NOTIFICATION_ID = 777;
+
+  /**
    * <p>Action start.</p>
    **/
   public static final String ACTION_START =
@@ -110,6 +115,40 @@ public class SrvAccJet extends Service {
   public final synchronized int onStartCommand(final Intent pIntent,
     final int pFlags, final int pStartId) {
     String action = pIntent.getAction();
+    Notification.Builder nfBld;
+    NotificationManager notfMan = (NotificationManager)
+      getSystemService(NOTIFICATION_SERVICE);
+    //Simple reflection way to avoid additional compile libraries
+    if (android.os.Build.VERSION.SDK_INT >= 26) {
+      try {
+        final String ntfChnlId = "BSEISCH";
+        Class[] argTypes = new Class[] {String.class, CharSequence.class,
+          Integer.TYPE};
+        Class ntfCnlCls = Class.forName("android.app.NotificationChannel");
+        Constructor ntfChnl = ntfCnlCls.getConstructor(argTypes);
+        argTypes = new Class[] {ntfCnlCls};
+        Method crNtfChnl = NotificationManager.class
+          .getDeclaredMethod("createNotificationChannel", argTypes);
+        int impDef = 3; //from source 29
+        crNtfChnl.invoke(notfMan, ntfChnl.newInstance(ntfChnlId,
+          ntfChnlId, impDef));
+        /*notfMan.createNotificationChannel(new NotificationChannel(
+                ntfChnlId, ntfChnlId,
+                NotificationManager.IMPORTANCE_DEFAULT));*/
+        argTypes = new Class[] {Context.class, String.class};
+        Constructor<Notification.Builder> nfBldCn = Notification.Builder.class
+          .getConstructor(argTypes);
+        nfBld = nfBldCn.newInstance(this, ntfChnlId);
+        //nfBld = new Notification.Builder(this, ntfChnlId);
+      } catch (Exception e) {
+        this.loga.error(null, getClass(), "Can't create notification", e);
+        throw new RuntimeException(e);
+      }
+    } else {
+      nfBld = new Notification.Builder(this);
+    }
+    PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+      new Intent(this, Bsa.class), 0);
     if (action.equals(ACTION_START)) {
       if (!this.isActionPerforming) {
         this.isActionPerforming = true;
@@ -117,40 +156,6 @@ public class SrvAccJet extends Service {
         stThread.start();
       }
       CharSequence text = getText(R.string.srvStrt);
-      PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-        new Intent(this, Bsa.class), 0);
-      Notification.Builder nfBld;
-      //Simple reflection way to avoid additional compile libraries
-      if (android.os.Build.VERSION.SDK_INT >= 26) {
-        try {
-          final String ntfChnlId = "BSEISCH";
-          NotificationManager notfMan = (NotificationManager)
-            getSystemService(NOTIFICATION_SERVICE);
-          Class[] argTypes = new Class[] {String.class, CharSequence.class,
-            Integer.TYPE};
-          Class ntfCnlCls = Class.forName("android.app.NotificationChannel");
-          Constructor ntfChnl = ntfCnlCls.getConstructor(argTypes);
-          argTypes = new Class[] {ntfCnlCls};
-          Method crNtfChnl = NotificationManager.class
-            .getDeclaredMethod("createNotificationChannel", argTypes);
-          int impDef = 3; //from source 29
-          crNtfChnl.invoke(notfMan, ntfChnl.newInstance(ntfChnlId,
-            ntfChnlId, impDef));
-          /*notfMan.createNotificationChannel(new NotificationChannel(
-                  ntfChnlId, ntfChnlId,
-                  NotificationManager.IMPORTANCE_DEFAULT));*/
-          argTypes = new Class[] {Context.class, String.class};
-          Constructor<Notification.Builder> nfBldCn = Notification.Builder.class
-            .getConstructor(argTypes);
-          nfBld = nfBldCn.newInstance(this, ntfChnlId);
-          //nfBld = new Notification.Builder(this, ntfChnlId);
-        } catch (Exception e) {
-          this.loga.error(null, getClass(), "Cant start service", e);
-          throw new RuntimeException(e);
-        }
-      } else {
-        nfBld = new Notification.Builder(this);
-      }
       // Set the info for the views that show in the ntfc panel.
       Notification ntfc = nfBld.setSmallIcon(R.drawable.bsnotf)  // the icon
         .setTicker(text)  // the status text
@@ -167,7 +172,7 @@ public class SrvAccJet extends Service {
           stFrg.invoke(this, R.string.srvStrt, ntfc);
           //startForeground(R.string.srvStrt, ntfc);
         } catch (Exception e) {
-          this.loga.error(null, getClass(), "Cant start service", e);
+          this.loga.error(null, getClass(), "Can't start service", e);
           throw new RuntimeException(e);
         }
       } else {
@@ -179,6 +184,16 @@ public class SrvAccJet extends Service {
         StopThread stThread = new StopThread();
         stThread.start();
       }
+      CharSequence text = getText(R.string.srvStop);
+      // Set the info for the views that show in the ntfc panel.
+      Notification ntfc = nfBld.setSmallIcon(R.drawable.bsnotf)  // the icon
+        .setTicker(text)  // the status text
+        .setWhen(System.currentTimeMillis())  // the time stamp
+        .setContentTitle(getText(R.string.app_name))  // the label
+        .setContentText(text)  // the contents of the entry
+        .setContentIntent(contentIntent)  // The intent to send when clicked
+        .build();
+      notfMan.notify(NOTIFICATION_ID, ntfc);
       stopForeground(true);
       stopSelf();
     }
@@ -208,10 +223,11 @@ public class SrvAccJet extends Service {
   private synchronized BootEmbed getBootStrap() {
     BootEmbed bootStrap = null;
     // this.beansMap already synchronized
-    Object bootStrapO = this.beansMap
-      .get(BootEmbed.class.getCanonicalName());
-    if (bootStrapO != null) {
-      bootStrap = (BootEmbed) bootStrapO;
+    Object srvStateo = this.beansMap
+      .get(SrvState.class.getSimpleName());
+    if (srvStateo != null) {
+      SrvState srvState = (SrvState) srvStateo;
+      bootStrap = srvState.getBootEmbd();
     } else {
       //already stopped
       stopSelf();

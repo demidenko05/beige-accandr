@@ -7,4 +7,6 @@
 <suppressions>
   <suppress checks="MagicNumberCheck"
     files="Bsa|SrvAccJet|FctAppAndr|FctAppAndrMdb|Rdb"/>
+  <suppress checks="MethodLength"
+    files="Bsa"/>
 </suppressions>

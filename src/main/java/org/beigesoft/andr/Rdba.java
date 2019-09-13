@@ -28,11 +28,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.beigesoft.andr;
 
-import java.util.Date;
-
 import android.database.Cursor;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import org.beigesoft.exc.ExcCode;
 import org.beigesoft.mdl.IHasId;
@@ -40,108 +39,82 @@ import org.beigesoft.mdl.IRecSet;
 import org.beigesoft.mdl.ColVals;
 
 /**
- * <p>Implementation of database service on Android.
- * I.e. for A-Jetty case, user must waits for HTTP response, otherwise it
- * will received "Busy" error.
- * SQLLite makes autocommit itself: when "TRANSACTION START", then
- * autocommit is off, when "END/COMMIT TRANSACTION", then autocommit is on.
- * Here flag autocommit is used for locking during transaction and high
- * level logic, e.g. "rollback transaction (AUTC=OFF) or not (AUTC=ON)".
- * Another expensive solution according SQLite documentation is #3:
- * <pre>
- * ...
- * 2. Multi-thread. In this mode, SQLite can be safely used by multiple threads
- *  PROVIDED THAT NO SINGLE DATABASE connection is used simultaneously
- * in two or more threads.
- * 3. Serialized. In serialized mode, SQLite can be safely used by multiple
- *  threads WITH NO RESTRICTION.
- * ...
- * </pre>
- * It seems that #3 means that SQLite compiled in that way and it's used
- * serialized transaction isolation.
- * This is should be the fastest "single thread" implementation, but using
- * SQLiteOpenHelper to get DB for each thread without closing works fast and
- * with no problems, so use RdbMdb instead.
- * </p>
+ * <p>Maximum native implementation of database service for Android.
+ * On hard job like webstore.refresh item in list (org.beigesoft.ws.prcRefrLst),
+ * the database is often becomes locked partially, e.g. a request OK
+ * but another one frozen, tables may be different or same,
+ * this is for all - this, Rdb, RdbMdb. Log shows that all transactions was started,
+ * marketed successful and ended successful, but in SQLite DB data is old.</p>
  *
  * @author Yury Demidenko
  */
-public class Rdb extends ARdba {
+public class Rdba extends ARdba {
 
   /**
-   * <p>SQLiteDatabase one for all threads.</p>
+   * <p>SQLiteOpenHelper one for all threads.</p>
    **/
-  private SQLiteDatabase sqliteDb;
+  private SQLiteOpenHelper sqliteOh;
 
   /**
-   * <p>Auto-commit flag, false means service is locked.</p>
+   * <p>Auto-commit flag per thread.</p>
    **/
-  private boolean acmt = true;
-
-  /**
-   * <p>Locking flag, 0 - free, otherwise
-   * time of starting non-autocommit transaction.</p>
-   **/
-  private long strt;
-
-  /**
-   * <p>Start transaction flag per thread holder.</p>
-   **/
-  private static final ThreadLocal<Boolean> HLDSTRT =
+  private static final ThreadLocal<Boolean> HLDACMT =
     new ThreadLocal<Boolean>() { };
 
   /**
-   * <p>Get if a transaction is started.</p>
+   * <p>SQLite database (connection like) per thread holder.</p>
+   **/
+  private static final ThreadLocal<SQLiteDatabase> HLDSQLT =
+    new ThreadLocal<SQLiteDatabase>() { };
+
+  /**
+   * <p>Get autocommit flag.</p>
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized boolean getAcmt() throws Exception {
-    return this.acmt;
+  public final boolean getAcmt() throws Exception {
+    Boolean acmt = HLDACMT.get();
+    if (acmt == null) {
+      acmt = Boolean.TRUE;
+      HLDACMT.set(acmt);
+    }
+    return acmt;
   }
 
   /**
-   * <p>Sets shared autocommit flag and trying to locks this servise.</p>
+   * <p>Sets autocommit flag.</p>
    * @param pAcmt if autocommit
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void setAcmt(final boolean pAcmt) throws Exception {
-    if (!pAcmt) { //begin new transaction
-      long now = new Date().getTime();
-      if (!this.acmt && this.strt != 0 && now - this.strt < 3000) {
-         //another thread isn't completed transaction yet
-        getLog().error(null, getClass(), "RDB busy!");
-        throw new ExcCode(ExcCode.WRPR, "Busy");
-      }
-      this.acmt = pAcmt; //locking
-      this.strt = now;
-    } else {
-      this.acmt = pAcmt;
-      this.strt = 0;
-    }
+  public final void setAcmt(final boolean pAcmt) throws Exception {
+    HLDACMT.set(pAcmt);
   }
 
   /**
    * <p>Sets transaction isolation level.
-   * Always read-uncommited.</p>
+   * Either read-uncommited or serializable.</p>
    * @param pLevel transaction level
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void setTrIsl(
-    final int pLevel) throws Exception {
-    exec("PRAGMA read_uncommitted=1;");
+  public final void setTrIsl(final int pLevel) throws Exception {
+    //nothing
   }
 
   /**
-   * <p>Gets transaction isolation level.
-   * Always read-uncommited.</p>
-   * @return Level transaction always TRANSACTION_READ_UNCOMMITTED
+   * <p>Gets transaction isolation level.</p>
+   * @return Level transaction
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized int getTrIsl() throws Exception {
-    return TRRUC;
+  public final int getTrIsl() throws Exception {
+    Integer val = evInt("PRAGMA read_uncommitted;", "read_uncommitted");
+    if (val == null || val == 0) {
+      return TRSR;
+    } else {
+      return TRRUC;
+    }
   }
 
   /**
@@ -150,7 +123,7 @@ public class Rdb extends ARdba {
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void creSavPnt(
+  public final void creSavPnt(
     final String pSvpNm) throws Exception {
     exec("SAVEPOINT " + pSvpNm + ";");
   }
@@ -161,7 +134,7 @@ public class Rdb extends ARdba {
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void relSavPnt(
+  public final void relSavPnt(
     final String pSvpNm) throws Exception {
     exec("RELEASE " + pSvpNm + ";");
   }
@@ -172,7 +145,7 @@ public class Rdb extends ARdba {
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void rollBack(
+  public final void rollBack(
     final String pSvpNm) throws Exception {
     exec(";ROLLBACK TRANSACTION TO SAVEPOINT " + pSvpNm + ";");
   }
@@ -182,9 +155,12 @@ public class Rdb extends ARdba {
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void begin() throws Exception {
-    exec("BEGIN TRANSACTION;");
-    HLDSTRT.set(Boolean.TRUE);
+  public final void begin() throws Exception {
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16005);
+    if (dbgSh) {
+      getLog().debug(null, getClass(), "try to begin...");
+    }
+    lazDb().beginTransactionNonExclusive();
   }
 
   /**
@@ -192,11 +168,23 @@ public class Rdb extends ARdba {
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void commit() throws Exception {
-    exec("COMMIT TRANSACTION;");
-    this.acmt = true; //unlocking
-    this.strt = 0;
-    HLDSTRT.remove();
+  public final void commit() throws Exception {
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16006);
+    if (dbgSh) {
+      getLog().debug(null, getClass(), "try to commit...");
+    }
+    SQLiteDatabase db = HLDSQLT.get();
+    try {
+      db.setTransactionSuccessful();
+      if (dbgSh) {
+        getLog().debug(null, getClass(), "Set successful OK");
+      }
+    } finally {
+      db.endTransaction();
+      if (dbgSh) {
+        getLog().debug(null, getClass(), "End transaction OK");
+      }
+    }
   }
 
   /**
@@ -204,22 +192,29 @@ public class Rdb extends ARdba {
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void rollBack() throws Exception {
-    if (HLDSTRT.get() != null) { // transaction started
-      exec("ROLLBACK TRANSACTION;");
-      this.acmt = true; //unlocking
-      this.strt = 0;
-    } //else busy exception
+  public final void rollBack() throws Exception {
+    boolean dbgSh = getLog().getDbgSh(this.getClass(), 16007);
+    if (dbgSh) {
+      getLog().debug(null, getClass(), "try to rollback...");
+    }
+    SQLiteDatabase db = HLDSQLT.get();
+    db.endTransaction(); //without setTransactionSuccessful
   }
 
   /**
-   * <p>Releases only unneeded memory.</p>
+   * <p>Closing DB.</p>
    * @throws Exception - an exception
    **/
   @Override
-  public final synchronized void release() throws Exception {
-    if (this.sqliteDb != null) {
-      this.sqliteDb.releaseMemory();
+  public final void release() throws Exception {
+    SQLiteDatabase sqliteDb = HLDSQLT.get();
+    if (sqliteDb != null) {
+      sqliteDb.close();
+      HLDSQLT.remove();
+      boolean dbgSh = getLog().getDbgSh(this.getClass(), 16008);
+      if (dbgSh) {
+        getLog().debug(null, getClass(), "Release DB OK");
+      }
     }
   }
 
@@ -230,14 +225,14 @@ public class Rdb extends ARdba {
    * @throws Exception - if an exception occurred
    **/
   @Override
-  public final synchronized IRecSet<Cursor> retRs(
+  public final IRecSet<Cursor> retRs(
     final String pSelect) throws Exception {
     boolean dbgSh = getLog().getDbgSh(this.getClass(), 16000);
     try {
       if (dbgSh) {
         getLog().debug(null, getClass(), "try to retrieve records: " + pSelect);
       }
-      Cursor rs = this.sqliteDb.rawQuery(pSelect, null);
+      Cursor rs = lazDb().rawQuery(pSelect, null);
       RecSet rsa = new RecSet(rs);
       if (dbgSh) {
         getLog().debug(null, getClass(), "Recordset: " + rsStr(rsa));
@@ -258,13 +253,13 @@ public class Rdb extends ARdba {
    * @throws Exception - if an exception occurred
    **/
   @Override
-  public final synchronized void exec(final String pQuery) throws Exception {
+  public final void exec(final String pQuery) throws Exception {
     boolean dbgSh = getLog().getDbgSh(this.getClass(), 16001);
     try {
       if (dbgSh) {
         getLog().debug(null, getClass(), "try to execute query: " + pQuery);
       }
-      this.sqliteDb.execSQL(pQuery);
+      lazDb().execSQL(pQuery);
     } catch (Exception ex) {
       String msg = ex.getMessage() + ", query:\n" + pQuery;
       ExcCode ewc = new ExcCode(SQLEX, msg);
@@ -285,9 +280,8 @@ public class Rdb extends ARdba {
    * @throws Exception - if an exception occurred
    **/
   @Override
-  public final synchronized <T extends IHasId<?>> int update(
-    final Class<T> pCls, final ColVals pCv,
-      final String pWhe) throws Exception {
+  public final <T extends IHasId<?>> int update(final Class<T> pCls,
+    final ColVals pCv, final String pWhe) throws Exception {
     boolean dbgSh = getLog().getDbgSh(this.getClass(), 16002);
     try {
       ContentValues cntVals = cnvToCntValsUpd(pCls, pCv);
@@ -295,7 +289,7 @@ public class Rdb extends ARdba {
         getLog().debug(null, getClass(), "try to update : " + pCls + " where: "
         + pWhe + " cv: " + getSrvClVl().str(pCls, pCv) + ", ACV: " + cntVals);
       }
-      return this.sqliteDb
+      return lazDb()
         .update(pCls.getSimpleName().toUpperCase(), cntVals, pWhe, null);
     } catch (Exception ex) {
       String msg = ex.getMessage() + ", cls: " + pCls + ", cv: "
@@ -317,8 +311,8 @@ public class Rdb extends ARdba {
    * @throws Exception - if an exception occurred
    **/
   @Override
-  public final synchronized <T extends IHasId<?>> long insert(
-    final Class<T> pCls, final ColVals pCv) throws Exception {
+  public final <T extends IHasId<?>> long insert(final Class<T> pCls,
+    final ColVals pCv) throws Exception {
     boolean dbgSh = getLog().getDbgSh(this.getClass(), 16003);
     try {
       ContentValues cntVals = cnvToCntValsIns(pCls, pCv);
@@ -326,7 +320,7 @@ public class Rdb extends ARdba {
         getLog().debug(null, getClass(), "try to insert : " + pCls + " cv: "
           + getSrvClVl().str(pCls, pCv) + " ACV: " + cntVals);
       }
-      long result = this.sqliteDb
+      long result = lazDb()
         .insert(pCls.getSimpleName().toUpperCase(), null, cntVals);
       if (dbgSh) {
         getLog().debug(null, getClass(), "result insert: " + result);
@@ -355,7 +349,7 @@ public class Rdb extends ARdba {
    * @throws Exception - if an exception occurred
    **/
   @Override
-  public final synchronized int delete(final String pTbl,
+  public final int delete(final String pTbl,
     final String pWhe) throws Exception {
     boolean dbgSh = getLog().getDbgSh(this.getClass(), 16004);
     try {
@@ -363,7 +357,7 @@ public class Rdb extends ARdba {
         getLog().debug(null, getClass(), "try to delete t: " + pTbl
           + " where: " + pWhe);
       }
-      return this.sqliteDb.delete(pTbl, pWhe, null);
+      return lazDb().delete(pTbl, pWhe, null);
     } catch (Exception ex) {
       String msg = ex.getMessage() + ", table: " + pTbl
         + ", where: " + pWhe;
@@ -373,20 +367,33 @@ public class Rdb extends ARdba {
     }
   }
 
+  /**
+   * <p>Lazy gets database for thread.</p>
+   * @return SQLite DB
+   **/
+  private SQLiteDatabase lazDb() {
+    SQLiteDatabase sqliteDb = HLDSQLT.get();
+    if (sqliteDb == null) {
+      sqliteDb = this.sqliteOh.getWritableDatabase();
+      HLDSQLT.set(sqliteDb);
+    }
+    return sqliteDb;
+  }
+
   //Simple getters and setters:
   /**
-   * <p>Geter for sqliteDb.</p>
-   * @return SQLiteDatabase
+   * <p>Getter for sqliteOh.</p>
+   * @return SQLiteOpenHelper
    **/
-  public final synchronized SQLiteDatabase getSqliteDb() {
-    return this.sqliteDb;
+  public final SQLiteOpenHelper getSqliteOh() {
+    return this.sqliteOh;
   }
 
   /**
-   * <p>Setter for sqliteDb.</p>
-   * @param pSqliteDb reference
+   * <p>Setter for sqliteOh.</p>
+   * @param pSqliteOh reference
    **/
-  public final synchronized void setSqliteDb(final SQLiteDatabase pSqliteDb) {
-    this.sqliteDb = pSqliteDb;
+  public final void setSqliteOh(final SQLiteOpenHelper pSqliteOh) {
+    this.sqliteOh = pSqliteOh;
   }
 }

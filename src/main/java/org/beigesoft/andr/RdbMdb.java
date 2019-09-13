@@ -28,9 +28,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.beigesoft.andr;
 
-import java.util.List;
-import java.util.Map;
-
 import android.database.Cursor;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -40,8 +37,6 @@ import org.beigesoft.exc.ExcCode;
 import org.beigesoft.mdl.IHasId;
 import org.beigesoft.mdl.IRecSet;
 import org.beigesoft.mdl.ColVals;
-import org.beigesoft.rdb.SrvClVl;
-import org.beigesoft.rdb.ARdb;
 
 /**
  * <p>Multi-thread implementation of database service for Android. Each thread
@@ -57,12 +52,7 @@ import org.beigesoft.rdb.ARdb;
  *
  * @author Yury Demidenko
  */
-public class RdbMdb extends ARdb<Cursor> {
-
-  /**
-   * <p>Generating insert/update and CV service.</p>
-   **/
-  private SrvClVl srvClVl;
+public class RdbMdb extends ARdba {
 
   /**
    * <p>SQLiteOpenHelper one for all threads.</p>
@@ -280,13 +270,13 @@ public class RdbMdb extends ARdb<Cursor> {
       ContentValues cntVals = cnvToCntValsUpd(pCls, pCv);
       if (dbgSh) {
         getLog().debug(null, getClass(), "try to update : " + pCls + " where: "
-        + pWhe + " cv: " + this.srvClVl.str(pCls, pCv) + ", ACV: " + cntVals);
+        + pWhe + " cv: " + getSrvClVl().str(pCls, pCv) + ", ACV: " + cntVals);
       }
       return lazDb()
         .update(pCls.getSimpleName().toUpperCase(), cntVals, pWhe, null);
     } catch (Exception ex) {
       String msg = ex.getMessage() + ", cls: " + pCls + ", cv: "
-        + this.srvClVl.str(pCls, pCv) + ", where: " + pWhe;
+        + getSrvClVl().str(pCls, pCv) + ", where: " + pWhe;
       ExcCode ewc = new ExcCode(SQLEX, msg);
       ewc.setStackTrace(ex.getStackTrace());
       throw ewc;
@@ -311,7 +301,7 @@ public class RdbMdb extends ARdb<Cursor> {
       ContentValues cntVals = cnvToCntValsIns(pCls, pCv);
       if (dbgSh) {
         getLog().debug(null, getClass(), "try to insert : " + pCls + " cv: "
-          + this.srvClVl.str(pCls, pCv) + " ACV: " + cntVals);
+          + getSrvClVl().str(pCls, pCv) + " ACV: " + cntVals);
       }
       long result = lazDb()
         .insert(pCls.getSimpleName().toUpperCase(), null, cntVals);
@@ -324,7 +314,7 @@ public class RdbMdb extends ARdb<Cursor> {
       return result;
     } catch (Exception ex) {
       String msg = ex.getMessage() + ", cls: " + pCls + ", cv: "
-        + this.srvClVl.str(pCls, pCv);
+        + getSrvClVl().str(pCls, pCv);
       ExcCode ewc = new ExcCode(SQLEX,
         msg);
       ewc.setStackTrace(ex.getStackTrace());
@@ -373,129 +363,7 @@ public class RdbMdb extends ARdb<Cursor> {
     return sqliteDb;
   }
 
-  //Utils:
-  /**
-   * <p>Converts org.beigesoft.mdl.ColVals
-   * to android.content.ContentValues for insert.</p>
-   * @param <T> entity type
-   * @param pCls entity class
-   * @param pCv Columns Values
-   * @return ContentValues
-   * @throws Exception - an exception
-   **/
-  public final <T extends IHasId<?>> ContentValues cnvToCntValsIns(
-    final Class<T> pCls, final ColVals pCv) throws Exception {
-    ContentValues cntVals = new ContentValues();
-    List<String> idNms = this.srvClVl.getSetng().lazIdFldNms(pCls);
-    if (pCv.getInts() != null) {
-      for (Map.Entry<String, Integer> enr : pCv.getInts().entrySet()) {
-        if (enr.getValue() != null || !idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-        }
-      }
-    }
-    if (pCv.getLongs() != null) {
-      for (Map.Entry<String, Long> enr : pCv.getLongs().entrySet()) {
-        if (enr.getValue() != null || !idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-        }
-      }
-    }
-    if (pCv.getStrs() != null) {
-      for (Map.Entry<String, String> enr : pCv.getStrs().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-      }
-    }
-    if (pCv.getFloats() != null) {
-      for (Map.Entry<String, Float> enr : pCv.getFloats().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-      }
-    }
-    if (pCv.getDoubles() != null) {
-      for (Map.Entry<String, Double> enr : pCv.getDoubles().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-      }
-    }
-    return cntVals;
-  }
-
-  /**
-   * <p>Converts org.beigesoft.mdl.ColVals
-   * to android.content.ContentValues for update.</p>
-   * @param <T> entity type
-   * @param pCls entity class
-   * @param pCv Columns Values
-   * @return ContentValues
-   * @throws Exception - an exception
-   **/
-  public final <T extends IHasId<?>> ContentValues cnvToCntValsUpd(
-    final Class<T> pCls, final ColVals pCv) throws Exception {
-    ContentValues cntVals = new ContentValues();
-    List<String> idNms = this.srvClVl.getSetng().lazIdFldNms(pCls);
-    if (pCv.getInts() != null) {
-      for (Map.Entry<String, Integer> enr : pCv.getInts().entrySet()) {
-        if (!idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-        }
-      }
-    }
-    if (pCv.getLongs() != null) {
-      for (Map.Entry<String, Long> enr : pCv.getLongs().entrySet()) {
-        if (!idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-        }
-      }
-    }
-    if (pCv.getStrs() != null) {
-      for (Map.Entry<String, String> enr : pCv.getStrs().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-      }
-    }
-    if (pCv.getFloats() != null) {
-      for (Map.Entry<String, Float> enr : pCv.getFloats().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-      }
-    }
-    if (pCv.getDoubles() != null) {
-      for (Map.Entry<String, Double> enr : pCv.getDoubles().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
-      }
-    }
-    return cntVals;
-  }
-
-  /**
-   * <p>Prints record-set.</p>
-   * @param pRs record-set
-   * @return representation
-   **/
-  public final String rsStr(final RecSet pRs) {
-    StringBuffer columns = new StringBuffer();
-    for (String cn :  pRs.getRecSet().getColumnNames()) {
-      columns.append(" " + cn);
-    }
-    return "Columns total: " + pRs.getRecSet().getColumnCount()
-      + "\nRows total: " + pRs.getRecSet().getCount()
-      + "\nColumns: " + columns.toString();
-  }
-
   //Simple getters and setters:
-  /**
-   * <p>Getter for srvClVl.</p>
-   * @return SrvClVl
-   **/
-  public final SrvClVl getSrvClVl() {
-    return this.srvClVl;
-  }
-
-  /**
-   * <p>Setter for srvClVl.</p>
-   * @param pSrvClVl reference
-   **/
-  public final void setSrvClVl(final SrvClVl pSrvClVl) {
-    this.srvClVl = pSrvClVl;
-  }
-
   /**
    * <p>Getter for sqliteOh.</p>
    * @return SQLiteOpenHelper

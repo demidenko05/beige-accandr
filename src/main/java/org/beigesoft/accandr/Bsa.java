@@ -42,8 +42,9 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.nio.charset.Charset;
 
-import android.content.ContextWrapper;
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.Intent;
@@ -66,8 +67,6 @@ import android.util.Log;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 
 import org.beigesoft.exc.ExcCode;
-import org.beigesoft.ajetty.FctAppEmb;
-import org.beigesoft.ajetty.BootEmbed;
 import org.beigesoft.ajetty.crypto.CryptoService;
 import org.beigesoft.log.ILog;
 import org.beigesoft.log.LogFile;
@@ -121,18 +120,6 @@ public class Bsa extends Activity implements OnClickListener {
   private Map<String, Object> beansMap;
 
   /**
-   * <p>A-Jetty application beans factory.</p>
-   **/
-  private final FctAppEmb jettyFactoryAppBeans =
-    new FctAppEmb();
-
-  /**
-   * <p>Bootstrap.</p>
-   **/
-  private final BootEmbed bootStrapEmbeddedHttps =
-    new BootEmbed();
-
-  /**
    * <p>A-Jetty instance number.</p>
    **/
   private EditText etAjettyIn;
@@ -148,16 +135,6 @@ public class Bsa extends Activity implements OnClickListener {
   private EditText etKsPasswRep;
 
   /**
-   * <p>A-Jetty instance number.</p>
-   **/
-  private Integer ajettyIn;
-
-  /**
-   * <p>Crypto service.</p>
-   **/
-  private CryptoService cryptoService;
-
-  /**
    * <p>Flag is starting.</p>
    **/
   private boolean isStarting;
@@ -168,11 +145,6 @@ public class Bsa extends Activity implements OnClickListener {
   private boolean isStopping;
 
   /**
-   * <p>Flag is keystore created.</p>
-   **/
-  private boolean isKeystoreCreated;
-
-  /**
    * <p>Log.</p>
    **/
   private ILog log;
@@ -181,6 +153,11 @@ public class Bsa extends Activity implements OnClickListener {
    * <p>Loga.</p>
    **/
   private Loga loga = new Loga();
+
+  /**
+   * <p>Shared with service state.</p>
+   **/
+  private SrvState srvState;
 
   /**
    * <p>Called when the activity is first created or recreated.</p>
@@ -228,8 +205,6 @@ public class Bsa extends Activity implements OnClickListener {
       }
     }
     try {
-      AppPlus appPlus = (AppPlus) getApplicationContext();
-      this.beansMap = appPlus.getBeansMap();
       setContentView(R.layout.beigeaccounting);
       this.etAjettyIn = (EditText) findViewById(R.id.etAjettyIn);
       this.etKsPassw = (EditText) findViewById(R.id.etKsPassw);
@@ -249,12 +224,34 @@ public class Bsa extends Activity implements OnClickListener {
       this.btnStop = (Button) findViewById(R.id.btnStop);
       this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
+      AppPlus appPlus = (AppPlus) getApplicationContext();
+      this.beansMap = appPlus.getBeansMap();
+      synchronized (this.beansMap) {
+        if (this.beansMap.size() == 0) {
+          try {
+            initSrv();
+          } catch (Exception e) {
+            log.error(null, getClass(), "Cant create server", e);
+          }
+        } else {
+          this.srvState = (SrvState) this.beansMap
+            .get(SrvState.class.getSimpleName());
+        }
+      }
     } catch (Exception e) {
       log.error(null, getClass(),
         "Cant create interface", e);
     }
+ }
+
+  /**
+   * <p>Called when the server is dead.</p>
+   * @throws Exception an Exception
+   */
+  public final void initSrv() throws Exception {
     try {
-      this.cryptoService = new CryptoService();
+      this.srvState = new SrvState();
+      this.srvState.setCryptoService(new CryptoService());
       File jettyBase = new File(getFilesDir().getAbsolutePath()
        + "/" + APP_BASE);
       PackageInfo packageInfo = getPackageManager()
@@ -316,23 +313,23 @@ public class Bsa extends Activity implements OnClickListener {
       } else if (lstFl.length == 1 && lstFl[0].isFile()
         && lstFl[0].getName().startsWith(nmpref)) {
         String ajettyInStr = lstFl[0].getName().replace(nmpref, "");
-        this.ajettyIn = Integer.parseInt(ajettyInStr);
-        this.isKeystoreCreated = true;
+        this.srvState.setAjettyIn(Integer.parseInt(ajettyInStr));
+        this.srvState.setIsKeystoreCreated(true);
       }
     }
-    this.bootStrapEmbeddedHttps.setCryptoProviderName("BC");
-    this.bootStrapEmbeddedHttps.setFactoryAppBeans(this.jettyFactoryAppBeans);
-    this.bootStrapEmbeddedHttps.setWebAppPath(getFilesDir().getAbsolutePath()
+    this.srvState.getBootEmbd().setCryptoProviderName("BC");
+    this.srvState.getBootEmbd()
+      .setFactoryAppBeans(this.srvState.getJetFctApp());
+    this.srvState.getBootEmbd().setWebAppPath(getFilesDir().getAbsolutePath()
        + "/" + APP_BASE);
     try {
-      this.cryptoService.init();
+      this.srvState.getCryptoService().init();
     } catch (Exception e) {
       String msg = getResources().getString(R.string.cantInitCrypto);
       this.log.error(null, getClass(), msg);
       Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
-    this.beansMap.put(BootEmbed.class.getCanonicalName(),
-      this.bootStrapEmbeddedHttps);
+    this.beansMap.put(SrvState.class.getSimpleName(), this.srvState);
   }
 
   /**
@@ -343,16 +340,17 @@ public class Bsa extends Activity implements OnClickListener {
   public final void onClick(final View pTarget) {
     if (!this.isStarting && !this.isStopping) {
       if (pTarget == this.btnStart
-        && !this.bootStrapEmbeddedHttps.getIsStarted()) {
+        && !this.srvState.getBootEmbd().getIsStarted()) {
         this.isStarting = true;
-        if (!this.isKeystoreCreated) {
+        if (!this.srvState.getIsKeystoreCreated()) {
           try {
-            this.ajettyIn = Integer.parseInt(etAjettyIn.getText().toString());
+            this.srvState.setAjettyIn(Integer
+              .parseInt(etAjettyIn.getText().toString()));
           } catch (Exception e) {
             e.printStackTrace();
           }
         }
-        if (this.ajettyIn == null) {
+        if (this.srvState.getAjettyIn() == null) {
           Toast.makeText(getApplicationContext(),
             getResources().getString(R.string.EnterAjettyNumber),
               Toast.LENGTH_SHORT).show();
@@ -370,12 +368,25 @@ public class Bsa extends Activity implements OnClickListener {
         }
         refreshView();
       } else if (pTarget == this.btnStop
-        && this.bootStrapEmbeddedHttps.getIsStarted()) {
+        && this.srvState.getBootEmbd().getIsStarted()) {
         this.isStopping = true;
         refreshView();
         Intent intent = new Intent(this, SrvAccJet.class);
         intent.setAction(SrvAccJet.ACTION_STOP);
-        startService(intent);
+        if (android.os.Build.VERSION.SDK_INT >= 26) {
+          try {
+            Class[] argTypes = new Class[] {Intent.class};
+            Method stFrg = Context.class
+              .getDeclaredMethod("startForegroundService", argTypes);
+            stFrg.invoke(this, intent);
+            //startForegroundService(intent);
+          } catch (Exception e) {
+            this.loga.error(null, getClass(), "Can't stop service", e);
+            throw new RuntimeException(e);
+          }
+        } else {
+          startService(intent);
+        }
         refreshView();
       } else if (pTarget == this.btnStartBrowser) {
         startBrowser();
@@ -397,7 +408,7 @@ public class Bsa extends Activity implements OnClickListener {
     }
     char[] ksPassword = this.etKsPassw.getText().toString().toCharArray();
     File pks12File = new File(getFilesDir().getAbsolutePath()
-      + "/ks/ajettykeystore." + this.ajettyIn);
+      + "/ks/ajettykeystore." + this.srvState.getAjettyIn());
     KeyStore pkcs12Store = null;
     if (!pks12File.exists()) {
       if (this.etKsPasswRep.getText() == null) {
@@ -426,15 +437,17 @@ public class Bsa extends Activity implements OnClickListener {
         this.isStarting = false;
         return;
       }
-      String isPswStrRez = this.cryptoService.isPasswordStrong(ksPassword);
+      String isPswStrRez = this.srvState.getCryptoService()
+        .isPasswordStrong(ksPassword);
       if (isPswStrRez != null) {
         Toast.makeText(getApplicationContext(),
           isPswStrRez, Toast.LENGTH_SHORT).show();
         this.isStarting = false;
         return;
       }
-      this.cryptoService.createKeyStoreWithCredentials(getFilesDir()
-        .getAbsolutePath() + "/ks", this.ajettyIn, ksPassword);
+      this.srvState.getCryptoService().createKeyStoreWithCredentials(
+        getFilesDir().getAbsolutePath() + "/ks",
+          this.srvState.getAjettyIn(), ksPassword);
       FileInputStream fis = null;
       Certificate certCa = null;
       PublicKey fileExchPub = null;
@@ -442,10 +455,11 @@ public class Bsa extends Activity implements OnClickListener {
         pkcs12Store = KeyStore.getInstance("PKCS12", "BC");
         fis = new FileInputStream(pks12File);
         pkcs12Store.load(fis, ksPassword);
-        this.isKeystoreCreated = true;
-        certCa = pkcs12Store.getCertificate("AJettyCa" + this.ajettyIn);
-        fileExchPub = pkcs12Store
-          .getCertificate("AJettyFileExch" + this.ajettyIn).getPublicKey();
+        this.srvState.setIsKeystoreCreated(true);
+        certCa = pkcs12Store.getCertificate("AJettyCa"
+          + this.srvState.getAjettyIn());
+        fileExchPub = pkcs12Store.getCertificate("AJettyFileExch"
+          + this.srvState.getAjettyIn()).getPublicKey();
       } finally {
         if (fis != null) {
           try {
@@ -457,7 +471,8 @@ public class Bsa extends Activity implements OnClickListener {
       }
       if (certCa != null) {
         File pemFl = new File(Environment.getExternalStorageDirectory()
-    .getAbsolutePath() + File.separator + "ajetty-ca" + this.ajettyIn + ".pem");
+          .getAbsolutePath() + File.separator + "ajetty-ca"
+            + this.srvState.getAjettyIn() + ".pem");
         JcaPEMWriter pemWriter = null;
         try {
           OutputStreamWriter osw = new OutputStreamWriter(
@@ -475,7 +490,8 @@ public class Bsa extends Activity implements OnClickListener {
           }
         }
         File pubFl = new File(Environment.getExternalStorageDirectory()
-          + File.separator + "ajetty-file-exch" + this.ajettyIn + ".kpub");
+          + File.separator + "ajetty-file-exch"
+            + this.srvState.getAjettyIn() + ".kpub");
         FileOutputStream fos = null;
         try {
           fos = new FileOutputStream(pubFl);
@@ -520,18 +536,32 @@ public class Bsa extends Activity implements OnClickListener {
         return;
       }
     }
-    this.bootStrapEmbeddedHttps.setHttpsAlias("AJettyHttps" + this.ajettyIn);
-    this.bootStrapEmbeddedHttps.setPkcs12File(pks12File);
-    this.bootStrapEmbeddedHttps.setPassword(new String(ksPassword));
-    this.bootStrapEmbeddedHttps.setKeyStore(pkcs12Store);
-    this.bootStrapEmbeddedHttps.setAjettyIn(this.ajettyIn);
-    this.bootStrapEmbeddedHttps.setPort((Integer) cmbPort.getSelectedItem());
+    this.srvState.getBootEmbd().setHttpsAlias(
+      "AJettyHttps" + this.srvState.getAjettyIn());
+    this.srvState.getBootEmbd().setPkcs12File(pks12File);
+    this.srvState.getBootEmbd().setPassword(new String(ksPassword));
+    this.srvState.getBootEmbd().setKeyStore(pkcs12Store);
+    this.srvState.getBootEmbd().setAjettyIn(this.srvState.getAjettyIn());
+    this.srvState.getBootEmbd().setPort((Integer) cmbPort.getSelectedItem());
     Toast.makeText(getApplicationContext(), getResources().getString(
       R.string.sendingStart), Toast.LENGTH_SHORT)
         .show();
     Intent intent = new Intent(this, SrvAccJet.class);
     intent.setAction(SrvAccJet.ACTION_START);
-    startService(intent);
+    if (android.os.Build.VERSION.SDK_INT >= 26) {
+      try {
+        Class[] argTypes = new Class[] {Intent.class};
+        Method stFrg = Context.class
+          .getDeclaredMethod("startForegroundService", argTypes);
+        stFrg.invoke(this, intent);
+        //startForegroundService(intent);
+      } catch (Exception e) {
+        this.loga.error(null, getClass(), "Can't start service", e);
+        throw new RuntimeException(e);
+      }
+    } else {
+      startService(intent);
+    }
   }
 
   /**
@@ -577,55 +607,57 @@ public class Bsa extends Activity implements OnClickListener {
    * <p>Refresh view.</p>
    */
   private void refreshView() {
-    if (this.isStarting && !this.bootStrapEmbeddedHttps.getIsStarted()
-      || this.isStopping && this.bootStrapEmbeddedHttps.getIsStarted()) {
-      this.cmbPort.setEnabled(false);
-      this.etAjettyIn.setEnabled(false);
-      this.etKsPassw.setEnabled(false);
-      this.etKsPasswRep.setEnabled(false);
-      this.btnStart.setEnabled(false);
-      this.btnStop.setEnabled(false);
-      this.btnStartBrowser.setEnabled(false);
-      if (this.isStarting) {
-        this.btnStartBrowser.setText(getResources()
-          .getString(R.string.starting));
-      } else {
-        this.btnStartBrowser.setText(getResources()
-          .getString(R.string.stopping));
-      }
-    } else {
-      if (this.bootStrapEmbeddedHttps.getIsStarted()) {
-        if (this.isStarting) {
-          this.isStarting = false;
-        }
+    if (this.srvState != null) {
+      if (this.isStarting && !this.srvState.getBootEmbd().getIsStarted()
+        || this.isStopping && this.srvState.getBootEmbd().getIsStarted()) {
         this.cmbPort.setEnabled(false);
-        this.btnStart.setEnabled(false);
         this.etAjettyIn.setEnabled(false);
         this.etKsPassw.setEnabled(false);
         this.etKsPasswRep.setEnabled(false);
-        this.btnStop.setEnabled(true);
-        this.btnStartBrowser.setEnabled(true);
-        this.btnStartBrowser.setText("https://localhost:"
-        + this.cmbPort.getSelectedItem() + "/bsa"
-            + this.cmbPort.getSelectedItem());
-      } else {
-        if (this.isStopping) {
-          this.isStopping = false;
-        }
-        if (this.isKeystoreCreated) {
-          this.etAjettyIn.setEnabled(false);
-          this.etKsPasswRep.setEnabled(false);
-          this.etAjettyIn.setText(this.ajettyIn.toString());
-        } else {
-          this.etAjettyIn.setEnabled(true);
-          this.etKsPasswRep.setEnabled(true);
-        }
-        this.etKsPassw.setEnabled(true);
-        this.cmbPort.setEnabled(true);
-        this.btnStart.setEnabled(true);
+        this.btnStart.setEnabled(false);
         this.btnStop.setEnabled(false);
         this.btnStartBrowser.setEnabled(false);
-        this.btnStartBrowser.setText("");
+        if (this.isStarting) {
+          this.btnStartBrowser.setText(getResources()
+            .getString(R.string.starting));
+        } else {
+          this.btnStartBrowser.setText(getResources()
+            .getString(R.string.stopping));
+        }
+      } else {
+        if (this.srvState.getBootEmbd().getIsStarted()) {
+          if (this.isStarting) {
+            this.isStarting = false;
+          }
+          this.cmbPort.setEnabled(false);
+          this.btnStart.setEnabled(false);
+          this.etAjettyIn.setEnabled(false);
+          this.etKsPassw.setEnabled(false);
+          this.etKsPasswRep.setEnabled(false);
+          this.btnStop.setEnabled(true);
+          this.btnStartBrowser.setEnabled(true);
+          this.btnStartBrowser.setText("https://localhost:"
+          + this.cmbPort.getSelectedItem() + "/bsa"
+              + this.cmbPort.getSelectedItem());
+        } else {
+          if (this.isStopping) {
+            this.isStopping = false;
+          }
+          if (this.srvState.getIsKeystoreCreated()) {
+            this.etAjettyIn.setEnabled(false);
+            this.etKsPasswRep.setEnabled(false);
+            this.etAjettyIn.setText(this.srvState.getAjettyIn().toString());
+          } else {
+            this.etAjettyIn.setEnabled(true);
+            this.etKsPasswRep.setEnabled(true);
+          }
+          this.etKsPassw.setEnabled(true);
+          this.cmbPort.setEnabled(true);
+          this.btnStart.setEnabled(true);
+          this.btnStop.setEnabled(false);
+          this.btnStartBrowser.setEnabled(false);
+          this.btnStartBrowser.setText("");
+        }
       }
     }
   }

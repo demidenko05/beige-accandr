@@ -47,8 +47,6 @@ import org.beigesoft.fct.IFctAsm;
 import org.beigesoft.fct.FctBlc;
 import org.beigesoft.fct.FctDbCp;
 import org.beigesoft.fct.FctFlRep;
-import org.beigesoft.fct.IFctCnToSt;
-import org.beigesoft.fct.IFcFlFdSt;
 import org.beigesoft.hld.IAttrs;
 import org.beigesoft.hld.IHlNmClSt;
 import org.beigesoft.andr.FctRdba;
@@ -60,8 +58,6 @@ import org.beigesoft.acc.fct.FcEnPrAc;
 import org.beigesoft.acc.fct.FcPrNtAc;
 import org.beigesoft.acc.fct.FcPrNtAd;
 import org.beigesoft.acc.fct.FcPrFlAc;
-import org.beigesoft.acc.fct.FcCnToStAi;
-import org.beigesoft.acc.fct.FcFlFdAi;
 import org.beigesoft.acc.hld.HlAcEnPr;
 import org.beigesoft.ajetty.FcPrNtAj;
 import org.beigesoft.ajetty.GetUsrCrd;
@@ -76,7 +72,7 @@ import org.beigesoft.ws.hld.HlTrEnPr;
  *
  * @author Yury Demidenko
  */
-public class FctAppAndr implements IFctAsm<Cursor> {
+public class FctAppAndra implements IFctAsm<Cursor> {
 
   /**
    * <p>Main only factory.</p>
@@ -87,7 +83,7 @@ public class FctAppAndr implements IFctAsm<Cursor> {
    * <p>Only constructor.</p>
    * @throws Exception - an exception
    */
-  public FctAppAndr() throws Exception {
+  public FctAppAndra() throws Exception {
     this.fctBlc = new FctBlc<Cursor>();
     this.fctBlc.getFctDt().setIsAndr(true);
     this.fctBlc.getFctDt().setClsImm(true);
@@ -159,7 +155,7 @@ public class FctAppAndr implements IFctAsm<Cursor> {
     FctAndr fctAndr = new FctAndr();
     fctAndr.setCntx(cntx);
     this.fctBlc.getFctsAux().add(fctAndr);
-FctRdba frdb = new FctRdba(); //QUICK web.xml TODO
+    FctRdba frdb = new FctRdba();
     frdb.setCntx(cntx);
     this.fctBlc.getFctsAux().add(frdb);
     Set<IFctPrcEnt> fcsenpr = new HashSet<IFctPrcEnt>();
@@ -195,16 +191,6 @@ FctRdba frdb = new FctRdba(); //QUICK web.xml TODO
     fcpf.setFctBlc(this.fctBlc);
     fcspf.add(fcpf);
     this.fctBlc.getFctDt().setFctrsPrcFl(fcspf);
-    Set<IFctCnToSt> fcsCnToSt = new HashSet<IFctCnToSt>();
-    FcCnToStAi<Cursor> fcnst = new FcCnToStAi<Cursor>();
-    fcnst.setFctBlc(this.fctBlc);
-    fcsCnToSt.add(fcnst);
-    this.fctBlc.getFctDt().setFcsCnToSt(fcsCnToSt);
-    Set<IFcFlFdSt> fcsFlFdSt = new HashSet<IFcFlFdSt>();
-    FcFlFdAi<Cursor> ffdst = new FcFlFdAi<Cursor>();
-    ffdst.setFctBlc(this.fctBlc);
-    fcsFlFdSt.add(ffdst);
-    this.fctBlc.getFctDt().setFcsFlFdSt(fcsFlFdSt);
     Set<IHlNmClSt> hldsAdEnPr = new LinkedHashSet<IHlNmClSt>();
     hldsAdEnPr.add(new HlTrEnPr());
     this.fctBlc.getFctDt().setHldsAdEnPr(hldsAdEnPr);
