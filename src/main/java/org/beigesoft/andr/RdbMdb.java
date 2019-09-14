@@ -188,15 +188,14 @@ public class RdbMdb extends ARdba {
   }
 
   /**
-   * <p>Releases only unneeded memory, otherwise exception
-   * "...open already closed DB...".</p>
+   * <p>Closes DB.</p>
    * @throws Exception - an exception
    **/
   @Override
   public final void release() throws Exception {
     SQLiteDatabase sqliteDb = HLDSQLT.get();
     if (sqliteDb != null) {
-      sqliteDb.releaseMemory();
+      sqliteDb.close();
       HLDSQLT.remove();
     }
   }

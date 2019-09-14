@@ -90,6 +90,21 @@ public class Bsa extends Activity implements OnClickListener {
   public static final int PERMISSIONS_REQUESTS = 2415;
 
   /**
+   * <p>Action none.</p>
+   **/
+  public static final int NOACT = 0;
+
+  /**
+   * <p>Action starting.</p>
+   **/
+  public static final int STARTING = 1;
+
+  /**
+   * <p>Action stopping.</p>
+   **/
+  public static final int STOPPING = 2;
+
+  /**
    * <p>Flag to refresh UI.</p>
    **/
   private boolean isNeedsToRefresh;
@@ -135,24 +150,15 @@ public class Bsa extends Activity implements OnClickListener {
   private EditText etKsPasswRep;
 
   /**
-   * <p>Flag is starting.</p>
+   * <p>Flag to avoid double invoke, 0 - no action, 1 - starting,
+   * 2 - stopping.</p>
    **/
-  private boolean isStarting;
-
-  /**
-   * <p>Flag is stopping.</p>
-   **/
-  private boolean isStopping;
+  private int actionPerforming = 0;
 
   /**
    * <p>Log.</p>
    **/
   private ILog log;
-
-  /**
-   * <p>Loga.</p>
-   **/
-  private Loga loga = new Loga();
 
   /**
    * <p>Shared with service state.</p>
@@ -166,6 +172,19 @@ public class Bsa extends Activity implements OnClickListener {
   @Override
   public final void onCreate(final Bundle pSavedInstanceState) {
     super.onCreate(pSavedInstanceState);
+    if (this.log == null) {
+      try {
+        LogFile lg = new LogFile();
+        lg.setPath(Environment.getExternalStorageDirectory()
+          .getAbsolutePath() + "/bseisst");
+        lg.setClsImm(true);
+        this.log = lg;
+      } catch (Exception e) {
+        this.log = new Loga();
+        this.log.error(null, getClass(),
+          "Cant create starter file log", e);
+      }
+    }
     //Simple reflection way to avoid additional compile libraries
     if (android.os.Build.VERSION.SDK_INT >= 23) {
       try {
@@ -187,21 +206,8 @@ public class Bsa extends Activity implements OnClickListener {
             PERMISSIONS_REQUESTS);
         }
       } catch (Exception e) {
-        this.loga.error(null, getClass(),
-          "Cant get permissions", e);
-      }
-    }
-    if (this.log == null) {
-      try {
-        LogFile lg = new LogFile();
-        lg.setPath(Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + "/bseisst");
-        lg.setClsImm(true);
-        this.log = lg;
-      } catch (Exception e) {
-        this.log = new Loga();
         this.log.error(null, getClass(),
-          "Cant create starter file log", e);
+          "Cant get permissions", e);
       }
     }
     try {
@@ -338,10 +344,13 @@ public class Bsa extends Activity implements OnClickListener {
    */
   @Override
   public final void onClick(final View pTarget) {
-    if (!this.isStarting && !this.isStopping) {
+    if (this.srvState == null) {
+      return;
+    }
+    if (this.actionPerforming == NOACT) {
       if (pTarget == this.btnStart
         && !this.srvState.getBootEmbd().getIsStarted()) {
-        this.isStarting = true;
+        this.actionPerforming = STARTING;
         if (!this.srvState.getIsKeystoreCreated()) {
           try {
             this.srvState.setAjettyIn(Integer
@@ -354,7 +363,7 @@ public class Bsa extends Activity implements OnClickListener {
           Toast.makeText(getApplicationContext(),
             getResources().getString(R.string.EnterAjettyNumber),
               Toast.LENGTH_SHORT).show();
-          this.isStarting = false;
+          this.actionPerforming = NOACT;
           return;
         }
         refreshView();
@@ -369,7 +378,7 @@ public class Bsa extends Activity implements OnClickListener {
         refreshView();
       } else if (pTarget == this.btnStop
         && this.srvState.getBootEmbd().getIsStarted()) {
-        this.isStopping = true;
+        this.actionPerforming = STOPPING;
         refreshView();
         Intent intent = new Intent(this, SrvAccJet.class);
         intent.setAction(SrvAccJet.ACTION_STOP);
@@ -381,7 +390,7 @@ public class Bsa extends Activity implements OnClickListener {
             stFrg.invoke(this, intent);
             //startForegroundService(intent);
           } catch (Exception e) {
-            this.loga.error(null, getClass(), "Can't stop service", e);
+            this.log.error(null, getClass(), "Can't stop service", e);
             throw new RuntimeException(e);
           }
         } else {
@@ -403,7 +412,7 @@ public class Bsa extends Activity implements OnClickListener {
       Toast.makeText(getApplicationContext(),
         getResources().getString(R.string.enterPassw),
           Toast.LENGTH_SHORT).show();
-      this.isStarting = false;
+      this.actionPerforming = NOACT;
       return;
     }
     char[] ksPassword = this.etKsPassw.getText().toString().toCharArray();
@@ -415,7 +424,7 @@ public class Bsa extends Activity implements OnClickListener {
         Toast.makeText(getApplicationContext(),
           getResources().getString(R.string.enterPassw),
             Toast.LENGTH_SHORT).show();
-        this.isStarting = false;
+        this.actionPerforming = NOACT;
         return;
       }
       char[] ksPasswordc = this.etKsPasswRep.getText().toString().toCharArray();
@@ -434,7 +443,7 @@ public class Bsa extends Activity implements OnClickListener {
         Toast.makeText(getApplicationContext(),
           getResources().getString(R.string.passwNoMatch),
             Toast.LENGTH_SHORT).show();
-        this.isStarting = false;
+        this.actionPerforming = NOACT;
         return;
       }
       String isPswStrRez = this.srvState.getCryptoService()
@@ -442,7 +451,7 @@ public class Bsa extends Activity implements OnClickListener {
       if (isPswStrRez != null) {
         Toast.makeText(getApplicationContext(),
           isPswStrRez, Toast.LENGTH_SHORT).show();
-        this.isStarting = false;
+        this.actionPerforming = NOACT;
         return;
       }
       this.srvState.getCryptoService().createKeyStoreWithCredentials(
@@ -532,7 +541,7 @@ public class Bsa extends Activity implements OnClickListener {
         Toast.makeText(getApplicationContext(),
           getResources().getString(R.string.passwordWrong),
             Toast.LENGTH_SHORT).show();
-        this.isStarting = false;
+        this.actionPerforming = NOACT;
         return;
       }
     }
@@ -556,7 +565,7 @@ public class Bsa extends Activity implements OnClickListener {
         stFrg.invoke(this, intent);
         //startForegroundService(intent);
       } catch (Exception e) {
-        this.loga.error(null, getClass(), "Can't start service", e);
+        this.log.error(null, getClass(), "Can't start service", e);
         throw new RuntimeException(e);
       }
     } else {
@@ -608,8 +617,9 @@ public class Bsa extends Activity implements OnClickListener {
    */
   private void refreshView() {
     if (this.srvState != null) {
-      if (this.isStarting && !this.srvState.getBootEmbd().getIsStarted()
-        || this.isStopping && this.srvState.getBootEmbd().getIsStarted()) {
+      if (this.actionPerforming == STARTING && !this.srvState.getBootEmbd()
+      .getIsStarted() || this.actionPerforming == STOPPING
+        && this.srvState.getBootEmbd().getIsStarted()) {
         this.cmbPort.setEnabled(false);
         this.etAjettyIn.setEnabled(false);
         this.etKsPassw.setEnabled(false);
@@ -617,7 +627,7 @@ public class Bsa extends Activity implements OnClickListener {
         this.btnStart.setEnabled(false);
         this.btnStop.setEnabled(false);
         this.btnStartBrowser.setEnabled(false);
-        if (this.isStarting) {
+        if (this.actionPerforming == STARTING) {
           this.btnStartBrowser.setText(getResources()
             .getString(R.string.starting));
         } else {
@@ -626,12 +636,15 @@ public class Bsa extends Activity implements OnClickListener {
         }
       } else {
         if (this.srvState.getBootEmbd().getIsStarted()) {
-          if (this.isStarting) {
-            this.isStarting = false;
+          if (this.actionPerforming == STARTING) {
+            this.actionPerforming = NOACT;
           }
           this.cmbPort.setEnabled(false);
           this.btnStart.setEnabled(false);
           this.etAjettyIn.setEnabled(false);
+          if (this.srvState.getIsKeystoreCreated()) {
+            this.etAjettyIn.setText(this.srvState.getAjettyIn().toString());
+          }
           this.etKsPassw.setEnabled(false);
           this.etKsPasswRep.setEnabled(false);
           this.btnStop.setEnabled(true);
@@ -640,8 +653,8 @@ public class Bsa extends Activity implements OnClickListener {
           + this.cmbPort.getSelectedItem() + "/bsa"
               + this.cmbPort.getSelectedItem());
         } else {
-          if (this.isStopping) {
-            this.isStopping = false;
+          if (this.actionPerforming == STOPPING) {
+            this.actionPerforming = NOACT;
           }
           if (this.srvState.getIsKeystoreCreated()) {
             this.etAjettyIn.setEnabled(false);

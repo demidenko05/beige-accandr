@@ -39,8 +39,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.os.IBinder;
+import android.util.Log;
 
-import org.beigesoft.loga.Loga;
 import org.beigesoft.ajetty.BootEmbed;
 
 /**
@@ -78,11 +78,6 @@ public class SrvAccJet extends Service {
   private boolean isActionPerforming = false;
 
   /**
-   * <p>Loga.</p>
-   **/
-  private Loga loga = new Loga();
-
-  /**
    * <p>on create.</p>
    **/
   @Override
@@ -114,88 +109,81 @@ public class SrvAccJet extends Service {
   @Override
   public final synchronized int onStartCommand(final Intent pIntent,
     final int pFlags, final int pStartId) {
-    String action = pIntent.getAction();
-    Notification.Builder nfBld;
-    NotificationManager notfMan = (NotificationManager)
-      getSystemService(NOTIFICATION_SERVICE);
-    //Simple reflection way to avoid additional compile libraries
-    if (android.os.Build.VERSION.SDK_INT >= 26) {
-      try {
-        final String ntfChnlId = "BSEISCH";
-        Class[] argTypes = new Class[] {String.class, CharSequence.class,
-          Integer.TYPE};
-        Class ntfCnlCls = Class.forName("android.app.NotificationChannel");
-        Constructor ntfChnl = ntfCnlCls.getConstructor(argTypes);
-        argTypes = new Class[] {ntfCnlCls};
-        Method crNtfChnl = NotificationManager.class
-          .getDeclaredMethod("createNotificationChannel", argTypes);
-        int impDef = 3; //from source 29
-        crNtfChnl.invoke(notfMan, ntfChnl.newInstance(ntfChnlId,
-          ntfChnlId, impDef));
-        /*notfMan.createNotificationChannel(new NotificationChannel(
-                ntfChnlId, ntfChnlId,
-                NotificationManager.IMPORTANCE_DEFAULT));*/
-        argTypes = new Class[] {Context.class, String.class};
-        Constructor<Notification.Builder> nfBldCn = Notification.Builder.class
-          .getConstructor(argTypes);
-        nfBld = nfBldCn.newInstance(this, ntfChnlId);
-        //nfBld = new Notification.Builder(this, ntfChnlId);
-      } catch (Exception e) {
-        this.loga.error(null, getClass(), "Can't create notification", e);
-        throw new RuntimeException(e);
+    if (!this.isActionPerforming) {
+      BootEmbed bootStrap;
+      synchronized (this.beansMap) {
+        bootStrap = getBootStrap();
       }
-    } else {
-      nfBld = new Notification.Builder(this);
-    }
-    PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-      new Intent(this, Bsa.class), 0);
-    if (action.equals(ACTION_START)) {
-      if (!this.isActionPerforming) {
+      String action = pIntent.getAction();
+      if (bootStrap != null && action.equals(ACTION_START)
+        && !bootStrap.getIsStarted()) {
         this.isActionPerforming = true;
+        Notification.Builder nfBld;
+        NotificationManager notfMan = (NotificationManager)
+          getSystemService(NOTIFICATION_SERVICE);
+        //Simple reflection way to avoid additional compile libraries
+        if (android.os.Build.VERSION.SDK_INT >= 26) {
+          try {
+            final String ntfChnlId = "BSEISCH";
+            Class[] argTypes = new Class[] {String.class, CharSequence.class,
+              Integer.TYPE};
+            Class ntfCnlCls = Class.forName("android.app.NotificationChannel");
+            Constructor ntfChnl = ntfCnlCls.getConstructor(argTypes);
+            argTypes = new Class[] {ntfCnlCls};
+            Method crNtfChnl = NotificationManager.class
+              .getDeclaredMethod("createNotificationChannel", argTypes);
+            int impDef = 3; //from source 29
+            crNtfChnl.invoke(notfMan, ntfChnl.newInstance(ntfChnlId,
+              ntfChnlId, impDef));
+            /*notfMan.createNotificationChannel(new NotificationChannel(
+                    ntfChnlId, ntfChnlId,
+                    NotificationManager.IMPORTANCE_DEFAULT));*/
+            argTypes = new Class[] {Context.class, String.class};
+            Constructor<Notification.Builder> nfBldCn = Notification.Builder
+              .class.getConstructor(argTypes);
+            nfBld = nfBldCn.newInstance(this, ntfChnlId);
+            //nfBld = new Notification.Builder(this, ntfChnlId);
+          } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "Can't create notification", e);
+            throw new RuntimeException(e);
+          }
+        } else {
+          nfBld = new Notification.Builder(this);
+        }
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+          new Intent(this, Bsa.class), 0);
+        CharSequence text = getText(R.string.srvStrt);
+        // Set the info for the views that show in the ntfc panel.
+        Notification ntfc = nfBld.setSmallIcon(R.drawable.bsnotf)  // the icon
+          //.setTicker(text)  // the status text
+          .setWhen(System.currentTimeMillis())  // the time stamp
+          .setContentTitle(getText(R.string.app_name))  // the label
+          .setContentText(text)  // the contents of the entry
+          .setContentIntent(contentIntent)  // The intent to send when clicked
+          .build();
+        if (android.os.Build.VERSION.SDK_INT >= 26) {
+          try {
+            Class[] argTypes = new Class[] {Integer.TYPE, Notification.class};
+            Method stFrg = Service.class
+              .getDeclaredMethod("startForeground", argTypes);
+            stFrg.invoke(this, R.string.srvStrt, ntfc);
+            //startForeground(R.string.srvStrt, ntfc);
+          } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "Can't start service", e);
+            throw new RuntimeException(e);
+          }
+        } else {
+          startForeground(R.string.srvStrt, ntfc);
+        }
         StartThread stThread = new StartThread();
         stThread.start();
-      }
-      CharSequence text = getText(R.string.srvStrt);
-      // Set the info for the views that show in the ntfc panel.
-      Notification ntfc = nfBld.setSmallIcon(R.drawable.bsnotf)  // the icon
-        .setTicker(text)  // the status text
-        .setWhen(System.currentTimeMillis())  // the time stamp
-        .setContentTitle(getText(R.string.app_name))  // the label
-        .setContentText(text)  // the contents of the entry
-        .setContentIntent(contentIntent)  // The intent to send when clicked
-        .build();
-      if (android.os.Build.VERSION.SDK_INT >= 26) {
-        try {
-          Class[] argTypes = new Class[] {Integer.TYPE, Notification.class};
-          Method stFrg = Service.class
-            .getDeclaredMethod("startForeground", argTypes);
-          stFrg.invoke(this, R.string.srvStrt, ntfc);
-          //startForeground(R.string.srvStrt, ntfc);
-        } catch (Exception e) {
-          this.loga.error(null, getClass(), "Can't start service", e);
-          throw new RuntimeException(e);
-        }
-      } else {
-        startForeground(R.string.srvStrt, ntfc);
-      }
-    } else if (action.equals(ACTION_STOP)) {
-      if (!this.isActionPerforming) {
+      } else if (action.equals(ACTION_STOP)) {
         this.isActionPerforming = true;
         StopThread stThread = new StopThread();
         stThread.start();
+        stopForeground(true);
+        stopSelf();
       }
-      CharSequence text = getText(R.string.srvStop);
-      // Set the info for the views that show in the ntfc panel.
-      Notification ntfc = nfBld.setSmallIcon(R.drawable.bsnotf)  // the icon
-        .setTicker(text)  // the status text
-        .setWhen(System.currentTimeMillis())  // the time stamp
-        .setContentTitle(getText(R.string.app_name))  // the label
-        .setContentText(text)  // the contents of the entry
-        .setContentIntent(contentIntent)  // The intent to send when clicked
-        .build();
-      notfMan.notify(NOTIFICATION_ID, ntfc);
-      stopForeground(true);
-      stopSelf();
     }
     // We want this service to continue running until it is explicitly
     // stopped, so return sticky.
@@ -229,8 +217,7 @@ public class SrvAccJet extends Service {
       SrvState srvState = (SrvState) srvStateo;
       bootStrap = srvState.getBootEmbd();
     } else {
-      //already stopped
-      stopSelf();
+      Log.e(getClass().getSimpleName(), "There is no srvState");
     }
     return bootStrap;
   }
@@ -242,9 +229,12 @@ public class SrvAccJet extends Service {
 
     @Override
     public void run() {
+      boolean cantStart = false;
       synchronized (SrvAccJet.this.beansMap) {
         BootEmbed bootStrap = getBootStrap();
-        if (bootStrap != null && !bootStrap.getIsStarted()) {
+        if (bootStrap == null) {
+          cantStart = true;
+        } else if (!bootStrap.getIsStarted()) {
           try {
             if (bootStrap.getServer() == null) {
               bootStrap.createServer();
@@ -253,11 +243,16 @@ public class SrvAccJet extends Service {
             }
             bootStrap.startServer();
           } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(getClass().getSimpleName(), "Can't start server", e);
+            cantStart = true;
           }
         }
       }
       synchronized (SrvAccJet.this) {
+        if (cantStart) {
+          SrvAccJet.this.stopForeground(true);
+          SrvAccJet.this.stopSelf();
+        }
         SrvAccJet.this.isActionPerforming = false;
       }
     }
@@ -271,13 +266,12 @@ public class SrvAccJet extends Service {
     @Override
     public void run() {
       synchronized (SrvAccJet.this.beansMap) {
-        BootEmbed bootStrap = SrvAccJet.this
-          .getBootStrap();
+        BootEmbed bootStrap = SrvAccJet.this.getBootStrap();
         if (bootStrap != null && bootStrap.getIsStarted()) {
           try {
             bootStrap.stopServer();
           } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(getClass().getSimpleName(), "Can't stop server", e);
           }
         }
       }

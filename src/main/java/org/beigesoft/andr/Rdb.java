@@ -60,8 +60,8 @@ import org.beigesoft.mdl.ColVals;
  * It seems that #3 means that SQLite compiled in that way and it's used
  * serialized transaction isolation.
  * This is should be the fastest "single thread" implementation, but using
- * SQLiteOpenHelper to get DB for each thread without closing works fast and
- * with no problems, so use RdbMdb instead.
+ * SQLiteOpenHelper to get DB for each thread with closing works fast and
+ * with no problems, so use RdbMdb or Rdba instead.
  * </p>
  *
  * @author Yury Demidenko

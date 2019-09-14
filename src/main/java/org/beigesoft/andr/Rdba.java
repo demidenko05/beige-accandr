@@ -39,12 +39,7 @@ import org.beigesoft.mdl.IRecSet;
 import org.beigesoft.mdl.ColVals;
 
 /**
- * <p>Maximum native implementation of database service for Android.
- * On hard job like webstore.refresh item in list (org.beigesoft.ws.prcRefrLst),
- * the database is often becomes locked partially, e.g. a request OK
- * but another one frozen, tables may be different or same,
- * this is for all - this, Rdb, RdbMdb. Log shows that all transactions was started,
- * marketed successful and ended successful, but in SQLite DB data is old.</p>
+ * <p>Maximum native implementation of database service for Android.</p>
  *
  * @author Yury Demidenko
  */

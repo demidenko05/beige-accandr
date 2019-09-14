@@ -26,6 +26,6 @@
   <string name="wasErr">Ошибка!</string>
   <string name="newFlCop">Новые версии WEB static файлов скопированы!</string>
   <string name="dirCrFlCop">Беижсофт директория создана и WEB static файлы скопированы!</string>
-  <string name="srvStrt">ВЕБ-Сервер А-Джетти запущен.</string>
+  <string name="srvStrt">А-Джетти запущен.</string>
   <string name="srvStop">ВЕБ-Сервер А-Джетти остановлен.</string>
 </resources>
