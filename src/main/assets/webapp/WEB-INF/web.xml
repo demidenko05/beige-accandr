@@ -1494,6 +1494,11 @@ description, distributable, and context-param elements.
     </servlet>
 
     <servlet>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.trIsl_jsp</servlet-name>
+        <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.trIsl_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.idsa_jsp</servlet-name>
         <servlet-class>org.apache.jsp.WEB_002dINF.jsp.in.idsa_jsp</servlet-class>
     </servlet>
@@ -2971,6 +2976,11 @@ description, distributable, and context-param elements.
     <servlet-mapping>
         <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.spStr_jsp</servlet-name>
         <url-pattern>/WEB-INF/jsp/in/spStr.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.jsp.WEB_002dINF.jsp.in.trIsl_jsp</servlet-name>
+        <url-pattern>/WEB-INF/jsp/in/trIsl.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
