@@ -35,7 +35,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.util.Map;
 import java.lang.reflect.Method;
 import java.security.KeyStore;
 import java.security.PublicKey;
@@ -62,7 +61,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.net.Uri;
 import android.Manifest;
-import android.util.Log;
 
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 
@@ -130,11 +128,6 @@ public class Bsa extends Activity implements OnClickListener {
   private Spinner cmbPort;
 
   /**
-   * <p>Application beans map reference to lock.</p>
-   **/
-  private Map<String, Object> beansMap;
-
-  /**
    * <p>A-Jetty instance number.</p>
    **/
   private EditText etAjettyIn;
@@ -156,14 +149,14 @@ public class Bsa extends Activity implements OnClickListener {
   private int actionPerforming = 0;
 
   /**
-   * <p>Log.</p>
-   **/
-  private ILog log;
-
-  /**
-   * <p>Shared with service state.</p>
+   * <p>Shared state.</p>
    **/
   private SrvState srvState;
+
+  /**
+   * <p>Shared logger.</p>
+   **/
+  private ILog log;
 
   /**
    * <p>Called when the activity is first created or recreated.</p>
@@ -172,7 +165,13 @@ public class Bsa extends Activity implements OnClickListener {
   @Override
   public final void onCreate(final Bundle pSavedInstanceState) {
     super.onCreate(pSavedInstanceState);
-    if (this.log == null) {
+    AppPlus appPlus = (AppPlus) getApplicationContext();
+    if (appPlus.getBeansMap().size() > 0) {
+      this.srvState = (SrvState) appPlus.getBeansMap()
+        .get(SrvState.class.getSimpleName());
+      this.log = this.srvState.getLog();
+    } else {
+      this.srvState = new SrvState();
       try {
         LogFile lg = new LogFile();
         lg.setPath(Environment.getExternalStorageDirectory()
@@ -184,6 +183,7 @@ public class Bsa extends Activity implements OnClickListener {
         this.log.error(null, getClass(),
           "Cant create starter file log", e);
       }
+      this.srvState.setLog(this.log);
     }
     //Simple reflection way to avoid additional compile libraries
     if (android.os.Build.VERSION.SDK_INT >= 23) {
@@ -230,22 +230,18 @@ public class Bsa extends Activity implements OnClickListener {
       this.btnStop = (Button) findViewById(R.id.btnStop);
       this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
-      AppPlus appPlus = (AppPlus) getApplicationContext();
-      this.beansMap = appPlus.getBeansMap();
-      synchronized (this.beansMap) {
-        if (this.beansMap.size() == 0) {
-          try {
-            initSrv();
-          } catch (Exception e) {
-            log.error(null, getClass(), "Cant create server", e);
-          }
-        } else {
-          this.srvState = (SrvState) this.beansMap
-            .get(SrvState.class.getSimpleName());
+      if (appPlus.getBeansMap().size() == 0) {
+        try {
+          initSrv();
+          appPlus.getBeansMap().put(SrvState.class.getSimpleName(),
+            this.srvState);
+        } catch (Exception e) {
+          this.srvState = null;
+          this.log.error(null, getClass(), "Cant create server", e);
         }
       }
     } catch (Exception e) {
-      log.error(null, getClass(),
+      this.log.error(null, getClass(),
         "Cant create interface", e);
     }
  }
@@ -256,7 +252,6 @@ public class Bsa extends Activity implements OnClickListener {
    */
   public final void initSrv() throws Exception {
     try {
-      this.srvState = new SrvState();
       this.srvState.setCryptoService(new CryptoService());
       File jettyBase = new File(getFilesDir().getAbsolutePath()
        + "/" + APP_BASE);
@@ -295,11 +290,13 @@ public class Bsa extends Activity implements OnClickListener {
       this.log.error(null, getClass(), null, e);
       Toast.makeText(getApplicationContext(),
         e.getShMsg(), Toast.LENGTH_SHORT).show();
+      throw e;
     } catch (Exception e) {
       this.log.error(null, getClass(), null, e);
       Toast.makeText(getApplicationContext(),
         getResources().getString(R.string.wasErr),
           Toast.LENGTH_SHORT).show();
+      throw e;
     }
     // keystore placed into [webappdir-parent]/ks folder:
     File ksDir = new File(getFilesDir().getAbsolutePath() + "/ks");
@@ -307,6 +304,7 @@ public class Bsa extends Activity implements OnClickListener {
       String msg = getResources().getString(R.string.cantCrDir) + ": " + ksDir;
       this.log.error(null, getClass(), msg);
       Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+      throw new ExcCode(ExcCode.WR, msg);
     }
     File[] lstFl = ksDir.listFiles();
     String nmpref = "ajettykeystore.";
@@ -334,8 +332,8 @@ public class Bsa extends Activity implements OnClickListener {
       String msg = getResources().getString(R.string.cantInitCrypto);
       this.log.error(null, getClass(), msg);
       Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+      throw e;
     }
-    this.beansMap.put(SrvState.class.getSimpleName(), this.srvState);
   }
 
   /**
@@ -356,7 +354,7 @@ public class Bsa extends Activity implements OnClickListener {
             this.srvState.setAjettyIn(Integer
               .parseInt(etAjettyIn.getText().toString()));
           } catch (Exception e) {
-            e.printStackTrace();
+            this.log.error(null, getClass(), "Error!", e);
           }
         }
         if (this.srvState.getAjettyIn() == null) {
@@ -553,8 +551,7 @@ public class Bsa extends Activity implements OnClickListener {
     this.srvState.getBootEmbd().setAjettyIn(this.srvState.getAjettyIn());
     this.srvState.getBootEmbd().setPort((Integer) cmbPort.getSelectedItem());
     Toast.makeText(getApplicationContext(), getResources().getString(
-      R.string.sendingStart), Toast.LENGTH_SHORT)
-        .show();
+      R.string.sendingStart), Toast.LENGTH_SHORT).show();
     Intent intent = new Intent(this, SrvAccJet.class);
     intent.setAction(SrvAccJet.ACTION_START);
     if (android.os.Build.VERSION.SDK_INT >= 26) {
@@ -597,7 +594,7 @@ public class Bsa extends Activity implements OnClickListener {
     try {
       Thread.sleep(1000);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      this.log.error(null, getClass(), "Error!", e);
     }
     super.onPause();
   }
@@ -694,7 +691,7 @@ public class Bsa extends Activity implements OnClickListener {
             this.log.error(null, getClass(), msg);
             throw new ExcCode(ExcCode.WR, msg);
           } else {
-            Log.i(getClass().getSimpleName(),
+            this.log.info(null, getClass(),
               "Created : " + subdir);
           }
         }
@@ -712,21 +709,21 @@ public class Bsa extends Activity implements OnClickListener {
             outs.write(data, 0, count);
           }
           outs.flush();
-          Log.i(getClass().getSimpleName(),
+          this.log.info(null, getClass(),
             "Copied: " + pCurrDir + "/" + fileName);
         } finally {
           if (ins != null) {
             try {
               ins.close();
             } catch (Exception e2) {
-              e2.printStackTrace();
+              this.log.error(null, getClass(), "Error!", e2);
             }
           }
           if (outs != null) {
             try {
               outs.close();
             } catch (Exception e3) {
-              e3.printStackTrace();
+              this.log.error(null, getClass(), "Error!", e3);
             }
           }
         }
@@ -749,7 +746,7 @@ public class Bsa extends Activity implements OnClickListener {
         try {
           Thread.sleep(2000);
         } catch (InterruptedException e) {
-          e.printStackTrace();
+          Bsa.this.log.error(null, getClass(), "error!", e);
         }
       }
       return null;
@@ -763,22 +760,5 @@ public class Bsa extends Activity implements OnClickListener {
       Bsa.this.refreshView();
       super.onProgressUpdate(values);
     }
-  }
-
-  //SGS:
-  /**
-   * <p>Getter for log.</p>
-   * @return ILog
-   **/
-  public final ILog getLog() {
-    return this.log;
-  }
-
-  /**
-   * <p>Setter for log.</p>
-   * @param pLog reference
-   **/
-  public final void setLog(final ILog pLog) {
-    this.log = pLog;
   }
 }

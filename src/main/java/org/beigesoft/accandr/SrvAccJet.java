@@ -28,7 +28,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.beigesoft.accandr;
 
-import java.util.Map;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
@@ -39,9 +38,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.os.IBinder;
-import android.util.Log;
 
-import org.beigesoft.ajetty.BootEmbed;
+import org.beigesoft.log.ILog;
 
 /**
  * <p>A-Jetty Android service.</p>
@@ -68,9 +66,9 @@ public class SrvAccJet extends Service {
     = "org.beigesoft.accandr.STOP";
 
   /**
-   * <p>Application beans map reference to lock.</p>
+   * <p>Flag to avoid double stopping.</p>
    **/
-  private Map<String, Object> beansMap;
+  private boolean isStopping = false;
 
   /**
    * <p>Flag to avoid double invoke.</p>
@@ -78,12 +76,24 @@ public class SrvAccJet extends Service {
   private boolean isActionPerforming = false;
 
   /**
+   * <p>Shared state.</p>
+   **/
+  private SrvState srvState;
+
+  /**
+   * <p>Shared logger.</p>
+   **/
+  private ILog log;
+
+  /**
    * <p>on create.</p>
    **/
   @Override
-  public final synchronized void onCreate() {
+  public final void onCreate() {
     AppPlus appPlus = (AppPlus) getApplicationContext();
-    this.beansMap = appPlus.getBeansMap();
+    this.srvState = (SrvState) appPlus.getBeansMap()
+      .get(SrvState.class.getSimpleName());
+    this.log = this.srvState.getLog();
   }
 
   /**
@@ -92,7 +102,7 @@ public class SrvAccJet extends Service {
    * @return IBinder IBinder
    **/
   @Override
-  public final synchronized IBinder onBind(final Intent pIntent) {
+  public final IBinder onBind(final Intent pIntent) {
     return null;
   }
 
@@ -107,16 +117,13 @@ public class SrvAccJet extends Service {
    * @return int status
    */
   @Override
-  public final synchronized int onStartCommand(final Intent pIntent,
+  public final int onStartCommand(final Intent pIntent,
     final int pFlags, final int pStartId) {
+    String action = pIntent.getAction();
+    this.log.info(null, getClass(), "Service action " + action);
     if (!this.isActionPerforming) {
-      BootEmbed bootStrap;
-      synchronized (this.beansMap) {
-        bootStrap = getBootStrap();
-      }
-      String action = pIntent.getAction();
-      if (bootStrap != null && action.equals(ACTION_START)
-        && !bootStrap.getIsStarted()) {
+      if (action.equals(ACTION_START)
+        && !this.srvState.getBootEmbd().getIsStarted()) {
         this.isActionPerforming = true;
         Notification.Builder nfBld;
         NotificationManager notfMan = (NotificationManager)
@@ -144,7 +151,7 @@ public class SrvAccJet extends Service {
             nfBld = nfBldCn.newInstance(this, ntfChnlId);
             //nfBld = new Notification.Builder(this, ntfChnlId);
           } catch (Exception e) {
-            Log.e(getClass().getSimpleName(), "Can't create notification", e);
+            this.log.error(null, getClass(), "Can't create notification", e);
             throw new RuntimeException(e);
           }
         } else {
@@ -169,7 +176,7 @@ public class SrvAccJet extends Service {
             stFrg.invoke(this, R.string.srvStrt, ntfc);
             //startForeground(R.string.srvStrt, ntfc);
           } catch (Exception e) {
-            Log.e(getClass().getSimpleName(), "Can't start service", e);
+            this.log.error(null, getClass(), "Can't start service", e);
             throw new RuntimeException(e);
           }
         } else {
@@ -195,31 +202,17 @@ public class SrvAccJet extends Service {
    * @see android.app.Service#onDestroy().</p>
    */
   @Override
-  public final synchronized void onDestroy() {
-    if (!this.isActionPerforming) {
-      this.isActionPerforming = true;
-      StopThread stThread = new StopThread();
-      stThread.start();
+  public final void onDestroy() { //Android doesn't invoke it on reboot!?
+    super.onDestroy();
+    this.log.info(null, getClass(), "Destroing service...");
+    if (!this.isStopping && this.srvState.getBootEmbd().getIsStarted()) {
+      try {
+        this.log.info(null, getClass(), "Stoping server...");
+        this.srvState.getBootEmbd().stopServer();
+      } catch (Exception e) {
+        this.log.error(null, getClass(), "Can't stop server", e);
+      }
     }
-  }
-
-  /**
-   * <p>Get BootStrapEmbedded from app-context.
-   * It invoked by start/stop threads.</p>
-   * @return BootStrapEmbedded BootStrapEmbedded
-   */
-  private synchronized BootEmbed getBootStrap() {
-    BootEmbed bootStrap = null;
-    // this.beansMap already synchronized
-    Object srvStateo = this.beansMap
-      .get(SrvState.class.getSimpleName());
-    if (srvStateo != null) {
-      SrvState srvState = (SrvState) srvStateo;
-      bootStrap = srvState.getBootEmbd();
-    } else {
-      Log.e(getClass().getSimpleName(), "There is no srvState");
-    }
-    return bootStrap;
   }
 
   /**
@@ -229,32 +222,27 @@ public class SrvAccJet extends Service {
 
     @Override
     public void run() {
+      SrvAccJet.this.isStopping = false;
       boolean cantStart = false;
-      synchronized (SrvAccJet.this.beansMap) {
-        BootEmbed bootStrap = getBootStrap();
-        if (bootStrap == null) {
-          cantStart = true;
-        } else if (!bootStrap.getIsStarted()) {
-          try {
-            if (bootStrap.getServer() == null) {
-              bootStrap.createServer();
-              bootStrap.getWebAppContext()
-                .setAttribute("AndrCtx", SrvAccJet.this);
-            }
-            bootStrap.startServer();
-          } catch (Exception e) {
-            Log.e(getClass().getSimpleName(), "Can't start server", e);
-            cantStart = true;
+      if (!SrvAccJet.this.srvState.getBootEmbd().getIsStarted()) {
+        try {
+          SrvAccJet.this.log.info(null, getClass(), "Staring server...");
+          if (SrvAccJet.this.srvState.getBootEmbd().getServer() == null) {
+            SrvAccJet.this.srvState.getBootEmbd().createServer();
+            SrvAccJet.this.srvState.getBootEmbd().getWebAppContext()
+              .setAttribute("AndrCtx", SrvAccJet.this);
           }
+          SrvAccJet.this.srvState.getBootEmbd().startServer();
+        } catch (Exception e) {
+          SrvAccJet.this.log.error(null, getClass(), "Can't start server", e);
+          cantStart = true;
         }
       }
-      synchronized (SrvAccJet.this) {
-        if (cantStart) {
-          SrvAccJet.this.stopForeground(true);
-          SrvAccJet.this.stopSelf();
-        }
-        SrvAccJet.this.isActionPerforming = false;
+      if (cantStart) {
+        SrvAccJet.this.stopForeground(true);
+        SrvAccJet.this.stopSelf();
       }
+      SrvAccJet.this.isActionPerforming = false;
     }
   };
 
@@ -265,44 +253,16 @@ public class SrvAccJet extends Service {
 
     @Override
     public void run() {
-      synchronized (SrvAccJet.this.beansMap) {
-        BootEmbed bootStrap = SrvAccJet.this.getBootStrap();
-        if (bootStrap != null && bootStrap.getIsStarted()) {
-          try {
-            bootStrap.stopServer();
-          } catch (Exception e) {
-            Log.e(getClass().getSimpleName(), "Can't stop server", e);
-          }
+      SrvAccJet.this.isStopping = true; //A-Jetty take a time to stop itself
+      if (SrvAccJet.this.srvState.getBootEmbd().getIsStarted()) {
+        try {
+          SrvAccJet.this.log.info(null, getClass(), "Stoping server...");
+          SrvAccJet.this.srvState.getBootEmbd().stopServer();
+        } catch (Exception e) {
+          SrvAccJet.this.log.error(null, getClass(), "Can't stop server", e);
         }
       }
-      synchronized (SrvAccJet.this) {
-        SrvAccJet.this.isActionPerforming = false;
-      }
+      SrvAccJet.this.isActionPerforming = false;
     }
   };
-
-  //Simple getters and setters:
-  /**
-   * <p>Getter for beansMap.</p>
-   * @return Map<String, Object>
-   **/
-  public final Map<String, Object> getBeansMap() {
-    return this.beansMap;
-  }
-
-  /**
-   * <p>Setter for beansMap.</p>
-   * @param pBeansMap reference
-   **/
-  public final void setBeansMap(final Map<String, Object> pBeansMap) {
-    this.beansMap = pBeansMap;
-  }
-
-  /**
-   * <p>Getter for isActionPerforming.</p>
-   * @return boolean
-   **/
-  public final boolean getIsActionPerforming() {
-    return this.isActionPerforming;
-  }
 }

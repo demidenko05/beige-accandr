@@ -32,6 +32,8 @@ import org.beigesoft.ajetty.FctAppEmb;
 import org.beigesoft.ajetty.BootEmbed;
 import org.beigesoft.ajetty.crypto.CryptoService;
 
+import org.beigesoft.log.ILog;
+
 /**
  * <p>Service state holder.</p>
  *
@@ -63,6 +65,11 @@ public class SrvState {
    * <p>Flag is keystore created.</p>
    **/
   private boolean isKeystoreCreated = false;
+
+  /**
+   * <p>Shared logger.</p>
+   **/
+  private ILog log;
 
   //Simple getters and setters:
   /**
@@ -127,5 +134,21 @@ public class SrvState {
    **/
   public final void setIsKeystoreCreated(final boolean pIsKeystoreCreated) {
     this.isKeystoreCreated = pIsKeystoreCreated;
+  }
+
+  /**
+   * <p>Getter for log.</p>
+   * @return ILog
+   **/
+  public final ILog getLog() {
+    return this.log;
+  }
+
+  /**
+   * <p>Setter for log.</p>
+   * @param pLog reference
+   **/
+  public final void setLog(final ILog pLog) {
+    this.log = pLog;
   }
 }
