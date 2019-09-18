@@ -66,11 +66,6 @@ public class SrvAccJet extends Service {
     = "org.beigesoft.accandr.STOP";
 
   /**
-   * <p>Flag to avoid double stopping.</p>
-   **/
-  private boolean isStopping = false;
-
-  /**
    * <p>Flag to avoid double invoke.</p>
    **/
   private boolean isActionPerforming = false;
@@ -120,7 +115,6 @@ public class SrvAccJet extends Service {
   public final int onStartCommand(final Intent pIntent,
     final int pFlags, final int pStartId) {
     String action = pIntent.getAction();
-    this.log.info(null, getClass(), "Service action " + action);
     if (!this.isActionPerforming) {
       if (action.equals(ACTION_START)
         && !this.srvState.getBootEmbd().getIsStarted()) {
@@ -198,31 +192,12 @@ public class SrvAccJet extends Service {
   }
 
   /**
-   * <p>Android Service destroy.
-   * @see android.app.Service#onDestroy().</p>
-   */
-  @Override
-  public final void onDestroy() { //Android doesn't invoke it on reboot!?
-    super.onDestroy();
-    this.log.info(null, getClass(), "Destroing service...");
-    if (!this.isStopping && this.srvState.getBootEmbd().getIsStarted()) {
-      try {
-        this.log.info(null, getClass(), "Stoping server...");
-        this.srvState.getBootEmbd().stopServer();
-      } catch (Exception e) {
-        this.log.error(null, getClass(), "Can't stop server", e);
-      }
-    }
-  }
-
-  /**
    * <p>Thread to start A-Jetty.</p>
    */
   private class StartThread extends Thread {
 
     @Override
     public void run() {
-      SrvAccJet.this.isStopping = false;
       boolean cantStart = false;
       if (!SrvAccJet.this.srvState.getBootEmbd().getIsStarted()) {
         try {
@@ -253,7 +228,6 @@ public class SrvAccJet extends Service {
 
     @Override
     public void run() {
-      SrvAccJet.this.isStopping = true; //A-Jetty take a time to stop itself
       if (SrvAccJet.this.srvState.getBootEmbd().getIsStarted()) {
         try {
           SrvAccJet.this.log.info(null, getClass(), "Stoping server...");
