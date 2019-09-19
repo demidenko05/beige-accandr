@@ -111,25 +111,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       //Allow: backspace, delete, tab, esc, enter, end, arrow navigation:
       if ($.inArray(e.keyCode, [8, 46, 9, 27, 13, 37, 39, 190]) !== -1
         //Allow Ctrl+V
-        || (e.ctrlKey && e.keyCode === 86)
+        || (e.ctrlKey && e.keyCode == 86)
         //Allow Ctrl+A, Command+A
-        || (e.keyCode === 65 && (e.ctrlKey || e.metaKey))
+        || (e.keyCode == 65 && (e.ctrlKey || e.metaKey))
         //Allow: home, end, left, right, down, up:
         || (e.keyCode >= 35 && e.keyCode <= 40)) {
         return;
       }
       //Handle minus:
-      if (e.key === "-") {
-        if (e.target.nmin < 0 && e.target.value.indexOf("-") === -1 && e.target.selectionStart === 0
-          || (e.target.value.startsWith("0") && e.target.selectionStart === 1)) {
+      if (e.key == "-") {
+        if (e.target.nmin < 0 && e.target.value.indexOf("-") == -1 && e.target.selectionStart == 0
+          || (e.target.value.startsWith("0") && e.target.selectionStart == 1)) {
           return;
         }
         e.preventDefault();
         return;
       }
       //Handle decimal separator:
-      if (e.key === '.' || e.key === ',' || e.key === BSNUMVS.decSep) {
-        if (e.target.decPl === 0) {
+      if (e.key == '.' || e.key == ',' || e.key == BSNUMVS.decSep) {
+        if (e.target.decPl == 0) {
           e.preventDefault();
           return;
         }
@@ -157,7 +157,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           var dotIdx = e.target.value.indexOf(BSNUMVS.decSep);
           e.target.selectionStart = dotIdx;
           e.target.selectionEnd = dotIdx;
-        } else if (e.key === "-") {
+        } else if (e.key == "-") {
             if (e.target.value.startsWith("0-")) {
               //minus at start:
               e.target.value = e.target.value.substring(1);
@@ -200,7 +200,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             e.target.selectionStart = ss;
             e.target.selectionEnd = ss;
           } else {
-            if (ss == 2 && e.target.value.startsWith("0")) {
+            if (ss == 2 && e.target.value.startsWith("0") && e.target.value.indexOf(BSNUMVS.decSep) == 2) {
+              //new first digit replaces 0
               ss = ss - 1;
             }
             var vn = bsStrFlt(e.target.value);
