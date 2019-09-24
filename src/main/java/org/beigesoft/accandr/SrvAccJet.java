@@ -230,7 +230,7 @@ public class SrvAccJet extends Service {
     public void run() {
       if (SrvAccJet.this.srvState.getBootEmbd().getIsStarted()) {
         try {
-          SrvAccJet.this.log.info(null, getClass(), "Stoping server...");
+          SrvAccJet.this.log.info(null, getClass(), "Stopping server...");
           SrvAccJet.this.srvState.getBootEmbd().stopServer();
         } catch (Exception e) {
           SrvAccJet.this.log.error(null, getClass(), "Can't stop server", e);

@@ -213,7 +213,8 @@ public class Rdb extends ARdba {
   }
 
   /**
-   * <p>Releases only unneeded memory.</p>
+   * <p>Releases only unneeded memory, otherwise exception
+   * "...open already closed DB...".</p>
    * @throws Exception - an exception
    **/
   @Override
