@@ -28,6 +28,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.beigesoft.andr;
 
+import java.util.Locale;
+
 import android.database.Cursor;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -284,8 +286,8 @@ public class Rdba extends ARdba {
         getLog().debug(null, getClass(), "try to update : " + pCls + " where: "
         + pWhe + " cv: " + getSrvClVl().str(pCls, pCv) + ", ACV: " + cntVals);
       }
-      return lazDb()
-        .update(pCls.getSimpleName().toUpperCase(), cntVals, pWhe, null);
+      return lazDb().update(pCls.getSimpleName().toUpperCase(Locale.ROOT),
+        cntVals, pWhe, null);
     } catch (Exception ex) {
       String msg = ex.getMessage() + ", cls: " + pCls + ", cv: "
         + getSrvClVl().str(pCls, pCv) + ", where: " + pWhe;
@@ -316,7 +318,7 @@ public class Rdba extends ARdba {
           + getSrvClVl().str(pCls, pCv) + " ACV: " + cntVals);
       }
       long result = lazDb()
-        .insert(pCls.getSimpleName().toUpperCase(), null, cntVals);
+        .insert(pCls.getSimpleName().toUpperCase(Locale.ROOT), null, cntVals);
       if (dbgSh) {
         getLog().debug(null, getClass(), "result insert: " + result);
       }

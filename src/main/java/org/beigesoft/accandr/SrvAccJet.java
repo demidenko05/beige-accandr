@@ -114,9 +114,8 @@ public class SrvAccJet extends Service {
   @Override
   public final int onStartCommand(final Intent pIntent,
     final int pFlags, final int pStartId) {
-    String action = pIntent.getAction();
     if (!this.isActionPerforming) {
-      if (action.equals(ACTION_START)
+      if (pIntent.getAction().equals(ACTION_START)
         && !this.srvState.getBootEmbd().getIsStarted()) {
         this.isActionPerforming = true;
         Notification.Builder nfBld;
@@ -178,7 +177,7 @@ public class SrvAccJet extends Service {
         }
         StartThread stThread = new StartThread();
         stThread.start();
-      } else if (action.equals(ACTION_STOP)) {
+      } else if (pIntent.getAction().equals(ACTION_STOP)) {
         this.isActionPerforming = true;
         StopThread stThread = new StopThread();
         stThread.start();

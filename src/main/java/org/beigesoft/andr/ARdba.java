@@ -30,6 +30,7 @@ package org.beigesoft.andr;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import android.database.Cursor;
 import android.content.ContentValues;
@@ -68,30 +69,30 @@ public abstract class ARdba extends ARdb<Cursor> {
     if (pCv.getInts() != null) {
       for (Map.Entry<String, Integer> enr : pCv.getInts().entrySet()) {
         if (enr.getValue() != null || !idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+          cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
         }
       }
     }
     if (pCv.getLongs() != null) {
       for (Map.Entry<String, Long> enr : pCv.getLongs().entrySet()) {
         if (enr.getValue() != null || !idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+          cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
         }
       }
     }
     if (pCv.getStrs() != null) {
       for (Map.Entry<String, String> enr : pCv.getStrs().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+        cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
       }
     }
     if (pCv.getFloats() != null) {
       for (Map.Entry<String, Float> enr : pCv.getFloats().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+        cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
       }
     }
     if (pCv.getDoubles() != null) {
       for (Map.Entry<String, Double> enr : pCv.getDoubles().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+        cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
       }
     }
     return cntVals;
@@ -113,30 +114,30 @@ public abstract class ARdba extends ARdb<Cursor> {
     if (pCv.getInts() != null) {
       for (Map.Entry<String, Integer> enr : pCv.getInts().entrySet()) {
         if (!idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+          cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
         }
       }
     }
     if (pCv.getLongs() != null) {
       for (Map.Entry<String, Long> enr : pCv.getLongs().entrySet()) {
         if (!idNms.contains(enr.getKey())) {
-          cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+          cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
         }
       }
     }
     if (pCv.getStrs() != null) {
       for (Map.Entry<String, String> enr : pCv.getStrs().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+        cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
       }
     }
     if (pCv.getFloats() != null) {
       for (Map.Entry<String, Float> enr : pCv.getFloats().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+        cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
       }
     }
     if (pCv.getDoubles() != null) {
       for (Map.Entry<String, Double> enr : pCv.getDoubles().entrySet()) {
-        cntVals.put(enr.getKey().toUpperCase(), enr.getValue());
+        cntVals.put(enr.getKey().toUpperCase(Locale.ROOT), enr.getValue());
       }
     }
     return cntVals;

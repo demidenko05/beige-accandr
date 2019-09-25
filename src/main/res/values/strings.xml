@@ -7,8 +7,6 @@
   <string name="stop">Stop</string>
   <string name="starting">Starting</string>
   <string name="stopping">Stopping</string>
-  <string name="started">Started</string>
-  <string name="stopped">Stopped</string>
   <string name="ksPassw">Password:</string>
   <string name="ksPasswRep">Confirm password:</string>
   <string name="ajettyNumber">A-Jetty number:</string>
@@ -16,9 +14,8 @@
   <string name="EnterAjettyNumber">Please enter A-Jetty number!</string>
   <string name="ajettycacopied">A-Jetty CA certificate and file exchanger public key copied into external storage ajetty-ca.pem and ajetty-file-exch[A-Jetty#].kpub files.</string>
   <string name="passwordWrong">Wrong password!</string>
-  <string name="wait">Please wait!</string>
   <string name="enterPassw">Please enter password!</string>
-  <string name="sendingStart">Sending request to start server, please wait...</string>
+  <string name="sendingStart">Sending request to start server, please wait&#8230;</string>
   <string name="cantStart">Can not start A-Jetty!</string>
   <string name="cantInitCrypto">Can not initialize crypto service!</string>
   <string name="cantCrDir">Can not create ks directory</string>
@@ -27,5 +24,5 @@
   <string name="newFlCop">New version of WEB static files has been copied!</string>
   <string name="dirCrFlCop">Beige Accounting directory has been  successfully created and WEB static files has been copied!</string>
   <string name="srvStrt">A-Jetty has been started.</string>
-  <string name="srvStop">WEB-server A-Jetty has been stopped.</string>
+  <string name="noPerm">No permissions!</string>
 </resources>

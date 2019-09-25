@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+  <!-- Ignore everything in the compiled app -->
+  <issue id="all">
+    <ignore path="target/*" />
+  </issue>
+  <!--Cursor will be closed by the requesting client with RecSet.release()-->
+  <issue id="Recycle">
+    <ignore path="src/main/java/org/beigesoft/andr/Rdb.java" />
+    <ignore path="src/main/java/org/beigesoft/andr/Rdba.java" />
+    <ignore path="src/main/java/org/beigesoft/andr/RdbMdb.java" />
+  </issue>
+  <!--This refresher is every time killed with onPause and created with onResume-->
+  <issue id="StaticFieldLeak">
+    <ignore path="src/main/java/org/beigesoft/accandr/Bsa.java" />
+  </issue>
+</lint>

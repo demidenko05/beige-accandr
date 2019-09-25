@@ -50,7 +50,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Build;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -165,26 +164,7 @@ public class Bsa extends Activity implements OnClickListener {
   @Override
   public final void onCreate(final Bundle pSavedInstanceState) {
     super.onCreate(pSavedInstanceState);
-    AppPlus appPlus = (AppPlus) getApplicationContext();
-    if (appPlus.getBeansMap().size() > 0) {
-      this.srvState = (SrvState) appPlus.getBeansMap()
-        .get(SrvState.class.getSimpleName());
-      this.log = this.srvState.getLog();
-    } else {
-      this.srvState = new SrvState();
-      try {
-        LogFile lg = new LogFile();
-        lg.setPath(Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + "/bseisst");
-        lg.setClsImm(true);
-        this.log = lg;
-      } catch (Exception e) {
-        this.log = new Loga();
-        this.log.error(null, getClass(),
-          "Cant create starter file log", e);
-      }
-      this.srvState.setLog(this.log);
-    }
+    this.log = new Loga();
     //Simple reflection way to avoid additional compile libraries
     if (android.os.Build.VERSION.SDK_INT >= 23) {
       try {
@@ -206,8 +186,30 @@ public class Bsa extends Activity implements OnClickListener {
             PERMISSIONS_REQUESTS);
         }
       } catch (Exception e) {
-        this.log.error(null, getClass(),
-          "Cant get permissions", e);
+        this.log.error(null, getClass(), "Can't get permissions", e);
+      }
+    }
+    //On target 29 Android asks for permission in parallel process,
+    //so next code will be running when permission is not yet granted!!!
+    //and so does if the user do not accept the permissions
+    AppPlus appPlus = (AppPlus) getApplicationContext();
+    if (appPlus.getBeansMap().size() > 0) { // onResume
+      this.srvState = (SrvState) appPlus.getBeansMap()
+        .get(SrvState.class.getSimpleName());
+      this.log = this.srvState.getLog();
+    } else {
+      try {
+        LogFile lg = new LogFile();
+        lg.setPath(Environment.getExternalStorageDirectory()
+          .getAbsolutePath() + "/bseisst");
+        lg.setClsImm(true);
+        //it will fail on new Android on any start without permissions:
+        lg.info(null, getClass(), "Logger created: " + lg.getPath());
+        this.log = lg;
+        this.srvState = new SrvState();
+        this.srvState.setLog(this.log);
+      } catch (Exception e) {
+        this.log.error(null, getClass(), "Can't create starter file log", e);
       }
     }
     try {
@@ -218,10 +220,10 @@ public class Bsa extends Activity implements OnClickListener {
       this.cmbPort = (Spinner) findViewById(R.id.cmbPort);
       ArrayAdapter<Integer> cmbAdapter =
         new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item);
-      cmbAdapter.add(new Integer(8443));
-      cmbAdapter.add(new Integer(8444));
-      cmbAdapter.add(new Integer(8445));
-      cmbAdapter.add(new Integer(8446));
+      cmbAdapter.add(Integer.valueOf(8443));
+      cmbAdapter.add(Integer.valueOf(8444));
+      cmbAdapter.add(Integer.valueOf(8445));
+      cmbAdapter.add(Integer.valueOf(8446));
       cmbPort.setAdapter(cmbAdapter);
       cmbPort.setSelection(0);
       this.btnStart = (Button) findViewById(R.id.btnStart);
@@ -230,7 +232,7 @@ public class Bsa extends Activity implements OnClickListener {
       this.btnStop = (Button) findViewById(R.id.btnStop);
       this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
-      if (appPlus.getBeansMap().size() == 0) {
+      if (appPlus.getBeansMap().size() == 0 || this.srvState != null) {
         try {
           initSrv();
           appPlus.getBeansMap().put(SrvState.class.getSimpleName(),
@@ -245,6 +247,40 @@ public class Bsa extends Activity implements OnClickListener {
         "Cant create interface", e);
     }
  }
+
+  /**
+   * <p>Checks that permissions granted and starts server.
+   * It must be invoked only by user clicking.</p>
+   */
+  public final void startMan() {
+    AppPlus appPlus = (AppPlus) getApplicationContext();
+    try {
+      LogFile lg = new LogFile();
+      lg.setPath(Environment.getExternalStorageDirectory()
+        .getAbsolutePath() + "/bseisst");
+      lg.setClsImm(true);
+      //it will fail without permissions:
+      lg.info(null, getClass(), "Logger created: " + lg.getPath());
+      this.log = lg;
+      this.srvState = new SrvState();
+      this.srvState.setLog(this.log);
+    } catch (Exception e) {
+      Toast.makeText(getApplicationContext(),
+        getResources().getString(R.string.noPerm),
+          Toast.LENGTH_SHORT).show();
+      this.log.error(null, getClass(), "Can't create starter file log", e);
+    }
+    if (this.srvState != null) {
+      try {
+        initSrv();
+        appPlus.getBeansMap().put(SrvState.class.getSimpleName(),
+          this.srvState);
+      } catch (Exception e) {
+        this.srvState = null;
+        this.log.error(null, getClass(), "Cant create server", e);
+      }
+    }
+  }
 
   /**
    * <p>Called when the server is dead.</p>
@@ -342,11 +378,10 @@ public class Bsa extends Activity implements OnClickListener {
    */
   @Override
   public final void onClick(final View pTarget) {
-    if (this.srvState == null) {
-      return;
-    }
     if (this.actionPerforming == NOACT) {
-      if (pTarget == this.btnStart
+      if (this.srvState == null && pTarget == this.btnStart) {
+        startMan();
+      } else if (pTarget == this.btnStart
         && !this.srvState.getBootEmbd().getIsStarted()) {
         this.actionPerforming = STARTING;
         if (!this.srvState.getIsKeystoreCreated()) {
@@ -576,12 +611,8 @@ public class Bsa extends Activity implements OnClickListener {
   @Override
   public final void onResume() {
     isNeedsToRefresh = true;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      new Refresher().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-        (Void[]) null);
-    } else {
-      new Refresher().execute((Void[]) null);
-    }
+    new Refresher().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+      (Void[]) null);
     super.onResume();
   }
 
@@ -613,7 +644,16 @@ public class Bsa extends Activity implements OnClickListener {
    * <p>Refresh view.</p>
    */
   private void refreshView() {
-    if (this.srvState != null) {
+    if (this.srvState == null) {
+      this.cmbPort.setEnabled(false);
+      this.etAjettyIn.setEnabled(false);
+      this.etKsPassw.setEnabled(false);
+      this.etKsPasswRep.setEnabled(false);
+      this.btnStart.setEnabled(true);
+      this.btnStop.setEnabled(false);
+      this.btnStartBrowser.setEnabled(false);
+      this.btnStartBrowser.setText("");
+    } else {
       if (this.actionPerforming == STARTING && !this.srvState.getBootEmbd()
       .getIsStarted() || this.actionPerforming == STOPPING
         && this.srvState.getBootEmbd().getIsStarted()) {
@@ -621,7 +661,7 @@ public class Bsa extends Activity implements OnClickListener {
         this.etAjettyIn.setEnabled(false);
         this.etKsPassw.setEnabled(false);
         this.etKsPasswRep.setEnabled(false);
-        this.btnStart.setEnabled(false);
+        this.btnStart.setEnabled(true);
         this.btnStop.setEnabled(false);
         this.btnStartBrowser.setEnabled(false);
         if (this.actionPerforming == STARTING) {

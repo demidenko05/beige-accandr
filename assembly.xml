@@ -16,6 +16,7 @@
         <include>${file.separator}.gitignore</include>
         <include>${file.separator}README.txt</include>
         <include>${file.separator}LICENSE</include>
+        <include>${file.separator}lint.xml</include>
         <include>${file.separator}pom.xml</include>
         <include>${file.separator}assembly.xml</include>
         <include>${file.separator}maven-central-deploy.sh</include>

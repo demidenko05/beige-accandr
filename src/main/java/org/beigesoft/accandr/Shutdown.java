@@ -44,22 +44,28 @@ public class Shutdown extends BroadcastReceiver {
 
   /**
    * <p>Stops the server on system shutdown.</p>
-   * @param context The context under which the receiver is running.
-   * @param intent The intent being received.
+   * @param pCntx The pCntx under which the receiver is running.
+   * @param pIntent The pIntent being received.
    */
   @Override
-  public final void onReceive(final Context context, final Intent intent) {
-    Log.i(getClass().getSimpleName(), "Shutdown...");
-    AppPlus appPlus = (AppPlus) context;
-    SrvState srvState = (SrvState) appPlus.getBeansMap()
-      .get(SrvState.class.getSimpleName());
-    if (srvState != null && srvState.getBootEmbd().getIsStarted()) {
-      ILog log = srvState.getLog();
-      try {
-        log.info(null, getClass(), "Stopping server on shutdown...");
-        srvState.getBootEmbd().stopServer();
-      } catch (Exception e) {
-        log.error(null, getClass(), "Can't stop server", e);
+  public final void onReceive(final Context pCntx, final Intent pIntent) {
+    if (pIntent.getAction().equals(Intent.ACTION_SHUTDOWN)) {
+      Log.i(getClass().getSimpleName(), "Shutdown...");
+      if (pCntx instanceof AppPlus) { // it must be the APP ctx
+        AppPlus appPlus = (AppPlus) pCntx;
+        if (appPlus.getBeansMap().size() > 0) {
+          SrvState srvState = (SrvState) appPlus.getBeansMap()
+            .get(SrvState.class.getSimpleName());
+          if (srvState != null && srvState.getBootEmbd().getIsStarted()) {
+            ILog log = srvState.getLog();
+            try {
+              log.info(null, getClass(), "Stopping server on shutdown...");
+              srvState.getBootEmbd().stopServer();
+            } catch (Exception e) {
+              log.error(null, getClass(), "Can't stop server", e);
+            }
+          }
+        }
       }
     }
   }
