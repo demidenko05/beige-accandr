@@ -189,29 +189,6 @@ public class Bsa extends Activity implements OnClickListener {
         this.log.error(null, getClass(), "Can't get permissions", e);
       }
     }
-    //On target 29 Android asks for permission in parallel process,
-    //so next code will be running when permission is not yet granted!!!
-    //and so does if the user do not accept the permissions
-    AppPlus appPlus = (AppPlus) getApplicationContext();
-    if (appPlus.getBeansMap().size() > 0) { // onResume
-      this.srvState = (SrvState) appPlus.getBeansMap()
-        .get(SrvState.class.getSimpleName());
-      this.log = this.srvState.getLog();
-    } else {
-      try {
-        LogFile lg = new LogFile();
-        lg.setPath(Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + "/bseisst");
-        lg.setClsImm(true);
-        //it will fail on new Android on any start without permissions:
-        lg.info(null, getClass(), "Logger created: " + lg.getPath());
-        this.log = lg;
-        this.srvState = new SrvState();
-        this.srvState.setLog(this.log);
-      } catch (Exception e) {
-        this.log.error(null, getClass(), "Can't create starter file log", e);
-      }
-    }
     try {
       setContentView(R.layout.beigeaccounting);
       this.etAjettyIn = (EditText) findViewById(R.id.etAjettyIn);
@@ -232,27 +209,59 @@ public class Bsa extends Activity implements OnClickListener {
       this.btnStop = (Button) findViewById(R.id.btnStop);
       this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
-      if (appPlus.getBeansMap().size() == 0 || this.srvState != null) {
-        try {
-          initSrv();
-          appPlus.getBeansMap().put(SrvState.class.getSimpleName(),
-            this.srvState);
-        } catch (Exception e) {
-          this.srvState = null;
-          this.log.error(null, getClass(), "Cant create server", e);
-        }
-      }
     } catch (Exception e) {
       this.log.error(null, getClass(),
         "Cant create interface", e);
     }
- }
+    if (!isExternalStorageWritable()) { //TODO in scoped storage
+      Toast.makeText(getApplicationContext(), getResources()
+        .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
+    } else {
+      AppPlus appPlus = (AppPlus) getApplicationContext();
+      if (appPlus.getBeansMap().size() > 0) { // onResume
+        this.srvState = (SrvState) appPlus.getBeansMap()
+          .get(SrvState.class.getSimpleName());
+        this.log = this.srvState.getLog();
+      } else {
+        try {
+          LogFile lg = new LogFile();
+          lg.setPath(Environment.getExternalStorageDirectory()
+            .getAbsolutePath() + "/bseisst");
+          lg.setClsImm(true);
+          //it will fail without permissions:
+          lg.info(null, getClass(), "Logger created: " + lg.getPath());
+          this.log = lg;
+          this.srvState = new SrvState();
+          this.srvState.setLog(this.log);
+        } catch (Exception e) {
+          this.log.error(null, getClass(), "Can't create starter file log", e);
+          Toast.makeText(getApplicationContext(), getResources()
+            .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
+        }
+        if (this.srvState != null) {
+          try {
+            initSrv();
+            appPlus.getBeansMap().put(SrvState.class.getSimpleName(),
+              this.srvState);
+          } catch (Exception e) {
+            this.srvState = null;
+            this.log.error(null, getClass(), "Cant create server", e);
+          }
+        }
+      }
+    }
+  }
 
   /**
    * <p>Checks that permissions granted and starts server.
    * It must be invoked only by user clicking.</p>
    */
   public final void startMan() {
+    if (isExternalStorageWritable()) {
+      Toast.makeText(getApplicationContext(), getResources()
+        .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
+      return;
+    }
     AppPlus appPlus = (AppPlus) getApplicationContext();
     try {
       LogFile lg = new LogFile();
@@ -265,9 +274,8 @@ public class Bsa extends Activity implements OnClickListener {
       this.srvState = new SrvState();
       this.srvState.setLog(this.log);
     } catch (Exception e) {
-      Toast.makeText(getApplicationContext(),
-        getResources().getString(R.string.noPerm),
-          Toast.LENGTH_SHORT).show();
+      Toast.makeText(getApplicationContext(), getResources()
+        .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
       this.log.error(null, getClass(), "Can't create starter file log", e);
     }
     if (this.srvState != null) {
@@ -280,6 +288,18 @@ public class Bsa extends Activity implements OnClickListener {
         this.log.error(null, getClass(), "Cant create server", e);
       }
     }
+  }
+
+  /**
+   * <p>Checks if external storage is available for read and write.</p>
+   * @return if ES is writable
+   **/
+  public boolean isExternalStorageWritable() {
+    String state = Environment.getExternalStorageState();
+    if (Environment.MEDIA_MOUNTED.equals(state)) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -303,9 +323,8 @@ public class Bsa extends Activity implements OnClickListener {
           throw new ExcCode(ExcCode.WR, msg);
         }
         copyAssets(APP_BASE);
-        Toast.makeText(getApplicationContext(),
-          getResources().getString(R.string.dirCrFlCop),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.dirCrFlCop), Toast.LENGTH_SHORT).show();
         if (!fileVersion.createNewFile()) {
           String msg = "Cant't create file " + fileVersion;
           this.log.error(null, getClass(), msg);
@@ -318,20 +337,18 @@ public class Bsa extends Activity implements OnClickListener {
           this.log.error(null, getClass(), msg);
           throw new ExcCode(ExcCode.WR, msg);
         }
-        Toast.makeText(getApplicationContext(),
-          getResources().getString(R.string.newFlCop),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.newFlCop), Toast.LENGTH_SHORT).show();
       }
     } catch (ExcCode e) {
       this.log.error(null, getClass(), null, e);
       Toast.makeText(getApplicationContext(),
-        e.getShMsg(), Toast.LENGTH_SHORT).show();
+        e.getShMsg(), Toast.LENGTH_LONG).show();
       throw e;
     } catch (Exception e) {
       this.log.error(null, getClass(), null, e);
-      Toast.makeText(getApplicationContext(),
-        getResources().getString(R.string.wasErr),
-          Toast.LENGTH_SHORT).show();
+      Toast.makeText(getApplicationContext(), getResources()
+        .getString(R.string.wasErr), Toast.LENGTH_LONG).show();
       throw e;
     }
     // keystore placed into [webappdir-parent]/ks folder:
@@ -367,7 +384,7 @@ public class Bsa extends Activity implements OnClickListener {
     } catch (Exception e) {
       String msg = getResources().getString(R.string.cantInitCrypto);
       this.log.error(null, getClass(), msg);
-      Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+      Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
       throw e;
     }
   }
@@ -393,9 +410,8 @@ public class Bsa extends Activity implements OnClickListener {
           }
         }
         if (this.srvState.getAjettyIn() == null) {
-          Toast.makeText(getApplicationContext(),
-            getResources().getString(R.string.EnterAjettyNumber),
-              Toast.LENGTH_SHORT).show();
+          Toast.makeText(getApplicationContext(), getResources()
+            .getString(R.string.EnterAjettyNumber), Toast.LENGTH_SHORT).show();
           this.actionPerforming = NOACT;
           return;
         }
@@ -442,9 +458,8 @@ public class Bsa extends Activity implements OnClickListener {
    **/
   public final void startAjetty() throws Exception {
     if (this.etKsPassw.getText() == null) {
-      Toast.makeText(getApplicationContext(),
-        getResources().getString(R.string.enterPassw),
-          Toast.LENGTH_SHORT).show();
+      Toast.makeText(getApplicationContext(), getResources()
+        .getString(R.string.enterPassw), Toast.LENGTH_SHORT).show();
       this.actionPerforming = NOACT;
       return;
     }
@@ -454,9 +469,8 @@ public class Bsa extends Activity implements OnClickListener {
     KeyStore pkcs12Store = null;
     if (!pks12File.exists()) {
       if (this.etKsPasswRep.getText() == null) {
-        Toast.makeText(getApplicationContext(),
-          getResources().getString(R.string.enterPassw),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.enterPassw), Toast.LENGTH_SHORT).show();
         this.actionPerforming = NOACT;
         return;
       }
@@ -473,9 +487,8 @@ public class Bsa extends Activity implements OnClickListener {
         }
       }
       if (noMatch) {
-        Toast.makeText(getApplicationContext(),
-          getResources().getString(R.string.passwNoMatch),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.passwNoMatch), Toast.LENGTH_SHORT).show();
         this.actionPerforming = NOACT;
         return;
       }
@@ -483,7 +496,7 @@ public class Bsa extends Activity implements OnClickListener {
         .isPasswordStrong(ksPassword);
       if (isPswStrRez != null) {
         Toast.makeText(getApplicationContext(),
-          isPswStrRez, Toast.LENGTH_SHORT).show();
+          isPswStrRez, Toast.LENGTH_LONG).show();
         this.actionPerforming = NOACT;
         return;
       }
@@ -539,9 +552,8 @@ public class Bsa extends Activity implements OnClickListener {
           fos = new FileOutputStream(pubFl);
           fos.write(fileExchPub.getEncoded());
           fos.flush();
-          Toast.makeText(getApplicationContext(),
-            getResources().getString(R.string.ajettycacopied),
-              Toast.LENGTH_SHORT).show();
+          Toast.makeText(getApplicationContext(), getResources()
+            .getString(R.string.ajettycacopied), Toast.LENGTH_SHORT).show();
         } finally {
           if (fos != null) {
             try {
@@ -571,9 +583,8 @@ public class Bsa extends Activity implements OnClickListener {
         }
       }
       if (pkcs12Store == null) {
-        Toast.makeText(getApplicationContext(),
-          getResources().getString(R.string.passwordWrong),
-            Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.passwordWrong), Toast.LENGTH_SHORT).show();
         this.actionPerforming = NOACT;
         return;
       }
@@ -661,7 +672,7 @@ public class Bsa extends Activity implements OnClickListener {
         this.etAjettyIn.setEnabled(false);
         this.etKsPassw.setEnabled(false);
         this.etKsPasswRep.setEnabled(false);
-        this.btnStart.setEnabled(true);
+        this.btnStart.setEnabled(false);
         this.btnStop.setEnabled(false);
         this.btnStartBrowser.setEnabled(false);
         if (this.actionPerforming == STARTING) {
