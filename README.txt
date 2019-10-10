@@ -6,7 +6,7 @@ It requires Google Chrome browser.
 
 Beigesoft™ Enterprise Information System is always in secure enabled mode (protected from scams). It requires user authentication with strong password. It uses encryption for HTTPS and file exchange - modern algorithms asymmetric RSA 2048bit key size and symmetric AES 256bit size.
 -------------------------------------------------------------------------------------------------------------
-At first you should better read article Beigesoft™ Accounting: https://sites.google.com/site/beigesoftware/bobs-pizza/acc-android
+At first you should better read article Beigesoft™ EIS: https://sites.google.com/site/beigesoftware/eis-bobs-pizza/eis-android
 
 This application never waste your time because of:
   1. It provides sufficient functionality:  
@@ -31,12 +31,10 @@ You can check functionality without installation by reading the articles (see ab
 Web-Store is included for pricing, study, and tests purposes and you are also able to make full DB copy from cloud version.
 You can make price lists (in different price categories) and export it in CSV file to your customers or POS.
 
-This is enterprise application, database consist of 200 tables, so it requires a time to initialize itself and to create and upgrade database.
-
 --------------------------------------------------------------------------------------------------------------
-Вам лучше прочесть для начала Пример использования Беижсофт Бухгалтерии: https://sites.google.com/site/beigesoftware/acc-iv
+Вам лучше прочесть для начала Пример использования Беижсофт™ Информационная Система Предприятия: https://sites.google.com/site/beigesoftware/eis-iv
 
-Преимущества Беижсофт Бухгалтерии:
+Преимущества Беижсофт™ ИСП:
 
   Первое - это функциональность:
 *Оценить функциональность можно без установки, просто читая документацию данную выше.
@@ -52,12 +50,10 @@ This is enterprise application, database consist of 200 tables, so it requires a
 *Открытый код - возможность доработки, исправление ошибок.
 *Дистрибутивы и исходный код находятся в центральном Мавен репозитории. Нет риска даунгрэйда, исчезновения.
 
-База данных включает больше 200 таблиц, поэтому запуск потребует времени.
-
 --------------------------------------------------------------------------------------------------------------
 
 On the 1-st application start:
-1. You should enter strong (see below) password to start Beigesoft Accounting. Press "Start" button, then wait while server has been started
+1. You should enter strong (see below) password to start Beigesoft EIS. Press "Start" button, then wait while server has been started
 2. A-Jetty CA certificate ajetty-ca.pem will be at the external storage. You have to install it
   as trusted Certificate Authority in the settings.
   Certificate Authorities that aren't signed by global trusted CA are often used to create private (non-public) intranets, using digital signatures inside organization and its partners.
@@ -126,12 +122,6 @@ MIT License
 https://github.com/lipis/flag-icon-css
 
 site: https://sites.google.com/site/beigesoftware
-
-Working with source:
-building APK works fine on the latest 64bit Android SDK.
-multidex requires build tools 28.0.2, works OK on SDK tools 26.1.1, platform - 28.0.0
-outdated?64bit AVD works fine on the last emulator (27.1.12) and SDK platform API26,
-Google APIs system Intel x86 Atom system image(API26).
 
 It's based on previous beigesoft-accountingoio-android project.
 
