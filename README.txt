@@ -4,9 +4,15 @@ Beigesoft™ Enterprise Information System is standalone JEE web application tha
 This is Android version.
 It requires Google Chrome browser.
 
+This is the first version of successor of Beige Accounting All In One.
+The main goal was successfully achieved, it works noticeably faster on weak devices such us smartphone than its predecessor.
+
 Beigesoft™ Enterprise Information System is always in secure enabled mode (protected from scams). It requires user authentication with strong password. It uses encryption for HTTPS and file exchange - modern algorithms asymmetric RSA 2048bit key size and symmetric AES 256bit size.
 -------------------------------------------------------------------------------------------------------------
 At first you should better read article Beigesoft™ EIS: https://sites.google.com/site/beigesoftware/eis-bobs-pizza/eis-android
+
+This is the first version of successor of Beige Accounting All In One.
+The main goal was successfully achieved, it works noticeably faster on weak devices such us smartphone than its predecessor.
 
 This application never waste your time because of:
   1. It provides sufficient functionality:  
@@ -33,6 +39,9 @@ You can make price lists (in different price categories) and export it in CSV fi
 
 --------------------------------------------------------------------------------------------------------------
 Вам лучше прочесть для начала Пример использования Беижсофт™ Информационная Система Предприятия: https://sites.google.com/site/beigesoftware/eis-iv
+
+Это первая версия преемника Беижсофт Бухгалтерии Все В Одном.
+Главная цель была достигнута, новое приложение работает заметно быстрее предшественника на слабых устройствах, таких как смартфон.
 
 Преимущества Беижсофт™ ИСП:
 
