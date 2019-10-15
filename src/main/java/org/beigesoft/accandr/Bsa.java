@@ -35,18 +35,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.lang.reflect.Method;
+//import java.lang.reflect.Method;
 import java.security.KeyStore;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.nio.charset.Charset;
 
-import android.app.Activity;
+//import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
+//import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -60,6 +61,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.net.Uri;
 import android.Manifest;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 
@@ -74,7 +78,13 @@ import org.beigesoft.loga.Loga;
  *
  * @author Yury Demidenko
  */
-public class Bsa extends Activity implements OnClickListener {
+public class Bsa extends FragmentActivity
+  implements OnClickListener, Priv.PrivDlgLstn {
+
+  /**
+   * <p>Preference privacy policy is agreed key.</p>
+   **/
+  public static final String PRIVAGREE = "privAgree";
 
   /**
    * <p>APP BASE dir.</p>
@@ -122,6 +132,11 @@ public class Bsa extends Activity implements OnClickListener {
   private Button btnStartBrowser;
 
   /**
+   * <p>Button privacy policy.</p>
+   **/
+  private Button btnPrivacy;
+
+  /**
    * <p>Combo-Box Port.</p>
    **/
   private Spinner cmbPort;
@@ -158,6 +173,11 @@ public class Bsa extends Activity implements OnClickListener {
   private ILog log;
 
   /**
+   * <p>Cashed privacy policy is agreed.</p>
+   **/
+  private Boolean privAgreed;
+
+  /**
    * <p>Called when the activity is first created or recreated.</p>
    * @param pSavedInstanceState Saved Instance State
    */
@@ -166,7 +186,7 @@ public class Bsa extends Activity implements OnClickListener {
     super.onCreate(pSavedInstanceState);
     this.log = new Loga();
     //Simple reflection way to avoid additional compile libraries
-    if (android.os.Build.VERSION.SDK_INT >= 23) {
+    /*if (android.os.Build.VERSION.SDK_INT >= 23) {
       try {
         Class[] argTypes = new Class[] {String.class};
         Method checkSelfPermission = ContextWrapper.class
@@ -188,6 +208,13 @@ public class Bsa extends Activity implements OnClickListener {
       } catch (Exception e) {
         this.log.error(null, getClass(), "Can't get permissions", e);
       }
+    }*/
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission
+      .WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this, new String[] {Manifest
+        .permission.READ_EXTERNAL_STORAGE, Manifest.permission
+          .WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET},
+            PERMISSIONS_REQUESTS);
     }
     try {
       setContentView(R.layout.beigeaccounting);
@@ -206,6 +233,8 @@ public class Bsa extends Activity implements OnClickListener {
       this.btnStart = (Button) findViewById(R.id.btnStart);
       this.btnStartBrowser = (Button) findViewById(R.id.btnStartBrowser);
       this.btnStartBrowser.setOnClickListener(this);
+      this.btnPrivacy = (Button) findViewById(R.id.btnPrivacy);
+      this.btnPrivacy.setOnClickListener(this);
       this.btnStop = (Button) findViewById(R.id.btnStop);
       this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
@@ -213,7 +242,9 @@ public class Bsa extends Activity implements OnClickListener {
       this.log.error(null, getClass(),
         "Cant create interface", e);
     }
-    if (!isExternalStorageWritable()) { //TODO in scoped storage
+    if (!lazPrivAgreed()) {
+      showPrivDlg();
+    } else if (!isExternalStorageWritable()) { //TODO in scoped storage
       Toast.makeText(getApplicationContext(), getResources()
         .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
     } else {
@@ -250,6 +281,110 @@ public class Bsa extends Activity implements OnClickListener {
         }
       }
     }
+  }
+
+  /**
+   * <p>Passes agree event to activity.</>
+   * @param pPrivAgreed if privacy policy accepted
+   */
+  @Override
+  public final void onPrivSaveClick(final boolean pPrivAgreed) {
+    SharedPreferences shrPrf = getPreferences(Context.MODE_PRIVATE);
+    SharedPreferences.Editor ed = shrPrf.edit();
+    ed.putBoolean(PRIVAGREE, pPrivAgreed);
+    ed.apply();
+    this.privAgreed = pPrivAgreed;
+  }
+
+  /**
+   * <p>onClick handler.</p>
+   * @param pTarget button
+   */
+  @Override
+  public final void onClick(final View pTarget) {
+    if (this.actionPerforming == NOACT) {
+      if (this.srvState == null && pTarget == this.btnStart) {
+        startMan();
+      } else if (pTarget == this.btnStart
+        && !this.srvState.getBootEmbd().getIsStarted()) {
+        this.actionPerforming = STARTING;
+        if (!this.srvState.getIsKeystoreCreated()) {
+          try {
+            this.srvState.setAjettyIn(Integer
+              .parseInt(etAjettyIn.getText().toString()));
+          } catch (Exception e) {
+            this.log.error(null, getClass(), "Error!", e);
+          }
+        }
+        if (this.srvState.getAjettyIn() == null) {
+          Toast.makeText(getApplicationContext(), getResources()
+            .getString(R.string.EnterAjettyNumber), Toast.LENGTH_SHORT).show();
+          this.actionPerforming = NOACT;
+          return;
+        }
+        refreshView();
+        try {
+          startAjetty();
+        } catch (Exception e) {
+          String msg = getResources().getString(R.string.cantStart);
+          this.log.error(null, getClass(), msg, e);
+          Toast.makeText(getApplicationContext(), msg,
+            Toast.LENGTH_LONG).show();
+        }
+        refreshView();
+      } else if (pTarget == this.btnStop
+        && this.srvState.getBootEmbd().getIsStarted()) {
+        this.actionPerforming = STOPPING;
+        refreshView();
+        Intent intent = new Intent(this, SrvAccJet.class);
+        intent.setAction(SrvAccJet.ACTION_STOP);
+        /*if (android.os.Build.VERSION.SDK_INT >= 26) {
+          try {
+            Class[] argTypes = new Class[] {Intent.class};
+            Method stFrg = Context.class
+              .getDeclaredMethod("startForegroundService", argTypes);
+            stFrg.invoke(this, intent);
+            //startForegroundService(intent);
+          } catch (Exception e) {
+            this.log.error(null, getClass(), "Can't stop service", e);
+            throw new RuntimeException(e);
+          }
+        } else {
+          startService(intent);
+        }*/
+        ContextCompat.startForegroundService(this, intent);
+        refreshView();
+      } else if (pTarget == this.btnStartBrowser) {
+        startBrowser();
+      } else if (pTarget == this.btnPrivacy) {
+        showPrivDlg();
+      }
+    }
+  }
+
+  /**
+   * <p>onResume handler.</p>
+   */
+  @Override
+  public final void onResume() {
+    isNeedsToRefresh = true;
+    new Refresher().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+      (Void[]) null);
+    super.onResume();
+  }
+
+  /**
+   * <p>onPause handler.</p>
+   */
+  @Override
+  public final void onPause() {
+    this.isNeedsToRefresh = false;
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      this.log.error(null, getClass(), "Error!", e);
+    }
+    super.onPause();
   }
 
   /**
@@ -300,6 +435,18 @@ public class Bsa extends Activity implements OnClickListener {
       return true;
     }
     return false;
+  }
+
+  /**
+   * <p>Lazy get is privacy policy accepted.</p>
+   * @return if privacy policy accepted
+   **/
+  public Boolean lazPrivAgreed() {
+    if (this.privAgreed == null) {
+    this.privAgreed = getPreferences(Context.MODE_PRIVATE)
+      .getBoolean(PRIVAGREE, false);
+    }
+    return this.privAgreed;
   }
 
   /**
@@ -390,66 +537,11 @@ public class Bsa extends Activity implements OnClickListener {
   }
 
   /**
-   * <p>onClick handler.</p>
-   * @param pTarget button
-   */
-  @Override
-  public final void onClick(final View pTarget) {
-    if (this.actionPerforming == NOACT) {
-      if (this.srvState == null && pTarget == this.btnStart) {
-        startMan();
-      } else if (pTarget == this.btnStart
-        && !this.srvState.getBootEmbd().getIsStarted()) {
-        this.actionPerforming = STARTING;
-        if (!this.srvState.getIsKeystoreCreated()) {
-          try {
-            this.srvState.setAjettyIn(Integer
-              .parseInt(etAjettyIn.getText().toString()));
-          } catch (Exception e) {
-            this.log.error(null, getClass(), "Error!", e);
-          }
-        }
-        if (this.srvState.getAjettyIn() == null) {
-          Toast.makeText(getApplicationContext(), getResources()
-            .getString(R.string.EnterAjettyNumber), Toast.LENGTH_SHORT).show();
-          this.actionPerforming = NOACT;
-          return;
-        }
-        refreshView();
-        try {
-          startAjetty();
-        } catch (Exception e) {
-          String msg = getResources().getString(R.string.cantStart);
-          this.log.error(null, getClass(), msg, e);
-          Toast.makeText(getApplicationContext(), msg,
-            Toast.LENGTH_LONG).show();
-        }
-        refreshView();
-      } else if (pTarget == this.btnStop
-        && this.srvState.getBootEmbd().getIsStarted()) {
-        this.actionPerforming = STOPPING;
-        refreshView();
-        Intent intent = new Intent(this, SrvAccJet.class);
-        intent.setAction(SrvAccJet.ACTION_STOP);
-        if (android.os.Build.VERSION.SDK_INT >= 26) {
-          try {
-            Class[] argTypes = new Class[] {Intent.class};
-            Method stFrg = Context.class
-              .getDeclaredMethod("startForegroundService", argTypes);
-            stFrg.invoke(this, intent);
-            //startForegroundService(intent);
-          } catch (Exception e) {
-            this.log.error(null, getClass(), "Can't stop service", e);
-            throw new RuntimeException(e);
-          }
-        } else {
-          startService(intent);
-        }
-        refreshView();
-      } else if (pTarget == this.btnStartBrowser) {
-        startBrowser();
-      }
-    }
+   * <p>Shows privacy policy dialog.</p>
+   **/
+  public final void showPrivDlg() {
+    Priv priv = new Priv();
+    priv.show(getSupportFragmentManager(), "priv");
   }
 
   /**
@@ -600,7 +692,7 @@ public class Bsa extends Activity implements OnClickListener {
       R.string.sendingStart), Toast.LENGTH_SHORT).show();
     Intent intent = new Intent(this, SrvAccJet.class);
     intent.setAction(SrvAccJet.ACTION_START);
-    if (android.os.Build.VERSION.SDK_INT >= 26) {
+    /*if (android.os.Build.VERSION.SDK_INT >= 26) {
       try {
         Class[] argTypes = new Class[] {Intent.class};
         Method stFrg = Context.class
@@ -613,32 +705,8 @@ public class Bsa extends Activity implements OnClickListener {
       }
     } else {
       startService(intent);
-    }
-  }
-
-  /**
-   * <p>onResume handler.</p>
-   */
-  @Override
-  public final void onResume() {
-    isNeedsToRefresh = true;
-    new Refresher().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-      (Void[]) null);
-    super.onResume();
-  }
-
-  /**
-   * <p>onPause handler.</p>
-   */
-  @Override
-  public final void onPause() {
-    this.isNeedsToRefresh = false;
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      this.log.error(null, getClass(), "Error!", e);
-    }
-    super.onPause();
+    }*/
+    ContextCompat.startForegroundService(this, intent);
   }
 
   /**
@@ -660,10 +728,10 @@ public class Bsa extends Activity implements OnClickListener {
       this.etAjettyIn.setEnabled(false);
       this.etKsPassw.setEnabled(false);
       this.etKsPasswRep.setEnabled(false);
-      this.btnStart.setEnabled(true);
       this.btnStop.setEnabled(false);
       this.btnStartBrowser.setEnabled(false);
       this.btnStartBrowser.setText("");
+      this.btnStart.setEnabled(lazPrivAgreed());
     } else {
       if (this.actionPerforming == STARTING && !this.srvState.getBootEmbd()
       .getIsStarted() || this.actionPerforming == STOPPING
@@ -704,17 +772,18 @@ public class Bsa extends Activity implements OnClickListener {
           if (this.actionPerforming == STOPPING) {
             this.actionPerforming = NOACT;
           }
+          boolean prvAcp = lazPrivAgreed();
           if (this.srvState.getIsKeystoreCreated()) {
             this.etAjettyIn.setEnabled(false);
             this.etKsPasswRep.setEnabled(false);
             this.etAjettyIn.setText(this.srvState.getAjettyIn().toString());
           } else {
-            this.etAjettyIn.setEnabled(true);
-            this.etKsPasswRep.setEnabled(true);
+            this.etAjettyIn.setEnabled(prvAcp);
+            this.etKsPasswRep.setEnabled(prvAcp);
           }
-          this.etKsPassw.setEnabled(true);
-          this.cmbPort.setEnabled(true);
-          this.btnStart.setEnabled(true);
+          this.etKsPassw.setEnabled(prvAcp);
+          this.cmbPort.setEnabled(prvAcp);
+          this.btnStart.setEnabled(prvAcp);
           this.btnStop.setEnabled(false);
           this.btnStartBrowser.setEnabled(false);
           this.btnStartBrowser.setText("");

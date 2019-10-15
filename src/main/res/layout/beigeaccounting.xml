@@ -3,7 +3,7 @@
   android:layout_height="match_parent"
   android:orientation="vertical"
   xmlns:tools="http://schemas.android.com/tools"
-  tools:context="org.beigesoft.accounting.android.BeigeAccounting" >
+  tools:context="org.beigesoft.accandr.Bsa" >
 
   <TextView
     android:layout_width="match_parent"
@@ -57,10 +57,10 @@
   </LinearLayout>
 
   <Button
+    android:id="@+id/btnPrivacy"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/btnStart"
-    android:text="@string/start" />
+    android:text="@string/privTitle" />
 
   <Button
     android:layout_width="match_parent"
@@ -69,8 +69,13 @@
     android:text="@string/stop" />
 
   <Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/btnStart"
+    android:text="@string/start" />
+
+  <Button
     android:id="@+id/btnStartBrowser"
-    android:layout_marginTop="20sp"
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />

@@ -25,4 +25,20 @@
   <string name="dirCrFlCop">Beige Accounting directory has been  successfully created and WEB static files has been copied!</string>
   <string name="srvStrt">A-Jetty has been started.</string>
   <string name="noPerm">No permissions!</string>
+  <string name="privTitle">Privacy policy</string>
+  <string name="agree">I agree this privacy policy</string>
+  <string name="urlPrv">Privacy policy page</string>
+  <string name="save">Save</string>
+  <string name="cancel">Cancel</string>
+  <string name="privAll">Beigesoft™ EIS collects your data only inside database file. Log files might contain private data.
+  This application is based on embedded private A-Jetty WEB-server. This private WEB-server is not available from outside your Android device.
+  This application requires authorization with a strong password (created by you). It allows maximum 6 fail login attempts. The session will be blocked in 15 minutes after 6th failed login attempts. You should periodically check file <b>logSec.log</b> that contains of authorization information.
+  This application uses modern encryption algorithms with strong keys for HTTPS connection and for safe encrypted file exchanging.
+  Your data (SQLite databases), logStd.log, logSec.log, keystore (with secret keys) are in the private application storage. There is no way to read these files from there. Only this application can read and write these files.
+  You can lose your data if you forget password (for keystore or/and application), so you should backup database files by using WEB-interface. This requires Beige-EIS standalone version on another computer (or Android device), because application encrypts files with public key that belong to another Beige-EIS. Only another Beige-EIS (whose public key used for encryption) can decrypt these encrypted files.
+  PDF reports will be downloaded into shared storage, so you should avoid to install any unnecessary application that requires permission to this storage. If you connect your Android device to a computer in file transfer mode, then any application on that computer can read your files directly (in hidden way). You should delete these PDF files from shared storage after you watched them.
+  If you going to send log files to a programmer (who customize this application), then you have to remove private data from these files.
+  You should also set screen locking, for example with PIN-code.
+  You have to agree with this policy in order to work with this application.
+  </string>
 </resources>
