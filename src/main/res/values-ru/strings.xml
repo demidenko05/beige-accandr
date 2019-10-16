@@ -26,7 +26,7 @@
   <string name="srvStrt">А-Джетти запущен.</string>
   <string name="noPerm">Нет разрешений к внутренниму хранилищу!</string>
   <string name="privTitle">Политика конфиденциальности</string>
-  <string name="agree">Я согласен с политикой конфиденциальности</string>
+  <string name="agree">Я соглашаюсь с политикой конфиденциальности</string>
   <string name="urlPrv">Страница политики конфиденциальности</string>
   <string name="save">Сохранить</string>
   <string name="cancel">Отмена</string>

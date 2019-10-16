@@ -19,62 +19,36 @@
 
     <main role="main">
 
-<h3 align="center">Beigesoft™ Enterprise Information System Privacy Policy.</h3>
-<h4 align="center">All Beigesoft™ EIS versions.</h4>
+<h3 align="center">Beigesoft™ Enterprise Information System. Privacy Policy.</h3>
+<h4 align="center">Beigesoft™ EIS all versions.</h4>
 <p>  
-  Beigesoft™ EIS collects (stores) your data only inside database file. Log files might contain private data.
+  Beigesoft™ EIS only stores your information in database files. Log files may also contain private information.
 </p>
 <p>
-  If you set option <b>Show debug messages</b> to <b>ON</b>,
-  then log files <b>logStd0.log</b> and <b>logStd1.log</b> will contain private data.
-  In that case, if you are going to send these log files to a programmer (who customize this application),
-  then you have to remove private data from these files.
+  If you enable the "Show debugging messages" setting, then the log files logStd0.log and logStd1.log will contain information not for public disclosure. In this case, if you are going to transfer these Log files to a third party (for example, to the programmer serving this software), then you need to delete all private information from these files.
 </p>
 <p>
-  This is WEB-application, so you should use the newest version of WEB-browser. You should avoid to install any WEB-browser plugins.
+  Beigesoft™ EIS is based on the WEB interface, you need to use the latest version of a reliable Web Browser. You better refuse to install any extensions or plug-ins for the Web browser.
 </p>
 
-<h4 align="center">Beigesoft™ EIS standalone versions.</h4>
-<p>These versions are based on embedded private A-Jetty WEB-server.
-  This private WEB-server is not available from outside your computer (or Android device).
-  These versions require authorization with a strong password (created by you). They allow maximum 6 failed login attempts.
-  The session will be blocked in 15 minutes after 6th fail login attempts.
-  You should periodically check file <b>logSec.log</b> that contains of authorization information.
-  These versions use modern encryption algorithms with strong keys for HTTPS connection and for safe encrypted file exchanging.
-  These are multi-database versions, you can create new and switch the database from WEB-interface.
-  If you going to send database file to another computer then you should use WEB-interface for encrypting this file.
+<h4 align="center">Beigesoft™ EIS local versions for Android and other operating systems.</h4>
+<p>
+  These versions are based on the built-in private A-Jetty Web server. This private Web Server is not accessible outside of your computer or Android device. These versions require authorization with a strong password (you create a password yourself, and the software controls its reliability). These versions allow a maximum of 6 failed authorization attempts. Access will be blocked for 15 minutes in case of 6 unsuccessful login attempts. You need to periodically check the logSec.log file for authorization information. These versions use modern encryption of data passing from the server to the browser (HTTPS connection) and exchanged files (databases and log files). These versions allow you to work with several databases, you can create, switch, delete and send encrypted databases using the Web interface. You better use encryption (Web interface) to transfer the database to another computer.
 </p>
 
-<h4 align="center">Beigesoft™ EIS on embedded A-Jetty for ordinal computer.</h4>
+<h4 align="center">Beigesoft™ EIS local version for operating systems other than Android.</h4>
 <p>
-  Your data is in database file, default is <b>webapp/bseis.sqlite</b>.
-  You are able to copy (backup) database to a private place by using regular file manager.
-  Keystore with secret keys for encryption is in <b>ks</b> folder. It is protected with strong password (created by you).
-  You should set strong password for your OS account. It's advisable to set startup BIOS password on your computer. 
+  Your information is located in a database file, by default - "webapp/bseis.sqlite". You can copy the database file to any other place (closed from public access) using the usual file manager. The keystore for encryption is located in the "ks" folder. This  keystore is protected by a strong password (which you also create). You must use a strong password for authorization in your operating system. It will also be more reliable if you set a password to start your computer.
 </p>
 
-<h4 align="center">Beigesoft™ EIS on embedded A-Jetty for Android.</h4>
+<h4 align="center">Beigesoft™ EIS local version for Android.</h4>
 <p>
-  Your data (SQLite databases), logStd.log, logSec.log, keystore (with secret keys) are in the private application storage.
-  There is no way to read these files from there. Only this application can read and write these files.
-  You can lose your data if you forget password (for keystore or/and application),
-  so you should backup database files by using WEB-interface.
-  This requires Beige-EIS standalone version on another computer (or Android device),
-  cause application encrypts files with public key that belong to another Beige-EIS.
-  Only another Beige-EIS (whose public key used for encryption) can decrypt these encrypted files.
-  PDF reports will be downloaded into shared storage (external, USB, CD-card),
-  so you should avoid to install any unnecessary application that requires permission to this storage.
-  In the next year all Android applications can access any file on shared storage only when user allows it interactively, that is user will be asked about opening a file,
-  so there will be no way of hidden reads of your files on shared storage. But if you connect your Android device to a computer in file transfer mode,
-  then any application on that computer can read your files directly (in hidden way).
-  You should delete these PDF files from shared storage after you watched them.
-  You should also set screen locking, for example with PIN-code.
+  Your information (SQLite database), logStd.log, logSec.log, keystore are in a place inaccessible to other software. If you forget the password from the keystore or from entering the application, then you will lose your information. Therefore, you need to make an archived encrypted copy of the database using the Web interface. To do this, you need a second local Beigesoft™ EIS installed on another computer or Android device. The public encryption key from the second copy of the application is used to encrypt files, and only it (whose public key was used to encrypt) can decrypt the transferred files. PDF reports will be uploaded to the "Downloads” shared folder, so avoid installing unnecessary applications that require access to the storage. Next year, all Android applications will be denied direct access to the "shared storage" (shared internal memory and external removable media). Any application that has access to the shared storage will be able to access any file only after the explicit (interactive) permission of the user to specifically perform this operation on a specific file, accordingly there will be no possibility of hidden reading of your files on the shared storage. But when connecting an Android device to a computer in file sharing mode, any application on the computer will have direct access to these files. You need to delete these PDF files from the shared storage after viewing them. You also need to set a screen lock, such as a PIN code.
 </p>
 
 <h4 align="center">Beigesoft™ EIS cloud version.</h4>
 <p>
-  Cloud (Internet available) version is more difficult to keep your data private, so use it only when it's necessary.
-  You must yourself handle strong passwords and reliable HTTPS connection.
+  Protecting data published on the Internet is a difficult task. You should use this version only if necessary. You yourself must ensure the reliability of authorization (passwords) and encryption (HTTPS connection) of the transmitted data.
 </p>
 
 <p align="center"><a href="privacypolicy-ru.html">Беижсофт™ ИСП. Политика конфиденциальности.</a></p>
