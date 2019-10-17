@@ -64,7 +64,7 @@ See LICENSE in base folder
   </context-param>
   <context-param>
     <param-name>dbgCl</param-name>
-    <param-value>100000</param-value>
+    <param-value>1</param-value>
   </context-param>
   <context-param>
     <param-name>ormDir</param-name>
