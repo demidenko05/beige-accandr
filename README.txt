@@ -4,10 +4,10 @@ Beigesoft™ Enterprise Information System is standalone JEE web application tha
 This is Android version.
 It requires Google Chrome browser.
 
-This is the first version of successor of Beige Accounting All In One.
-The main goal was successfully achieved, it works noticeably faster on weak devices such us smartphone than its predecessor.
+This is the first version of the successor to Beige Accounting All In One.
+The main goal was successfully achieved, it works noticeably faster on weak devices such as a smartphone than its predecessor.
 
-Beigesoft™ Enterprise Information System is always in secure enabled mode (protected from scams). It requires user authentication with strong password. It uses encryption for HTTPS and file exchange - modern algorithms asymmetric RSA 2048bit key size and symmetric AES 256bit size.
+Beigesoft Enterprise Information System is always in secure enabled mode (protected from scams). It requires user authentication with strong password. It uses encryption for HTTPS and file exchange - modern algorithms asymmetric RSA 2048bit key size and symmetric AES 256bit size.
 -------------------------------------------------------------------------------------------------------------
 At first you should better read article Beigesoft™ EIS: https://sites.google.com/site/beigesoftware/eis-bobs-pizza/eis-android
 
@@ -16,16 +16,18 @@ The main goal was successfully achieved, it works noticeably faster on weak devi
 
 This application never waste your time because of:
   1. It provides sufficient functionality:  
-* Double entry accounting system including ledger and balance reports.
-* COGS FIFO/LIFO automatically for sales, sales returns, inventory losses.
-* Automatically sales taxes accounting entries for sales, purchases and their returns.
-* Sales tax methods: item/invoice basis, destination-based, aggregate rate, price inclusive of tax.
-* Prepayments/payments tracking for sales/purchases (including invoices with foreign currency).
-* Payroll - automatically taxes calculation (by percentage tax table method) and accounting entries.
-* Manufacturing - automatically cost calculation from used materials and direct labor (and other) costs.
+* Double entry accounting system.
+* General ledger, trial balance, balance sheet, stock items and other reports.
+* It makes COGS FIFO/LIFO automatically for sales, sales returns, inventory losses.
+* It makes sales tax (VAT) automatically for sales, purchases and their returns.
+* Sales tax (VAT) methods: item/invoice basis, destination-based, aggregate rate, tax included in the price.
+* Tracking payments for sales/purchases in national and foreign currencies.
+* Payroll - automatic calculation of the taxes using withholding tax tables.
+* Production - automatic calculation of the cost of a product from used materials, direct labor costs and other costs.
+* Inventory - two dimensional (warehouse, place) registration, moving items inside warehouse, etc.
 * Multi-databases (organizations).
-* Embedded Web-Store
-* There is Beigesoft™ Enterprise Information System version for MS Windows/Mac/*Nix and SQLite database, so you can work with the same database anywhere.
+* Embedded Web-Store. Pricing - multicurrency, price depends on buyer's category, exporting price list to CSV.
+* There is Beigesoft™ EIS version for MS Windows/Mac/*Nix and SQLite database, so you can work with the same database anywhere.
 
 You can check functionality without installation by reading the articles (see above).
   
@@ -35,7 +37,7 @@ You can check functionality without installation by reading the articles (see ab
 * It will never be downgraded or disappeared. You always can find it (binary and source code) in Central Maven Repository.
 
 Web-Store is included for pricing, study, and tests purposes and you are also able to make full DB copy from cloud version.
-You can make price lists (in different price categories) and export it in CSV file to your customers or POS.
+You can create price lists in different price categories and export them to a CSV file to your customers or POS.
 
 --------------------------------------------------------------------------------------------------------------
 Вам лучше прочесть для начала Пример использования Беижсофт™ Информационная Система Предприятия: https://sites.google.com/site/beigesoftware/eis-iv
@@ -46,11 +48,17 @@ You can make price lists (in different price categories) and export it in CSV fi
 Преимущества Беижсофт™ ИСП:
 
   Первое - это функциональность:
-*Оценить функциональность можно без установки, просто читая документацию данную выше.
-*Это готовое решение для ведения коммерческого учета методом двойной записи по рыночным правилам.
-*НДС методы: по отгрузке/оплате.
-*Автоматическое вычисление себестоимости методами ФИФО/ЛИФО и по стоимости единицы.
-*Веб-магазин включен в локальные версии для изучения, тренировки и возможности копирования полной базы данных из Интернет-версии.
+* Оценить функциональность можно без установки, просто читая документацию данную выше.
+* Это готовое решение для ведения коммерческого учета методом двойной записи по рыночным правилам.
+* Отчеты - баланс, отчет по счету детальный, остатки склада...
+* НДС методы: по отгрузке/оплате, расчет построчно/по документу, НДС включен в цену.
+* Отслеживание платежей за покупки/продажи в нациннальной и иностранной валютах.
+* Автоматическое вычисление себестоимости методами ФИФО/ЛИФО и по стоимости единицы.
+* Производство - автоматическое вычисление себестоимости продукции из стоимости использованных материалов и других прямых затрат (труд).
+* Склад - двумерная регистрация хранения "Склад-Место".
+* Нет ограничения на количество баз данных (организаций).
+* Есть версия Беижсофт™ ИСП для МС Виндоус, Мак, Юникс-подобных ОС. Вы можете работать с одинаковой СКЛайт базой данных везде.
+* Веб-магазин включен в локальные версии для изучения, тренировки и возможности копирования полной базы данных из Интернет-версии.
  Вы также можете с помощью Веб-магазина создавать прайс листы с различными ценами (магазин в центре, оптовые покупатели А...) и экспортировать их в CSV файлах оптовым покупателям и в POS-терминалы.
 ...
 
@@ -62,6 +70,8 @@ You can make price lists (in different price categories) and export it in CSV fi
 --------------------------------------------------------------------------------------------------------------
 
 On the 1-st application start:
+0. You should accept privacy policy to use this application. At the first start, if you allowed application to read and write storage (accepted permission), but when you pushed button "Start" and received message "No permissions!", then just restart application.
+  To restart application just push "Back", then push application start icon again. You can change given application permissions in "Settings - Applications and notifications"
 1. You should enter strong (see below) password to start Beigesoft EIS. Press "Start" button, then wait while server has been started
 2. A-Jetty CA certificate ajetty-ca.pem will be at the external storage. You have to install it
   as trusted Certificate Authority in the settings.
