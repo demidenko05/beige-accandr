@@ -185,30 +185,6 @@ public class Bsa extends FragmentActivity
   public final void onCreate(final Bundle pSavedInstanceState) {
     super.onCreate(pSavedInstanceState);
     this.log = new Loga();
-    //Simple reflection way to avoid additional compile libraries
-    /*if (android.os.Build.VERSION.SDK_INT >= 23) {
-      try {
-        Class[] argTypes = new Class[] {String.class};
-        Method checkSelfPermission = ContextWrapper.class
-          .getDeclaredMethod("checkSelfPermission", argTypes);
-        Object result = checkSelfPermission.invoke(getApplicationContext(),
-          Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        Integer chSlfPer = (Integer) result;
-        if (chSlfPer != PackageManager.PERMISSION_GRANTED) {
-          argTypes = new Class[] {String[].class, Integer.TYPE};
-          Method requestPermissions = Activity.class
-            .getDeclaredMethod("requestPermissions", argTypes);
-          String[] args = new String[]
-            {Manifest.permission.READ_EXTERNAL_STORAGE,
-              Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.INTERNET};
-          requestPermissions.invoke(this, (Object) args,
-            PERMISSIONS_REQUESTS);
-        }
-      } catch (Exception e) {
-        this.log.error(null, getClass(), "Can't get permissions", e);
-      }
-    }*/
     if (ContextCompat.checkSelfPermission(this, Manifest.permission
       .WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
       ActivityCompat.requestPermissions(this, new String[] {Manifest
@@ -338,20 +314,6 @@ public class Bsa extends FragmentActivity
         refreshView();
         Intent intent = new Intent(this, SrvAccJet.class);
         intent.setAction(SrvAccJet.ACTION_STOP);
-        /*if (android.os.Build.VERSION.SDK_INT >= 26) {
-          try {
-            Class[] argTypes = new Class[] {Intent.class};
-            Method stFrg = Context.class
-              .getDeclaredMethod("startForegroundService", argTypes);
-            stFrg.invoke(this, intent);
-            //startForegroundService(intent);
-          } catch (Exception e) {
-            this.log.error(null, getClass(), "Can't stop service", e);
-            throw new RuntimeException(e);
-          }
-        } else {
-          startService(intent);
-        }*/
         ContextCompat.startForegroundService(this, intent);
         refreshView();
       } else if (pTarget == this.btnStartBrowser) {
@@ -478,6 +440,12 @@ public class Bsa extends FragmentActivity
           throw new ExcCode(ExcCode.WR, msg);
         }
       } else if (!fileVersion.exists()) { // upgrade
+        //hard coded deleting jquery-3.3.1.min.js:
+        File oldJquery = new File(getFilesDir().getAbsolutePath()
+         + "/" + APP_BASE + "/js/" + "jquery-3.3.1.min.js");
+        if (oldJquery.exists() && !oldJquery.delete()) {
+          this.log.error(null, getClass(), "Can't delete " + oldJquery);
+        }
         copyAssets(APP_BASE); // refresh from upgrade package
         if (!fileVersion.createNewFile()) {
           String msg = "Cant't create file " + fileVersion;
@@ -692,20 +660,6 @@ public class Bsa extends FragmentActivity
       R.string.sendingStart), Toast.LENGTH_SHORT).show();
     Intent intent = new Intent(this, SrvAccJet.class);
     intent.setAction(SrvAccJet.ACTION_START);
-    /*if (android.os.Build.VERSION.SDK_INT >= 26) {
-      try {
-        Class[] argTypes = new Class[] {Intent.class};
-        Method stFrg = Context.class
-          .getDeclaredMethod("startForegroundService", argTypes);
-        stFrg.invoke(this, intent);
-        //startForegroundService(intent);
-      } catch (Exception e) {
-        this.log.error(null, getClass(), "Can't start service", e);
-        throw new RuntimeException(e);
-      }
-    } else {
-      startService(intent);
-    }*/
     ContextCompat.startForegroundService(this, intent);
   }
 
