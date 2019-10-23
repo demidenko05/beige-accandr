@@ -17,26 +17,26 @@ The main goal was successfully achieved, it works noticeably faster on weak devi
 
 Beigesoft™ EIS is free accounting double-entry software.
 
-At first you should better read article Beigesoft™ EIS: https://sites.google.com/site/beigesoftware/eis-bobs-pizza/eis-android
+At first you should better read this article: https://sites.google.com/site/beigesoftware/eis-bobs-pizza/eis-android
 
-This application never waste your time because of:
+This application never wastes your time because of:
   1. It provides sufficient functionality:  
 * Double entry accounting system.
 * General ledger, trial balance, balance sheet, stock items and other reports.
 * It makes COGS FIFO/LIFO automatically for sales, sales returns, inventory losses.
-* It makes sales tax (VAT) automatically for sales, purchases and their returns.
-* Sales tax (VAT) methods: item/invoice basis, destination-based, aggregate rate, tax included in the price.
+* It makes sales tax (VAT, GST) automatically for sales, purchases and their returns.
+* Sales tax (VAT, GST) methods: item/invoice basis, destination-based, aggregate rate, tax included in the price.
 * Tracking payments for sales/purchases in national and foreign currencies.
 * Payroll - automatic calculation of the taxes using withholding tax tables.
-* Production - automatic calculation of the cost of a product from used materials, direct labor costs and other costs.
+* Production - automatic calculation of the cost of a product from used materials, direct labor cost and other costs.
 * Inventory - two dimensional (warehouse, place) registration, moving items inside warehouse, etc.
 * Multi-databases (organizations).
 * Embedded Web-Store. Pricing - multicurrency, price depends on buyer's category, exporting price list to CSV.
 * There is Beigesoft™ EIS version for MS Windows/Mac/*Nix and SQLite database, so you can work with the same database anywhere.
 
-You can check functionality without installation by reading the articles (see above).
+You can check its functionality without installation by reading the articles (see above).
   
-  2. It's reliable software:
+  2. It's a reliable software:
 * All its parts are under truly free licenses.
 * It's open source software, so fixing an error or customizing is not a problem.
 * It will never be downgraded or disappeared. You always can find it (binary and source code) in Central Maven Repository.
@@ -78,6 +78,16 @@ You can create price lists in different price categories and export them to a CS
 *Открытый код - возможность доработки, исправление ошибок.
 *Дистрибутивы и исходный код находятся в центральном Мавен репозитории. Нет риска даунгрэйда, исчезновения.
 
+
+--------------------------------------------------------------------------------------------------------------
+Опубликован набор ПО для быстрой разработки кросс-платформенных ВЕБ приложений.
+За счет JEE сервера А-Джетти работает везде - Андроид и стандартная Джава.
+Код библиотеки базового ВЕБ-интерфейса основанного на JSP/JSON - https://github.com/demidenko05/beige-web
+Все остальное там-же.
+Собственный ОРМ, генератор отчетов в PDF.
+ОРМ работает быстро и на смартфоне за счет автоматической генерации SQL запросов с Join-ами по настройкам в ХМЛ файлах.
+Все с открытым кодом и свободной лицензией.
+Пробуйте, найдете ошибки - пишите.
 --------------------------------------------------------------------------------------------------------------
 
 On the 1-st application start:
