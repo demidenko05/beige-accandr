@@ -43,9 +43,13 @@ You can check its functionality without installation by reading the articles (se
 
 Web-Store is included for pricing, study, and tests purposes and you are also able to make full DB copy from cloud version.
 You can create price lists in different price categories and export them to a CSV file to your customers or POS.
-
 --------------------------------------------------------------------------------------------------------------
-
+Beigesoft™ EIS is a free, open source accounting software. This are local versions of Beigesoft™ EIS for Android and other operation systems.
+There is Beigesoft™ EIS cloud version. You can check its abilities (features) by reading the articles.
+--------------------------------------------------------------------------------------------------------------
+Беижсофт™ ИСП это бесплатное бухгалтерское программное обеспечение с открытым кодом. Есть локальные версии для Андроида и других операционных систем.
+Также есть Интернет версия. Вы можете проверить функциональность данного ПО прочитав приведенную документацию.
+--------------------------------------------------------------------------------------------------------------
 Беижсофт™ Информационная Система Предприятия
 
 Это первая версия преемника Беижсофт Бухгалтерии Все В Одном.
