@@ -35,15 +35,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-//import java.lang.reflect.Method;
 import java.security.KeyStore;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.nio.charset.Charset;
 
-//import android.app.Activity;
 import android.content.Context;
-//import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.Intent;
@@ -443,8 +440,12 @@ public class Bsa extends FragmentActivity
         //hard coded deleting jquery-3.3.1.min.js:
         File oldJquery = new File(getFilesDir().getAbsolutePath()
          + "/" + APP_BASE + "/js/" + "jquery-3.3.1.min.js");
-        if (oldJquery.exists() && !oldJquery.delete()) {
-          this.log.error(null, getClass(), "Can't delete " + oldJquery);
+        if (oldJquery.exists()) {
+          if (!oldJquery.delete()) {
+            this.log.error(null, getClass(), "Can't delete " + oldJquery);
+          } else {
+            this.log.info(null, getClass(), "Deleted " + oldJquery);
+          }
         }
         copyAssets(APP_BASE); // refresh from upgrade package
         if (!fileVersion.createNewFile()) {

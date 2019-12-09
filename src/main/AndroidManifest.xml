@@ -28,8 +28,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.beigesoft.accandr"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="2"
+    android:versionName="1.1">
 
   <uses-sdk
     android:minSdkVersion="18"

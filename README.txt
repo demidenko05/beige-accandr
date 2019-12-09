@@ -1,5 +1,13 @@
 site: https://sites.google.com/site/beigesoftware
 
+-----------------------------------------------
+Version 1.1
+
+JQuery upgraded to 3.4.1 version. Previous 3.3.1 version is vulnerable to prototype pollution. Any way, Beigesoft EIS was not vulnerable because of using HTTPS, i.e. there is no way to inject harmful JavaScript code.
+
+JQuery обновлен до версии 3.4.1. Предыдущая 3.3.1 версия уязвима для атаки "подмена прототипа". В любом случае, Беижсофт ИСП не была уязвима по причине использования HTTPS, то есть нет возможности внедрить вредоносный JavaScript код.
+
+---------------------------------------------------------------------------------------------------------
 Beigesoft™ Enterprise Information System is standalone JEE web application that runs on embedded A-Jetty.
 This is Android version.
 It requires Google Chrome browser.
@@ -19,7 +27,7 @@ Beigesoft™ EIS is free accounting double-entry software.
 
 At first you should better read this article: https://sites.google.com/site/beigesoftware/eis-bobs-pizza/eis-android
 
-This application never wastes your time because of:
+This application will never waste your time because of:
   1. It provides sufficient functionality:  
 * Double entry accounting system.
 * General ledger, trial balance, balance sheet, stock items and other reports.
