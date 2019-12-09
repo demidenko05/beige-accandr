@@ -1,6 +1,10 @@
 site: https://sites.google.com/site/beigesoftware
 
 -----------------------------------------------
+Version 1.2
+It's second time when just uploaded APK is not shown in android console release management, and it refuses to upload again new APK with same version (version of just uploaded but not listed APK).
+So 1.2 is actually 1.1
+
 Version 1.1
 
 JQuery upgraded to 3.4.1 version. Previous 3.3.1 version is vulnerable to prototype pollution. Any way, Beigesoft EIS was not vulnerable because of using HTTPS, i.e. there is no way to inject harmful JavaScript code.
