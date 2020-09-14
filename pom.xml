@@ -27,7 +27,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>2.2.1</version>
+            <version>3.2.0</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -40,7 +40,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.2</version>
+            <version>3.2.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -48,7 +48,7 @@
                   <goal>jar</goal>
                 </goals>
                 <configuration>
-                  <additionalparam>-Xdoclint:none</additionalparam>
+                  <doclint>none</doclint>
                 </configuration>
               </execution>
             </executions>
@@ -56,7 +56,7 @@
           <plugin>
             <groupId>com.simpligility.maven.plugins</groupId>
             <artifactId>android-maven-plugin</artifactId>
-            <version>4.5.0</version>
+            <version>4.6.0</version>
             <inherited>true</inherited>
             <configuration>
               <sign>
@@ -82,7 +82,7 @@
           <plugin>  
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.7</version>
+            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>remove-unaligned-apk</id>
@@ -101,7 +101,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jarsigner-plugin</artifactId>
-            <version>1.4</version>
+            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>signing</id>
@@ -151,7 +151,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
             <executions>
               <execution>
               <id>checkstyle</id>
@@ -169,7 +169,7 @@
           <plugin>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-maven-plugin</artifactId>
-            <version>3.1.12.2</version>
+            <version>4.0.4</version>
             <configuration>
               <excludeFilterFile>findbug-exclude.xml</excludeFilterFile>
             </configuration>
@@ -186,7 +186,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-pmd-plugin</artifactId>
-            <version>3.12.0</version>
+            <version>3.13.0</version>
             <configuration>
               <printFailingErrors>true</printFailingErrors>
               <excludes>
@@ -242,6 +242,16 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>1.60</version><!--TODO on multidex error: 1.61-Unsupported class version number [53.0] (maximum 51.0, Java 1.7); 1.66 com.android.dx.cf.iface.ParseException: unknown tag byte: 13 at com.android.dx.cf.cst.ConstantPoolParser.determineOffsets-->
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>1.60</version>
+    </dependency>
+    <dependency>
       <groupId>com.github.demidenko05</groupId>
       <artifactId>a-jetty-base</artifactId>
       <version>1.0.5</version>
@@ -257,16 +267,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk15on</artifactId>
-      <version>1.60</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.60</version>
-    </dependency>
-    <dependency>
       <groupId>org.beigesoft</groupId>
       <artifactId>beige-logging-android</artifactId>
       <version>1.0.3</version>
@@ -274,12 +274,12 @@
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>android-mail</artifactId>
-      <version>1.5.6</version>
+      <version>1.6.5</version>
     </dependency>
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>android-activation</artifactId>
-      <version>1.5.6</version>
+      <version>1.6.5</version>
     </dependency>
     <dependency>
       <groupId>com.google.android</groupId>
@@ -288,7 +288,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.android.support</groupId><!--TODO exclude useless? it seems that it doesn't increase the APK size-->
+      <groupId>com.android.support</groupId>
       <artifactId>support-v4</artifactId>
       <version>28.0.0</version>
       <type>aar</type>
@@ -315,8 +315,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.7</version>
+        <version>3.2.0</version>
       </plugin>
+      <!--Old plugins cause new maven install plugin gives error: "...NoFileAssignedException... Change packaging to 'pom'..."-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
@@ -330,7 +331,7 @@
       <plugin>
         <groupId>com.simpligility.maven.plugins</groupId>
         <artifactId>android-maven-plugin</artifactId>
-        <version>4.5.0</version>
+        <version>4.6.0</version>
         <configuration>
           <dex>
             <multiDex>true</multiDex>
@@ -340,7 +341,7 @@
             </jvmArguments>
           </dex>
           <sdk>
-            <platform>29</platform>
+            <platform>30</platform>
           </sdk>
           <undeployBeforeDeploy>true</undeployBeforeDeploy>
           <extractDuplicates>true</extractDuplicates>
@@ -354,7 +355,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.1</version>
+        <version>3.0.0-M5</version>
         <configuration>
           <useSystemClassLoader>false</useSystemClassLoader>
           <useFile>false</useFile>
@@ -364,7 +365,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>3.8.1</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
@@ -377,12 +378,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.3</version>
+        <version>3.0.0-M1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.3.0</version>
         <inherited>false</inherited>
         <configuration>
           <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
