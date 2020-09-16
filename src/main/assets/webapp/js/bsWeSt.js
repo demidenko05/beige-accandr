@@ -32,9 +32,6 @@ function bsSetCartItm(pItTyp, pItId, pItNm, pPri, pQuan, pAvQuan, pLnId, pUomId,
     pref = "Edit";
     var lnId = document.getElementById("lnId" + pref);
     lnId.value = pLnId;
-    $('#cartEditMdl').modal({keyboard: false, backdrop: false});
-  } else {
-    $('#cartAddMdl').modal('show');
   }
   var itNm = document.getElementById("itNm" + pref);
   itNm.value = pItNm;
