@@ -6,6 +6,7 @@
   tools:context="org.beigesoft.accandr.Bsa" >
 
   <TextView
+    android:labelFor="@+id/etAjettyIn"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/ajettyNumber" />
@@ -17,6 +18,7 @@
     android:inputType="number" />
 
   <TextView
+    android:labelFor="@+id/etKsPassw"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/ksPassw" />
@@ -28,6 +30,7 @@
     android:inputType="textPassword" />
 
   <TextView
+    android:labelFor="@+id/etKsPasswRep"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/ksPasswRep" />

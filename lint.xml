@@ -14,4 +14,8 @@
   <issue id="StaticFieldLeak">
     <ignore path="src/main/java/org/beigesoft/accandr/Bsa.java" />
   </issue>
+  <!--This is non-internationalized URL-->
+  <issue id="SetTextI18n">
+    <ignore path="src/main/java/org/beigesoft/accandr/Bsa.java" />
+  </issue>
 </lint>

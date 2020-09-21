@@ -244,12 +244,12 @@
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcprov-jdk15on</artifactId>
-      <version>1.60</version><!--TODO on multidex error: 1.61-Unsupported class version number [53.0] (maximum 51.0, Java 1.7); 1.66 com.android.dx.cf.iface.ParseException: unknown tag byte: 13 at com.android.dx.cf.cst.ConstantPoolParser.determineOffsets-->
+      <version>1.66</version>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.60</version>
+      <version>1.66</version>
     </dependency>
     <dependency>
       <groupId>com.github.demidenko05</groupId>
@@ -288,7 +288,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.android.support</groupId>
+      <groupId>com.android.support</groupId><!--TODO exclude useless-->
       <artifactId>support-v4</artifactId>
       <version>28.0.0</version>
       <type>aar</type>
@@ -303,14 +303,14 @@
 
   <build>
     <finalName>${project.artifactId}</finalName>
-    <!--<resources>
-      Duplicates problem. maven-shade-plugin is useless. Dependences order does matter for "the first file occurrence", but not always - cmnst.xml is wrong?!
-      This project's files must be at the target APK, but it is not! Files from JAR dependences sometimes have high priority!?
-      Coping (either into final project or these resources entries) - cmnst.xml is still wrong (from beige-acc.jar)!?
+    <!--
+      Because progurad manually file and skipDependencies=true!!!
+    -->
+    <resources>
       <resource>
-        <directory>..${file.separator}beige-blc${file.separator}src${file.separator}test${file.separator}resources</directory>
+        <directory>src${file.separator}main${file.separator}resources</directory>
       </resource>
-    </resources>-->
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -345,6 +345,17 @@
           </sdk>
           <undeployBeforeDeploy>true</undeployBeforeDeploy>
           <extractDuplicates>true</extractDuplicates>
+          <includeLibsJarsFromAar>false</includeLibsJarsFromAar>
+          <attachJar>false</attachJar>
+          <includeJdkLibs>false</includeJdkLibs>
+          <skipDependencies>true</skipDependencies><!--it works for proguard but there is no resources-->
+          <proguard>
+            <skip>false</skip>
+            <config>proguard.cfg</config>
+            <configs>
+              <config>${env.ANDROID_HOME}/tools/proguard/proguard-android.txt</config>
+            </configs><!-- -optimize -->
+          </proguard>
           <lint>
             <skip>false</skip>
             <classpath>${project.build.outputDirectory}</classpath>

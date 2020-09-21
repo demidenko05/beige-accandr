@@ -159,10 +159,6 @@ JQuery by JS Foundation and other contributors:
 MIT license
 https://jquery.org/license
 
-JS library Popper by Federico Zivolo and contributors:
-MIT License
-https://github.com/twbs/bootstrap/blob/master/LICENSE
-
 Open Iconic icon fonts by Waybury:
 SIL OPEN FONT LICENSE Version 1.1
 http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web
@@ -183,3 +179,7 @@ It's based on previous beigesoft-accountingoio-android project.
 
 debug range #16 (16000..16999)
 
+to build from source run:
+mvn clean install
+to check with lint run:
+$ANDROID_HOME/tools/bin/lint --config lint.xml --html target/lint.html --sources src/main --classpath target .
