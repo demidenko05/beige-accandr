@@ -2,6 +2,7 @@
 <resources>
 
   <string name="app_name">Беижсофт™ ИСП</string>
+  <string name="share">Обмен файлами</string>
   <string name="port">Порт:</string>
   <string name="start">Старт</string>
   <string name="stop">Стоп</string>
@@ -12,7 +13,7 @@
   <string name="ajettyNumber">А-Джетти номер:</string>
   <string name="passwNoMatch">Пароли не совпадают!</string>
   <string name="EnterAjettyNumber">Пожалуйста введите номер А-Джетти!</string>
-  <string name="ajettycacopied">А-Джетти ЦА сертификат и публичный ключ обмена файлами в файлах ajetty-ca.pem и ajetty-file-exch[А-Джетти#].kpub files.</string>
+  <string name="ajettycacopied">А-Джетти ЦА сертификат ajetty-ca[№А-Джетти].pem и публичный ключ обмена файлами ajetty-file-exch[№А-Джетти].kpub созданы.</string>
   <string name="passwordWrong">Неправильный пароль!</string>
   <string name="enterPassw">Пожалуйста введите пароль!</string>
   <string name="sendingStart">Запускаю сервер, подождите&#8230;</string>

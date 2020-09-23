@@ -40,6 +40,7 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.nio.charset.Charset;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -47,8 +48,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.AsyncTask;
+import android.os.ParcelFileDescriptor;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -134,6 +135,11 @@ public class Bsa extends FragmentActivity
   private Button btnPrivacy;
 
   /**
+   * <p>Button shere files.</p>
+   **/
+  private Button btnShare;
+
+  /**
    * <p>Combo-Box Port.</p>
    **/
   private Spinner cmbPort;
@@ -183,11 +189,9 @@ public class Bsa extends FragmentActivity
     super.onCreate(pSavedInstanceState);
     this.log = new Loga();
     if (ContextCompat.checkSelfPermission(this, Manifest.permission
-      .WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(this, new String[] {Manifest
-        .permission.READ_EXTERNAL_STORAGE, Manifest.permission
-          .WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET},
-            PERMISSIONS_REQUESTS);
+      .INTERNET) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions (this, new String[] { Manifest.permission.INTERNET },
+        PERMISSIONS_REQUESTS);
     }
     try {
       setContentView(R.layout.beigeaccounting);
@@ -209,18 +213,23 @@ public class Bsa extends FragmentActivity
       this.btnPrivacy = (Button) findViewById(R.id.btnPrivacy);
       this.btnPrivacy.setOnClickListener(this);
       this.btnStop = (Button) findViewById(R.id.btnStop);
+      this.btnShare = (Button) findViewById(R.id.btnShare);
       this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
+      this.btnShare.setOnClickListener(this);
     } catch (Exception e) {
       this.log.error(null, getClass(),
         "Cant create interface", e);
     }
     if (!lazPrivAgreed()) {
       showPrivDlg();
-    } else if (!isExternalStorageWritable()) { //TODO in scoped storage
-      Toast.makeText(getApplicationContext(), getResources()
-        .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
     } else {
+      File bseisdir = new File(getFilesDir().getAbsolutePath() + "/Bseis");
+      if (!bseisdir.exists() && !bseisdir.mkdirs()) {
+        String msg = "Can't create dir " + bseisdir;
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+        return;
+      }
       AppPlus appPlus = (AppPlus) getApplicationContext();
       if (appPlus.getBeansMap().size() > 0) { // onResume
         this.srvState = (SrvState) appPlus.getBeansMap()
@@ -229,8 +238,7 @@ public class Bsa extends FragmentActivity
       } else {
         try {
           LogFile lg = new LogFile();
-          lg.setPath(Environment.getExternalStorageDirectory()
-            .getAbsolutePath() + "/bseisst");
+          lg.setPath(getFilesDir().getAbsolutePath() + "/Bseis/bseisst");
           lg.setClsImm(true);
           //it will fail without permissions:
           lg.info(null, getClass(), "Logger created: " + lg.getPath());
@@ -238,6 +246,9 @@ public class Bsa extends FragmentActivity
           this.srvState = new SrvState();
           this.srvState.setLog(this.log);
         } catch (Exception e) {
+          if (this.log == null || !(this.log instanceof Loga)) {
+            this.log = new Loga();
+          }
           this.log.error(null, getClass(), "Can't create starter file log", e);
           Toast.makeText(getApplicationContext(), getResources()
             .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
@@ -317,6 +328,8 @@ public class Bsa extends FragmentActivity
         startBrowser();
       } else if (pTarget == this.btnPrivacy) {
         showPrivDlg();
+      } else if (pTarget == this.btnShare) {
+        shareFiles();
       }
     }
   }
@@ -351,16 +364,10 @@ public class Bsa extends FragmentActivity
    * It must be invoked only by user clicking.</p>
    */
   public final void startMan() {
-    if (isExternalStorageWritable()) {
-      Toast.makeText(getApplicationContext(), getResources()
-        .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
-      return;
-    }
     AppPlus appPlus = (AppPlus) getApplicationContext();
     try {
       LogFile lg = new LogFile();
-      lg.setPath(Environment.getExternalStorageDirectory()
-        .getAbsolutePath() + "/bseisst");
+      lg.setPath(getFilesDir().getAbsolutePath() + "/Bseis/bseisst");
       lg.setClsImm(true);
       //it will fail without permissions:
       lg.info(null, getClass(), "Logger created: " + lg.getPath());
@@ -382,18 +389,6 @@ public class Bsa extends FragmentActivity
         this.log.error(null, getClass(), "Cant create server", e);
       }
     }
-  }
-
-  /**
-   * <p>Checks if external storage is available for read and write.</p>
-   * @return if ES is writable
-   **/
-  public boolean isExternalStorageWritable() {
-    String state = Environment.getExternalStorageState();
-    if (Environment.MEDIA_MOUNTED.equals(state)) {
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -513,6 +508,84 @@ public class Bsa extends FragmentActivity
     priv.show(getSupportFragmentManager(), "priv");
   }
 
+  private static final int WRITE_REQUEST_CODE = 43;
+
+  /**
+   * <p>Shows privacy policy dialog.</p>
+   **/
+  public final void shareFiles() {
+    String fileName = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
+    File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + fileName);
+    if (pemFl.exists()) {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+
+        // Filter to only show results that can be "opened", such as
+        // a file (as opposed to a list of contacts or timezones).
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Create a file with the requested MIME type.
+        intent.setType("application/octet-stream");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+        startActivityForResult(intent, WRITE_REQUEST_CODE);
+    }
+  }
+
+  @Override
+  public void onActivityResult(int pRcCd, int pRsCd, Intent pRsDt) {
+    if (pRcCd == WRITE_REQUEST_CODE && pRsCd == Activity.RESULT_OK) {
+      Uri uri = null;
+      if (pRsDt != null) {
+        uri = pRsDt.getData();
+        String fileName = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
+        File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + fileName);
+        if (pemFl.exists()) {
+          OutputStream outs = null;
+          FileInputStream ins = null;
+          ParcelFileDescriptor pfd = null;
+          try {
+            pfd = //getActivity().
+              getContentResolver().openFileDescriptor(uri, "w");
+            FileOutputStream fous = new FileOutputStream(pfd.getFileDescriptor());
+            ins = new FileInputStream(pemFl);
+            outs = new BufferedOutputStream(fous);
+            byte[] data = new byte[1024];
+            int count;
+            while ((count = ins.read(data)) != -1) {
+              outs.write(data, 0, count);
+            }
+            outs.flush();
+          } catch (Exception e) {
+            this.log.error(null, getClass(), null, e);
+          } finally {
+            if (pfd != null) {
+              try {
+                pfd.close();
+              } catch (Exception e1) {
+                this.log.error(null, getClass(), "Error!", e1);
+              }
+            }
+            if (ins != null) {
+              try {
+                ins.close();
+              } catch (Exception e2) {
+                this.log.error(null, getClass(), "Error!", e2);
+              }
+            }
+            if (outs != null) {
+              try {
+                outs.close();
+              } catch (Exception e3) {
+                this.log.error(null, getClass(), "Error!", e3);
+              }
+            }
+          }
+        }
+      }
+    } else {
+      this.log.error(null, getClass(), "Unknown activity result:" + pRcCd);
+    }
+  }
+
   /**
    * <p>It starts A-Jetty.</p>
    * @throws Exception an Exception
@@ -586,8 +659,7 @@ public class Bsa extends FragmentActivity
         }
       }
       if (certCa != null) {
-        File pemFl = new File(Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + File.separator + "ajetty-ca"
+        File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/ajetty-ca"
             + this.srvState.getAjettyIn() + ".pem");
         JcaPEMWriter pemWriter = null;
         try {
@@ -605,8 +677,8 @@ public class Bsa extends FragmentActivity
             }
           }
         }
-        File pubFl = new File(Environment.getExternalStorageDirectory()
-          + File.separator + "ajetty-file-exch"
+        File pubFl = new File(getFilesDir().getAbsolutePath()
+          + "/Bseis/ajetty-file-exch"
             + this.srvState.getAjettyIn() + ".kpub");
         FileOutputStream fos = null;
         try {

@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
 
-import android.os.Environment;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -107,8 +106,7 @@ public class FcPrNtAdAn implements IFctPrc {
     mngDb.setLogDir(webAppDir);
     mngDb.setDbDir(this.cntx.getFilesDir().getAbsolutePath()
       .replace("files", "databases"));
-    File bkDir = new File(Environment.getExternalStorageDirectory()
-      .getAbsolutePath() + "/Bseis");
+    File bkDir = new File(this.cntx.getFilesDir().getAbsolutePath() + "/Bseis");
     if (!bkDir.exists() && !bkDir.mkdir()) {
       throw new Exception("Can't create directory: " + bkDir);
     }

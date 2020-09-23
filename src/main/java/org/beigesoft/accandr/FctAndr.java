@@ -31,7 +31,6 @@ package org.beigesoft.accandr;
 import java.util.Map;
 import java.io.File;
 
-import android.os.Environment;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -143,8 +142,7 @@ public class FctAndr implements IFctAux<Cursor> {
     final FctBlc pFctApp) throws Exception {
     HpCrypt rz = new HpCrypt();
     rz.setKsDirPath(this.cntx.getFilesDir().getAbsolutePath() + "/ks");
-    File bkDir = new File(Environment.getExternalStorageDirectory()
-      .getAbsolutePath() + "/Bseis");
+    File bkDir = new File(this.cntx.getFilesDir().getAbsolutePath() + "/Bseis");
     if (!bkDir.exists() && !bkDir.mkdirs()) {
       throw new Exception("Can't create directory: " + bkDir);
     }

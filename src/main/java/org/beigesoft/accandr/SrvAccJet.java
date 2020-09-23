@@ -49,6 +49,11 @@ import org.beigesoft.log.ILog;
 public class SrvAccJet extends Service {
 
   /**
+   * <p>Static reference for Jetty-Logger to get context.</p>
+   **/
+  public static SrvAccJet CNTX = null;
+
+  /**
    * <p>Notification ID.</p>
    **/
   public static final int NOTIFICATION_ID = 777;
@@ -89,6 +94,7 @@ public class SrvAccJet extends Service {
     this.srvState = (SrvState) appPlus.getBeansMap()
       .get(SrvState.class.getSimpleName());
     this.log = this.srvState.getLog();
+    CNTX = this;
   }
 
   /**

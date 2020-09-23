@@ -19,9 +19,9 @@
 package org.eclipse.jetty.util.log;
 
 import android.util.Log;
-import android.os.Environment;
 
 import org.beigesoft.log.LogFileAdp;
+import org.beigesoft.accandr.SrvAccJet;
 
 /**
  * Logger into file only for all classes.
@@ -40,7 +40,7 @@ public class LoggerFileAndroid extends AILoggerLog {
   @Override
   protected final void createLogger() {
     LogFileAdp logger = new LogFileAdp();
-    String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+    String dir = SrvAccJet.CNTX.getFilesDir().getAbsolutePath();
     logger.setPath(dir + "/ajetty-eis");
     Log.i("A-Jetty", "> Log file path: " + logger.getPath());
     setLogger(logger);

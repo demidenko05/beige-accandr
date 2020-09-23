@@ -2,6 +2,7 @@
 <resources>
 
   <string name="app_name">Beigesoft™ EIS</string>
+  <string name="share">Share files</string>
   <string name="port">Port:</string>
   <string name="start">Start</string>
   <string name="stop">Stop</string>
@@ -12,7 +13,7 @@
   <string name="ajettyNumber">A-Jetty number:</string>
   <string name="passwNoMatch">The passwords do not match!</string>
   <string name="EnterAjettyNumber">Please enter A-Jetty number!</string>
-  <string name="ajettycacopied">A-Jetty CA certificate and file exchanger public key copied into external storage ajetty-ca.pem and ajetty-file-exch[A-Jetty#].kpub files.</string>
+  <string name="ajettycacopied">A-Jetty CA certificat ajetty-ca[A-Jetty#].peme and file exchanger public key ajetty-file-exch[A-Jetty#].kpub has been created.</string>
   <string name="passwordWrong">Wrong password!</string>
   <string name="enterPassw">Please enter password!</string>
   <string name="sendingStart">Sending request to start server, please wait&#8230;</string>

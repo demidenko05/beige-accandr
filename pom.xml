@@ -17,6 +17,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.7</java.version>
+    <android.platform>30</android.platform>
   </properties>
 
   <profiles>
@@ -281,14 +282,21 @@
       <artifactId>android-activation</artifactId>
       <version>1.6.5</version>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android</artifactId>
       <version>4.1.1.4</version>
       <scope>provided</scope>
+    </dependency>-->
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android</artifactId>
+      <version>${android.platform}</version>
+      <scope>system</scope>
+      <systemPath>${env.ANDROID_HOME}/platforms/android-${android.platform}/android.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>com.android.support</groupId><!--TODO exclude useless-->
+      <groupId>com.android.support</groupId>
       <artifactId>support-v4</artifactId>
       <version>28.0.0</version>
       <type>aar</type>
@@ -305,6 +313,7 @@
     <finalName>${project.artifactId}</finalName>
     <!--
       Because progurad manually file and skipDependencies=true!!!
+      TODO 0 from dependent sources
     -->
     <resources>
       <resource>
@@ -341,7 +350,7 @@
             </jvmArguments>
           </dex>
           <sdk>
-            <platform>30</platform>
+            <platform>${android.platform}</platform>
           </sdk>
           <undeployBeforeDeploy>true</undeployBeforeDeploy>
           <extractDuplicates>true</extractDuplicates>
