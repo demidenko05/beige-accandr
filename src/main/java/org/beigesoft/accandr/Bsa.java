@@ -41,6 +41,10 @@ import java.security.cert.Certificate;
 import java.nio.charset.Charset;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.database.Cursor;
+import android.provider.OpenableColumns;
+import android.content.DialogInterface;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -77,7 +81,16 @@ import org.beigesoft.loga.Loga;
  * @author Yury Demidenko
  */
 public class Bsa extends FragmentActivity
+//public class Bsa extends Activity
   implements OnClickListener, Priv.PrivDlgLstn {
+
+  //SDK19 copies (they must be compared by content, not reference):
+  public static final String SDK19ACTION_CREATE_DOCUMENT = "android.intent.action.CREATE_DOCUMENT";
+
+  public static final String SDK19ACTION_OPEN_DOCUMENT = "android.intent.action.OPEN_DOCUMENT";
+
+  //SDK28 copies:
+  public static final String SDK28FOREGROUND_SERVICE = "android.permission.FOREGROUND_SERVICE";
 
   /**
    * <p>Preference privacy policy is agreed key.</p>
@@ -115,6 +128,11 @@ public class Bsa extends FragmentActivity
   private boolean isNeedsToRefresh;
 
   /**
+   * <p>Flag permissions INET OK.</p>
+   **/
+  private boolean isPermOk = false;
+
+  /**
    * <p>Button start.</p>
    **/
   private Button btnStart;
@@ -135,9 +153,19 @@ public class Bsa extends FragmentActivity
   private Button btnPrivacy;
 
   /**
-   * <p>Button shere files.</p>
+   * <p>Button export CA cert.</p>
    **/
-  private Button btnShare;
+  private Button btnExpCaCe;
+
+  /**
+   * <p>Combo-Box export log.</p>
+   **/
+  private Spinner cmbExpLog;
+
+  /**
+   * <p>Button share log file.</p>
+   **/
+  private Button btnExpLog;
 
   /**
    * <p>Combo-Box Port.</p>
@@ -160,6 +188,16 @@ public class Bsa extends FragmentActivity
   private EditText etKsPasswRep;
 
   /**
+   * <p>Button import SQLITE.</p>
+   **/
+  private Button btnImpSqlite;
+
+  /**
+   * <p>Button permissions.</p>
+   **/
+  private Button btnPerm;
+
+  /**
    * <p>Flag to avoid double invoke, 0 - no action, 1 - starting,
    * 2 - stopping.</p>
    **/
@@ -178,7 +216,10 @@ public class Bsa extends FragmentActivity
   /**
    * <p>Cashed privacy policy is agreed.</p>
    **/
-  private Boolean privAgreed;
+  private Boolean privAgreed = null;
+
+  private static String AJETTY_EIS0_LOG = "ajetty-eis0.log";
+  private static String AJETTY_EIS1_LOG = "ajetty-eis1.log";
 
   /**
    * <p>Called when the activity is first created or recreated.</p>
@@ -188,80 +229,95 @@ public class Bsa extends FragmentActivity
   public final void onCreate(final Bundle pSavedInstanceState) {
     super.onCreate(pSavedInstanceState);
     this.log = new Loga();
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission
-      .INTERNET) != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions (this, new String[] { Manifest.permission.INTERNET },
-        PERMISSIONS_REQUESTS);
-    }
+    /*revIsPermOk();*/
     try {
       setContentView(R.layout.beigeaccounting);
       this.etAjettyIn = (EditText) findViewById(R.id.etAjettyIn);
       this.etKsPassw = (EditText) findViewById(R.id.etKsPassw);
       this.etKsPasswRep = (EditText) findViewById(R.id.etKsPasswRep);
       this.cmbPort = (Spinner) findViewById(R.id.cmbPort);
-      ArrayAdapter<Integer> cmbAdapter =
+      ArrayAdapter<Integer> cmpAdPort =
         new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item);
-      cmbAdapter.add(Integer.valueOf(8443));
-      cmbAdapter.add(Integer.valueOf(8444));
-      cmbAdapter.add(Integer.valueOf(8445));
-      cmbAdapter.add(Integer.valueOf(8446));
-      cmbPort.setAdapter(cmbAdapter);
-      cmbPort.setSelection(0);
+      cmpAdPort.add(Integer.valueOf(8443));
+      cmpAdPort.add(Integer.valueOf(8444));
+      cmpAdPort.add(Integer.valueOf(8445));
+      cmpAdPort.add(Integer.valueOf(8446));
+      this.cmbPort.setAdapter(cmpAdPort);
+      this.cmbPort.setSelection(0);
       this.btnStart = (Button) findViewById(R.id.btnStart);
+      this.btnStart.setOnClickListener(this);
       this.btnStartBrowser = (Button) findViewById(R.id.btnStartBrowser);
       this.btnStartBrowser.setOnClickListener(this);
       this.btnPrivacy = (Button) findViewById(R.id.btnPrivacy);
       this.btnPrivacy.setOnClickListener(this);
       this.btnStop = (Button) findViewById(R.id.btnStop);
-      this.btnShare = (Button) findViewById(R.id.btnShare);
-      this.btnStart.setOnClickListener(this);
       this.btnStop.setOnClickListener(this);
-      this.btnShare.setOnClickListener(this);
+      this.btnExpCaCe = (Button) findViewById(R.id.btnExpCaCe);
+      this.btnExpCaCe.setOnClickListener(this);
+      this.cmbExpLog = (Spinner) findViewById(R.id.cmbExpLog);
+      ArrayAdapter<String> cmpAdExLog =
+        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+      cmpAdExLog.add("-");
+      File logf = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG);
+      if (logf.exists()) {
+        cmpAdExLog.add(AJETTY_EIS0_LOG);
+      }
+      logf = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS1_LOG);
+      if (logf.exists()) {
+        cmpAdExLog.add(AJETTY_EIS1_LOG);
+      }
+      this.cmbExpLog.setAdapter(cmpAdExLog);
+      this.cmbExpLog.setSelection(0);
+      this.btnExpLog = (Button) findViewById(R.id.btnExpLog);
+      this.btnExpLog.setOnClickListener(this);
+      this.btnImpSqlite = (Button) findViewById(R.id.btnImpSqlite);
+      this.btnImpSqlite.setOnClickListener(this);
+      this.btnPerm = (Button) findViewById(R.id.btnPerm);
+      this.btnPerm.setOnClickListener(this);
     } catch (Exception e) {
       this.log.error(null, getClass(),
         "Cant create interface", e);
     }
     if (!lazPrivAgreed()) {
       showPrivDlg();
+    }
+    File bseisdir = new File(getFilesDir().getAbsolutePath() + "/Bseis");
+    if (!bseisdir.exists() && !bseisdir.mkdirs()) {
+      String msg = "Can't create dir " + bseisdir;
+      Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+      return;
+    }
+    AppPlus appPlus = (AppPlus) getApplicationContext();
+    if (appPlus.getBeansMap().size() > 0) { // onResume
+      this.srvState = (SrvState) appPlus.getBeansMap()
+        .get(SrvState.class.getSimpleName());
+      this.log = this.srvState.getLog();
     } else {
-      File bseisdir = new File(getFilesDir().getAbsolutePath() + "/Bseis");
-      if (!bseisdir.exists() && !bseisdir.mkdirs()) {
-        String msg = "Can't create dir " + bseisdir;
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-        return;
-      }
-      AppPlus appPlus = (AppPlus) getApplicationContext();
-      if (appPlus.getBeansMap().size() > 0) { // onResume
-        this.srvState = (SrvState) appPlus.getBeansMap()
-          .get(SrvState.class.getSimpleName());
-        this.log = this.srvState.getLog();
-      } else {
-        try {
-          LogFile lg = new LogFile();
-          lg.setPath(getFilesDir().getAbsolutePath() + "/Bseis/bseisst");
-          lg.setClsImm(true);
-          //it will fail without permissions:
-          lg.info(null, getClass(), "Logger created: " + lg.getPath());
-          this.log = lg;
-          this.srvState = new SrvState();
-          this.srvState.setLog(this.log);
-        } catch (Exception e) {
-          if (this.log == null || !(this.log instanceof Loga)) {
-            this.log = new Loga();
-          }
-          this.log.error(null, getClass(), "Can't create starter file log", e);
-          Toast.makeText(getApplicationContext(), getResources()
-            .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
+      try {
+        LogFile lg = new LogFile();
+        lg.setPath(getFilesDir().getAbsolutePath() + "/Bseis/bseisst");
+        lg.setClsImm(true);
+        //it will fail without permissions:
+        lg.info(null, getClass(), "Logger created: " + lg.getPath());
+        this.log = lg;
+        this.srvState = new SrvState();
+        this.srvState.setLog(this.log);
+      } catch (Exception e) {
+        if (this.log == null || !(this.log instanceof Loga)) {
+          this.log = new Loga();
         }
-        if (this.srvState != null) {
-          try {
-            initSrv();
-            appPlus.getBeansMap().put(SrvState.class.getSimpleName(),
-              this.srvState);
-          } catch (Exception e) {
-            this.srvState = null;
-            this.log.error(null, getClass(), "Cant create server", e);
-          }
+        this.log.error(null, getClass(), "Can't create starter file log", e);
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.errStartLog), Toast.LENGTH_LONG).show();
+      }
+      if (this.srvState != null) {
+        try {
+          initSrv();
+          appPlus.getBeansMap().put(SrvState.class.getSimpleName(),
+            this.srvState);
+        } catch (Exception e) {
+          this.srvState = null;
+          this.log.error(null, getClass(), "Cant create server", e);
         }
       }
     }
@@ -291,6 +347,9 @@ public class Bsa extends FragmentActivity
         startMan();
       } else if (pTarget == this.btnStart
         && !this.srvState.getBootEmbd().getIsStarted()) {
+        /*if (!revIsPermOk()) {
+          return;
+        }*/
         this.actionPerforming = STARTING;
         if (!this.srvState.getIsKeystoreCreated()) {
           try {
@@ -328,8 +387,14 @@ public class Bsa extends FragmentActivity
         startBrowser();
       } else if (pTarget == this.btnPrivacy) {
         showPrivDlg();
-      } else if (pTarget == this.btnShare) {
-        shareFiles();
+      } else if (pTarget == this.btnExpCaCe) {
+        exportCaCe();
+      } else if (pTarget == this.btnExpLog) {
+        exportLog();
+      } else if (pTarget == this.btnPerm) {
+        revIsPermOk();
+      } else if (pTarget == this.btnImpSqlite) {
+        impSqlite();
       }
     }
   }
@@ -376,7 +441,7 @@ public class Bsa extends FragmentActivity
       this.srvState.setLog(this.log);
     } catch (Exception e) {
       Toast.makeText(getApplicationContext(), getResources()
-        .getString(R.string.noPerm), Toast.LENGTH_LONG).show();
+        .getString(R.string.errStartLog), Toast.LENGTH_LONG).show();
       this.log.error(null, getClass(), "Can't create starter file log", e);
     }
     if (this.srvState != null) {
@@ -397,8 +462,8 @@ public class Bsa extends FragmentActivity
    **/
   public Boolean lazPrivAgreed() {
     if (this.privAgreed == null) {
-    this.privAgreed = getPreferences(Context.MODE_PRIVATE)
-      .getBoolean(PRIVAGREE, false);
+      this.privAgreed = getPreferences(Context.MODE_PRIVATE)
+        .getBoolean(PRIVAGREE, false);
     }
     return this.privAgreed;
   }
@@ -435,6 +500,15 @@ public class Bsa extends FragmentActivity
         //hard coded deleting jquery-3.3.1.min.js:
         File oldJquery = new File(getFilesDir().getAbsolutePath()
          + "/" + APP_BASE + "/js/" + "jquery-3.3.1.min.js");
+        if (oldJquery.exists()) {
+          if (!oldJquery.delete()) {
+            this.log.error(null, getClass(), "Can't delete " + oldJquery);
+          } else {
+            this.log.info(null, getClass(), "Deleted " + oldJquery);
+          }
+        }
+        oldJquery = new File(getFilesDir().getAbsolutePath()
+         + "/" + APP_BASE + "/js/" + "jquery-3.4.1.min.js");
         if (oldJquery.exists()) {
           if (!oldJquery.delete()) {
             this.log.error(null, getClass(), "Can't delete " + oldJquery);
@@ -506,83 +580,165 @@ public class Bsa extends FragmentActivity
   public final void showPrivDlg() {
     Priv priv = new Priv();
     priv.show(getSupportFragmentManager(), "priv");
+    //priv.show(getManager(), "priv");
   }
 
-  private static final int WRITE_REQUEST_CODE = 43;
+  private static final int REQCD_SEND_CAPEM = 43;
 
-  /**
-   * <p>Shows privacy policy dialog.</p>
-   **/
-  public final void shareFiles() {
+  private final void exportCaCe() {
     String fileName = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
     File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + fileName);
     if (pemFl.exists()) {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-
-        // Filter to only show results that can be "opened", such as
-        // a file (as opposed to a list of contacts or timezones).
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        // Create a file with the requested MIME type.
-        intent.setType("application/octet-stream");
-        intent.putExtra(Intent.EXTRA_TITLE, fileName);
-        startActivityForResult(intent, WRITE_REQUEST_CODE);
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/octet-stream");
+      intent.putExtra(Intent.EXTRA_TITLE, fileName);
+      startActivityForResult(intent, REQCD_SEND_CAPEM);
     }
+  }
+
+  private static final int REQCD_SEND_JETLOG0 = 44;
+
+  private final void exportLog() {
+    String res = (String) cmbExpLog.getSelectedItem();
+    if (res.equals(AJETTY_EIS0_LOG)) {
+      File fl = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG);
+      if (fl.exists()) {
+        Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, AJETTY_EIS0_LOG);
+        startActivityForResult(intent, REQCD_SEND_JETLOG0);
+      }
+    }
+  }
+
+  private static final int REQCD_IMP_SQLITE = 45;
+
+  private final void impSqlite() {
+    Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setType("application/octet-stream");
+    intent.putExtra(Intent.EXTRA_TITLE, "*.sqlite");
+    startActivityForResult(intent, REQCD_IMP_SQLITE);
   }
 
   @Override
   public void onActivityResult(int pRcCd, int pRsCd, Intent pRsDt) {
-    if (pRcCd == WRITE_REQUEST_CODE && pRsCd == Activity.RESULT_OK) {
-      Uri uri = null;
-      if (pRsDt != null) {
-        uri = pRsDt.getData();
-        String fileName = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
-        File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + fileName);
-        if (pemFl.exists()) {
-          OutputStream outs = null;
-          FileInputStream ins = null;
-          ParcelFileDescriptor pfd = null;
-          try {
-            pfd = //getActivity().
-              getContentResolver().openFileDescriptor(uri, "w");
-            FileOutputStream fous = new FileOutputStream(pfd.getFileDescriptor());
-            ins = new FileInputStream(pemFl);
-            outs = new BufferedOutputStream(fous);
-            byte[] data = new byte[1024];
-            int count;
-            while ((count = ins.read(data)) != -1) {
-              outs.write(data, 0, count);
-            }
-            outs.flush();
-          } catch (Exception e) {
-            this.log.error(null, getClass(), null, e);
-          } finally {
-            if (pfd != null) {
-              try {
-                pfd.close();
-              } catch (Exception e1) {
-                this.log.error(null, getClass(), "Error!", e1);
-              }
-            }
-            if (ins != null) {
-              try {
-                ins.close();
-              } catch (Exception e2) {
-                this.log.error(null, getClass(), "Error!", e2);
-              }
-            }
-            if (outs != null) {
-              try {
-                outs.close();
-              } catch (Exception e3) {
-                this.log.error(null, getClass(), "Error!", e3);
-              }
-            }
-          }
+    if (pRsCd != Activity.RESULT_OK || pRsDt == null) {
+      return;
+    }
+    if (pRcCd == REQCD_SEND_CAPEM) {
+      Uri uri = pRsDt.getData();
+      String fileName = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
+      File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + fileName);
+      if (pemFl.exists()) {
+        copyFileTo(pemFl, uri);
+      }
+    } else if (pRcCd == REQCD_SEND_JETLOG0) {
+      Uri uri = pRsDt.getData();
+      File fl = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG);
+      if (fl.exists()) {
+        copyFileTo(fl, uri);
+      }
+    } else if (pRcCd == REQCD_IMP_SQLITE) {
+      Uri uri = pRsDt.getData();
+      String dbpth = getFilesDir().getAbsolutePath()
+        .replace("files", "databases"); //TODO 0 files maybe will do but upgrade?
+      Cursor retCu = getContentResolver().query(uri, null, null, null, null);
+      int nmIdx = retCu.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+      retCu.moveToFirst();
+      File fl = new File(dbpth + "/" + retCu.getString(nmIdx));
+      copyFileFrom(uri, fl);
+    } else {
+      this.log.error(null, getClass(), "Unknown activity request code:" + pRcCd);
+    }
+  }
+
+  private void copyFileTo(File pFile, Uri pUriTo) {
+    OutputStream outs = null;
+    FileInputStream ins = null;
+    ParcelFileDescriptor pfd = null;
+    try {
+      ins = new FileInputStream(pFile);
+      pfd = getContentResolver().openFileDescriptor(pUriTo, "w");
+      FileOutputStream fous = new FileOutputStream(pfd.getFileDescriptor());
+      outs = new BufferedOutputStream(fous);
+      byte[] data = new byte[1024];
+      int count;
+      while ((count = ins.read(data)) != -1) {
+        outs.write(data, 0, count);
+      }
+      outs.flush();
+    } catch (Exception e) {
+      this.log.error(null, getClass(), null, e);
+    } finally {
+      if (pfd != null) {
+        try {
+          pfd.close();
+        } catch (Exception e1) {
+          this.log.error(null, getClass(), "Error!", e1);
         }
       }
-    } else {
-      this.log.error(null, getClass(), "Unknown activity result:" + pRcCd);
+      if (ins != null) {
+        try {
+          ins.close();
+        } catch (Exception e2) {
+          this.log.error(null, getClass(), "Error!", e2);
+        }
+      }
+      if (outs != null) {
+        try {
+          outs.close();
+        } catch (Exception e3) {
+          this.log.error(null, getClass(), "Error!", e3);
+        }
+      }
+    }
+  }
+
+  private void copyFileFrom(Uri pUriFr, File pFile) {
+    OutputStream outs = null;
+    FileInputStream ins = null;
+    ParcelFileDescriptor pfd = null;
+    try {
+      pfd = getContentResolver().openFileDescriptor(pUriFr, "r");
+      ins = new FileInputStream(pfd.getFileDescriptor());
+      FileOutputStream fous = new FileOutputStream(pFile);
+      outs = new BufferedOutputStream(fous);
+      byte[] data = new byte[1024];
+      int count;
+      while ((count = ins.read(data)) != -1) {
+        outs.write(data, 0, count);
+      }
+      outs.flush();
+      Toast.makeText(getApplicationContext(), getResources()
+        .getString(R.string.fileImpd) + ": " + pFile.getAbsolutePath()
+          , Toast.LENGTH_LONG).show();
+    } catch (Exception e) {
+      this.log.error(null, getClass(), null, e);
+    } finally {
+      if (pfd != null) {
+        try {
+          pfd.close();
+        } catch (Exception e1) {
+          this.log.error(null, getClass(), "Error!", e1);
+        }
+      }
+      if (ins != null) {
+        try {
+          ins.close();
+        } catch (Exception e2) {
+          this.log.error(null, getClass(), "Error!", e2);
+        }
+      }
+      if (outs != null) {
+        try {
+          outs.close();
+        } catch (Exception e3) {
+          this.log.error(null, getClass(), "Error!", e3);
+        }
+      }
     }
   }
 
@@ -758,7 +914,7 @@ public class Bsa extends FragmentActivity
       this.btnStop.setEnabled(false);
       this.btnStartBrowser.setEnabled(false);
       this.btnStartBrowser.setText("");
-      this.btnStart.setEnabled(lazPrivAgreed());
+      this.btnStart.setEnabled(this.privAgreed != null && this.privAgreed);
     } else {
       if (this.actionPerforming == STARTING && !this.srvState.getBootEmbd()
       .getIsStarted() || this.actionPerforming == STOPPING
@@ -799,7 +955,7 @@ public class Bsa extends FragmentActivity
           if (this.actionPerforming == STOPPING) {
             this.actionPerforming = NOACT;
           }
-          boolean prvAcp = lazPrivAgreed();
+          boolean prvAcp = this.privAgreed != null && this.privAgreed;
           if (this.srvState.getIsKeystoreCreated()) {
             this.etAjettyIn.setEnabled(false);
             this.etKsPasswRep.setEnabled(false);
@@ -874,6 +1030,76 @@ public class Bsa extends FragmentActivity
             }
           }
         }
+      }
+    }
+  }
+
+  /**
+   * <p>Long term obviously useless decision.
+   * https://github.com/aosp-mirror/platform_frameworks_base/blob/master/core/res/AndroidManifest.xml
+   * shows that permissions are not dangerous.
+   * But this always goes to non-granted? Maybe because:
+     * These permissions
+     * must be requested in your manifest, they should not be granted to your app,
+     * and they should have protection level {@link
+     * android.content.pm.PermissionInfo#PROTECTION_DANGEROUS dangerous}
+   * but during install/update user already asked and accept all permissions!
+   * In app-settings user can do this.
+   * </p>
+   **/
+  private boolean revIsPermOk() {
+    if (this.isPermOk) {
+      return this.isPermOk;
+    }
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission
+      .INTERNET) != PackageManager.PERMISSION_GRANTED
+        || ContextCompat.checkSelfPermission(this,
+          SDK28FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this, new String[] {SDK28FOREGROUND_SERVICE,
+          Manifest.permission.INTERNET},
+            PERMISSIONS_REQUESTS);
+    } else {
+      this.log.info(null, getClass(), getResources().getString(R.string.permAlGr));
+      Toast.makeText(getApplicationContext(), getResources()
+        .getString(R.string.permAlGr), Toast.LENGTH_LONG).show();
+      this.isPermOk = true;
+    }
+    return this.isPermOk;
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int pRqCd, String[] pPerms,
+          int[] pGrRess) {
+    String prmstr = "Request permissions code=" + pRqCd + "; perms[";
+    for (int i = 0; i < pPerms.length; i++) {
+      prmstr += " " + pPerms[i];
+    }
+    prmstr += " ]; grand rss[";
+    for (int i = 0; i < pGrRess.length; i++) {
+      prmstr += " " + pGrRess[i];
+    }
+    prmstr += " ]";
+    this.log.info(null, getClass(), prmstr);
+    if (pRqCd == PERMISSIONS_REQUESTS) {
+      if (pGrRess.length > 0 &&
+                   pGrRess[0] == PackageManager.PERMISSION_GRANTED) {
+        this.log.info(null, getClass(), getResources().getString(R.string.permGr));
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.permGr), Toast.LENGTH_LONG).show();
+        this.isPermOk = true;
+      } else {
+        this.log.info(null, getClass(), getResources().getString(R.string.permNoGr));
+        Toast.makeText(getApplicationContext(), getResources()
+          .getString(R.string.permNoGr), Toast.LENGTH_LONG).show();
+        this.isPermOk = false;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(R.string.perm))
+          .setTitle(getResources().getString(R.string.permTi))
+            .setPositiveButton(R.string.alert_dialog_ok, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface pDlg, int pBtn) {
+                pDlg.dismiss();
+              }});
+        builder.create().show();
       }
     }
   }

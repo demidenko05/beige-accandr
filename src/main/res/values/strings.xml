@@ -2,7 +2,16 @@
 <resources>
 
   <string name="app_name">Beigesoft™ EIS</string>
-  <string name="share">Share files</string>
+  <string name="ImpSqlite">Import SQLITE DB</string>
+  <string name="fileImpd">File has been imported</string>
+  <string name="alert_dialog_ok">OK</string>
+  <string name="permGr">Permissions granted</string>
+  <string name="permNoGr">Permissions aren\'t granted</string>
+  <string name="permAlGr">Permissions already granted</string>
+  <string name="permTi">Permissions</string>
+  <string name="perm">You need permission internet to run this application and to import data from cloud version! You also need permission foreground service to run server in background!</string>
+  <string name="expCaCe">Export A-Jetty CA certificat</string>
+  <string name="expLog">Export log file</string>
   <string name="port">Port:</string>
   <string name="start">Start</string>
   <string name="stop">Stop</string>
@@ -25,12 +34,12 @@
   <string name="newFlCop">New version of WEB static files has been copied!</string>
   <string name="dirCrFlCop">Beige Accounting directory has been  successfully created and WEB static files has been copied!</string>
   <string name="srvStrt">A-Jetty has been started.</string>
-  <string name="noPerm">No permissions!</string>
   <string name="privTitle">Privacy policy</string>
   <string name="agree">I accept this privacy policy</string>
   <string name="urlPrv">Privacy policy page</string>
   <string name="save">Save</string>
   <string name="cancel">Cancel</string>
+  <string name="errStartLog">Can\'t create starter file log</string>
   <string name="privAll">Beigesoft™ EIS only stores your information in database files. Log files may also contain private information.
 This application is based on the built-in private A-Jetty Web server. This private Web Server is not accessible outside of your Android device. This application requires authorization with a strong password (you create a password yourself, and the software controls its reliability). This application allows a maximum of 6 failed authorization attempts. Access will be blocked for 15 minutes in case of 6 unsuccessful login attempts. You need to periodically check the logSec.log file for authorization information.
 This application uses modern encryption of data passing from the server to the browser (HTTPS connection) and exchanged files (databases and log files).
