@@ -94,6 +94,20 @@
       android:layout_height="wrap_content"
       android:text="@string/expCaCe" />
 
+    <Button
+      android:id="@+id/btnExpPubExch"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/expPubExch" />
+
+    <Button
+      android:id="@+id/btnImpPubExch"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/impPubExch" />
+
     <Spinner
       android:id="@+id/cmbExpLog"
       android:layout_width="fill_parent"
@@ -105,6 +119,54 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/expLog" />
+
+    <Spinner
+      android:id="@+id/cmbExpEnLog"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+
+    <Button
+      android:id="@+id/btnExpEnLog"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/expEnLog" />
+
+    <Spinner
+      android:id="@+id/cmbExpSqlt"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+
+    <Button
+      android:id="@+id/btnExpSqlt"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/expSqlt" />
+
+    <Spinner
+      android:id="@+id/cmbExpEnSqlt"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+
+    <Button
+      android:id="@+id/btnExpEnSqlt"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/expEnSqlt" />
+
+    <Spinner
+      android:id="@+id/cmbExpEnSqltSg"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+
+    <Button
+      android:id="@+id/btnExpEnSqltSg"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/expEnSqltSg" />
 
     <Button
       android:id="@+id/btnImpSqlite"

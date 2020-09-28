@@ -158,6 +158,16 @@ public class Bsa extends FragmentActivity
   private Button btnExpCaCe;
 
   /**
+   * <p>Button export pub. exch. key.</p>
+   **/
+  private Button btnExpPubExch;
+
+  /**
+   * <p>Button import pub. exch. key.</p>
+   **/
+  private Button btnImpPubExch;
+
+  /**
    * <p>Combo-Box export log.</p>
    **/
   private Spinner cmbExpLog;
@@ -166,6 +176,46 @@ public class Bsa extends FragmentActivity
    * <p>Button share log file.</p>
    **/
   private Button btnExpLog;
+
+  /**
+   * <p>Combo-Box export en.log.</p>
+   **/
+  private Spinner cmbExpEnLog;
+
+  /**
+   * <p>Button share en.log file.</p>
+   **/
+  private Button btnExpEnLog;
+
+  /**
+   * <p>Combo-Box export SQLITE DB.</p>
+   **/
+  private Spinner cmbExpSqlt;
+
+  /**
+   * <p>Button export SQLITE DB.</p>
+   **/
+  private Button btnExpSqlt;
+
+  /**
+   * <p>Combo-Box export en. SQLITE DB.</p>
+   **/
+  private Spinner cmbExpEnSqlt;
+
+  /**
+   * <p>Button export en. SQLITE DB.</p>
+   **/
+  private Button btnExpEnSqlt;
+
+  /**
+   * <p>Combo-Box export signature of en. SQLITE DB.</p>
+   **/
+  private Spinner cmbExpEnSqltSg;
+
+  /**
+   * <p>Button export signature of en. SQLITE DB.</p>
+   **/
+  private Button btnExpEnSqltSg;
 
   /**
    * <p>Combo-Box Port.</p>
@@ -218,8 +268,55 @@ public class Bsa extends FragmentActivity
    **/
   private Boolean privAgreed = null;
 
+  //Hard-coded Log's names:
+  private static String LOG_BSEISST0 = "bseisst0.log";
+
+  private static String LOG_BSEISST1 = "bseisst1.log";
+
   private static String AJETTY_EIS0_LOG = "ajetty-eis0.log";
+
   private static String AJETTY_EIS1_LOG = "ajetty-eis1.log";
+
+  private static String LOG_STD0 = "logStd0.log";
+
+  private static String LOG_STD1 = "logStd1.log";
+
+  private static String LOG_SEC0 = "logSec0.log";
+
+  private static String LOG_SEC1 = "logSec1.log";
+
+    //encrypted to export:
+  private static String LOG_STDEN0 = "logStd0.logen";
+
+  private static String LOG_STDEN1 = "logStd1.logen";
+
+  private static String LOG_SECEN0 = "logSec0.logen";
+
+  private static String LOG_SECEN1 = "logSec1.logen";
+
+  private static String LOG_STDENSG0 = "logStd0.logen.sig";
+
+  private static String LOG_STDENSG1 = "logStd1.logen.sig";
+
+  private static String LOG_SECENSG0 = "logSec0.logen.sig";
+
+  private static String LOG_SECENSG1 = "logSec1.logen.sig";
+
+  private static String LOG_STDENSK0 = "logStd0.logen.sken";
+
+  private static String LOG_STDENSK1 = "logStd1.logen.sken";
+
+  private static String LOG_SECENSK0 = "logSec0.logen.sken";
+
+  private static String LOG_SECENSK1 = "logSec1.logen.sken";
+
+  private static String LOG_STDENSKS0 = "logStd0.logen.sken.sig";
+
+  private static String LOG_STDENSKS1 = "logStd1.logen.sken.sig";
+
+  private static String LOG_SECENSKS0 = "logSec0.logen.sken.sig";
+
+  private static String LOG_SECENSKS1 = "logSec1.logen.sken.sig";
 
   /**
    * <p>Called when the activity is first created or recreated.</p>
@@ -229,6 +326,13 @@ public class Bsa extends FragmentActivity
   public final void onCreate(final Bundle pSavedInstanceState) {
     super.onCreate(pSavedInstanceState);
     this.log = new Loga();
+    File bsBkdir = new File(getFilesDir().getAbsolutePath() + "/Bseis");
+    if (!bsBkdir.exists() && !bsBkdir.mkdirs()) {
+      String msg = "Can't create dir " + bsBkdir;
+      Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+      this.log.error(null, getClass(), msg);
+      return;
+    }
     /*revIsPermOk();*/
     try {
       setContentView(R.layout.beigeaccounting);
@@ -254,11 +358,27 @@ public class Bsa extends FragmentActivity
       this.btnStop.setOnClickListener(this);
       this.btnExpCaCe = (Button) findViewById(R.id.btnExpCaCe);
       this.btnExpCaCe.setOnClickListener(this);
+      this.btnExpPubExch = (Button) findViewById(R.id.btnExpPubExch);
+      this.btnExpPubExch.setOnClickListener(this);
+      this.btnImpPubExch = (Button) findViewById(R.id.btnImpPubExch);
+      this.btnImpPubExch.setOnClickListener(this);
+      this.btnExpLog = (Button) findViewById(R.id.btnExpLog);
+      this.btnExpLog.setOnClickListener(this);
       this.cmbExpLog = (Spinner) findViewById(R.id.cmbExpLog);
       ArrayAdapter<String> cmpAdExLog =
         new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
       cmpAdExLog.add("-");
-      File logf = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG);
+      this.cmbExpLog.setAdapter(cmpAdExLog);
+      this.cmbExpLog.setSelection(0);
+      File logf = new File(getFilesDir().getAbsolutePath() + "/" + LOG_BSEISST0);
+      if (logf.exists()) {
+        cmpAdExLog.add(LOG_BSEISST0);
+      }
+      logf = new File(getFilesDir().getAbsolutePath() + "/" + LOG_BSEISST1);
+      if (logf.exists()) {
+        cmpAdExLog.add(LOG_BSEISST1);
+      }
+      logf = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG);
       if (logf.exists()) {
         cmpAdExLog.add(AJETTY_EIS0_LOG);
       }
@@ -266,10 +386,151 @@ public class Bsa extends FragmentActivity
       if (logf.exists()) {
         cmpAdExLog.add(AJETTY_EIS1_LOG);
       }
-      this.cmbExpLog.setAdapter(cmpAdExLog);
-      this.cmbExpLog.setSelection(0);
-      this.btnExpLog = (Button) findViewById(R.id.btnExpLog);
-      this.btnExpLog.setOnClickListener(this);
+      logf = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS1_LOG);
+      if (logf.exists()) {
+        cmpAdExLog.add(AJETTY_EIS1_LOG);
+      }
+      String appDir = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/";
+      logf = new File(appDir + LOG_STD0);
+      if (logf.exists()) {
+        cmpAdExLog.add(LOG_STD0);
+      }
+      logf = new File(appDir + LOG_STD1);
+      if (logf.exists()) {
+        cmpAdExLog.add(LOG_STD1);
+      }
+      logf = new File(appDir + LOG_SEC0);
+      if (logf.exists()) {
+        cmpAdExLog.add(LOG_SEC0);
+      }
+      logf = new File(appDir + LOG_SEC1);
+      if (logf.exists()) {
+        cmpAdExLog.add(LOG_SEC1);
+      }
+      this.btnExpEnLog = (Button) findViewById(R.id.btnExpEnLog);
+      this.btnExpEnLog.setOnClickListener(this);
+      this.cmbExpEnLog = (Spinner) findViewById(R.id.cmbExpEnLog);
+      ArrayAdapter<String> cmpAdExEnLog =
+        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+      cmpAdExEnLog.add("-");
+      this.cmbExpEnLog.setAdapter(cmpAdExEnLog);
+      this.cmbExpEnLog.setSelection(0);
+      String bkDr = getFilesDir().getAbsolutePath() + "/Bseis/";
+      logf = new File(bkDr + LOG_STDEN0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDEN0);
+      }
+      logf = new File(bkDr + LOG_STDEN1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDEN1);
+      }
+      logf = new File(bkDr + LOG_SECEN0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECEN0);
+      }
+      logf = new File(bkDr + LOG_SECEN1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECEN1);
+      }
+      logf = new File(bkDr + LOG_STDENSG0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDENSG0);
+      }
+      logf = new File(bkDr + LOG_STDENSG1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDENSG1);
+      }
+      logf = new File(bkDr + LOG_SECENSG0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECENSG0);
+      }
+      logf = new File(bkDr + LOG_SECENSG1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECENSG1);
+      }
+      logf = new File(bkDr + LOG_STDENSK0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDENSK0);
+      }
+      logf = new File(bkDr + LOG_STDENSK1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDENSK1);
+      }
+      logf = new File(bkDr + LOG_SECENSK0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECENSK0);
+      }
+      logf = new File(bkDr + LOG_SECENSK1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECENSK1);
+      }
+      logf = new File(bkDr + LOG_STDENSKS0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDENSKS0);
+      }
+      logf = new File(bkDr + LOG_STDENSKS1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_STDENSKS1);
+      }
+      logf = new File(bkDr + LOG_SECENSKS0);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECENSKS0);
+      }
+      logf = new File(bkDr + LOG_SECENSKS1);
+      if (logf.exists()) {
+        cmpAdExEnLog.add(LOG_SECENSKS1);
+      }
+      this.btnExpSqlt = (Button) findViewById(R.id.btnExpSqlt);
+      this.btnExpSqlt.setOnClickListener(this);
+      this.cmbExpSqlt = (Spinner) findViewById(R.id.cmbExpSqlt);
+      ArrayAdapter<String> cmpAdExSqlt =
+        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+      cmpAdExSqlt.add("-");
+      this.cmbExpSqlt.setAdapter(cmpAdExSqlt);
+      this.cmbExpSqlt.setSelection(0);
+      File appDr = new File(appDir);
+      if (appDr.exists()) {
+        File[] fls = appDr.listFiles();
+        if (fls != null) {
+          for (File fl : fls) {
+            if (fl.getName().endsWith(".sqlite")) {
+              cmpAdExSqlt.add(fl.getName());
+            }
+          }
+        }
+      }
+      this.btnExpEnSqlt = (Button) findViewById(R.id.btnExpEnSqlt);
+      this.btnExpEnSqlt.setOnClickListener(this);
+      this.cmbExpEnSqlt = (Spinner) findViewById(R.id.cmbExpEnSqlt);
+      ArrayAdapter<String> cmpAdExEnSqlt =
+        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+      cmpAdExEnSqlt.add("-");
+      this.cmbExpEnSqlt.setAdapter(cmpAdExEnSqlt);
+      this.cmbExpEnSqlt.setSelection(0);
+      File[] fls = bsBkdir.listFiles();
+      if (fls != null) {
+        for (File fl : fls) {
+          if (fl.getName().endsWith(".sqlten")) {
+            cmpAdExEnSqlt.add(fl.getName());
+          }
+        }
+      }
+      this.btnExpEnSqltSg = (Button) findViewById(R.id.btnExpEnSqltSg);
+      this.btnExpEnSqltSg.setOnClickListener(this);
+      this.cmbExpEnSqltSg = (Spinner) findViewById(R.id.cmbExpEnSqltSg);
+      ArrayAdapter<String> cmpAdExEnSqltSg =
+        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+      cmpAdExEnSqltSg.add("-");
+      this.cmbExpEnSqltSg.setAdapter(cmpAdExEnSqltSg);
+      this.cmbExpEnSqltSg.setSelection(0);
+      fls = bsBkdir.listFiles();
+      if (fls != null) {
+        for (File fl : fls) {
+          if (fl.getName().endsWith(".sqlten.sig")) {
+            cmpAdExEnSqltSg.add(fl.getName());
+          }
+        }
+      }
       this.btnImpSqlite = (Button) findViewById(R.id.btnImpSqlite);
       this.btnImpSqlite.setOnClickListener(this);
       this.btnPerm = (Button) findViewById(R.id.btnPerm);
@@ -281,12 +542,6 @@ public class Bsa extends FragmentActivity
     if (!lazPrivAgreed()) {
       showPrivDlg();
     }
-    File bseisdir = new File(getFilesDir().getAbsolutePath() + "/Bseis");
-    if (!bseisdir.exists() && !bseisdir.mkdirs()) {
-      String msg = "Can't create dir " + bseisdir;
-      Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-      return;
-    }
     AppPlus appPlus = (AppPlus) getApplicationContext();
     if (appPlus.getBeansMap().size() > 0) { // onResume
       this.srvState = (SrvState) appPlus.getBeansMap()
@@ -295,7 +550,7 @@ public class Bsa extends FragmentActivity
     } else {
       try {
         LogFile lg = new LogFile();
-        lg.setPath(getFilesDir().getAbsolutePath() + "/Bseis/bseisst");
+        lg.setPath(getFilesDir().getAbsolutePath() + "/bseisst");
         lg.setClsImm(true);
         //it will fail without permissions:
         lg.info(null, getClass(), "Logger created: " + lg.getPath());
@@ -389,12 +644,24 @@ public class Bsa extends FragmentActivity
         showPrivDlg();
       } else if (pTarget == this.btnExpCaCe) {
         exportCaCe();
+      } else if (pTarget == this.btnExpPubExch) {
+        exportPubExch();
+      } else if (pTarget == this.btnImpPubExch) {
+        impPubExch();
       } else if (pTarget == this.btnExpLog) {
         exportLog();
-      } else if (pTarget == this.btnPerm) {
-        revIsPermOk();
+      } else if (pTarget == this.btnExpEnLog) {
+        exportEnLog();
+      } else if (pTarget == this.btnExpSqlt) {
+        exportSqlt();
+      } else if (pTarget == this.btnExpEnSqlt) {
+        exportEnSqlt();
+      } else if (pTarget == this.btnExpEnSqltSg) {
+        exportEnSqltSg();
       } else if (pTarget == this.btnImpSqlite) {
         impSqlite();
+      } else if (pTarget == this.btnPerm) {
+        revIsPermOk();
       }
     }
   }
@@ -432,7 +699,7 @@ public class Bsa extends FragmentActivity
     AppPlus appPlus = (AppPlus) getApplicationContext();
     try {
       LogFile lg = new LogFile();
-      lg.setPath(getFilesDir().getAbsolutePath() + "/Bseis/bseisst");
+      lg.setPath(getFilesDir().getAbsolutePath() + "/bseisst");
       lg.setClsImm(true);
       //it will fail without permissions:
       lg.info(null, getClass(), "Logger created: " + lg.getPath());
@@ -583,44 +850,259 @@ public class Bsa extends FragmentActivity
     //priv.show(getManager(), "priv");
   }
 
-  private static final int REQCD_SEND_CAPEM = 43;
+  private static final int RQC_EXP_CAPEM = 43;
 
   private final void exportCaCe() {
-    String fileName = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
-    File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + fileName);
+    String flNm = "/ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
+    File pemFl = new File(getFilesDir().getAbsolutePath() + flNm);
     if (pemFl.exists()) {
       Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
       intent.addCategory(Intent.CATEGORY_OPENABLE);
       intent.setType("application/octet-stream");
-      intent.putExtra(Intent.EXTRA_TITLE, fileName);
-      startActivityForResult(intent, REQCD_SEND_CAPEM);
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, RQC_EXP_CAPEM);
     }
   }
 
-  private static final int REQCD_SEND_JETLOG0 = 44;
+  private static final int RQC_EXP_PUBEXCH = 44;
+
+  private final void exportPubExch() {
+    String flNm = "/ajetty-file-exch" + this.srvState.getAjettyIn() + ".kpub";
+    File peFl = new File(getFilesDir().getAbsolutePath() + flNm);
+    if (peFl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/octet-stream");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, RQC_EXP_PUBEXCH);
+    }
+  }
+
+  private static final int RQC_EXP_LOGEISST0 = 52;
+
+  private static final int RQC_EXP_LOGEISST1 = 53;
+
+  private static final int RQC_EXP_JETLOG0 = 54;
+
+  private static final int RQC_EXP_JETLOG1 = 55;
+
+  private static final int RQC_EXP_LOGSTD0 = 56;
+
+  private static final int RQC_EXP_LOGSTD1 = 57;
+
+  private static final int RQC_EXP_LOGSEC0 = 58;
+
+  private static final int RQC_EXP_LOGSEC1 = 59;
 
   private final void exportLog() {
     String res = (String) cmbExpLog.getSelectedItem();
-    if (res.equals(AJETTY_EIS0_LOG)) {
-      File fl = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG);
-      if (fl.exists()) {
-        Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TITLE, AJETTY_EIS0_LOG);
-        startActivityForResult(intent, REQCD_SEND_JETLOG0);
-      }
+    String flNm = null;
+    int reqCd = -1;
+    if (res.equals(LOG_BSEISST0)) {
+      flNm = LOG_BSEISST0;
+      reqCd = RQC_EXP_LOGEISST0;
+    } else if (res.equals(LOG_BSEISST1)) {
+      flNm = LOG_BSEISST1;
+      reqCd = RQC_EXP_LOGEISST1;
+    } else if (res.equals(AJETTY_EIS0_LOG)) {
+      flNm = AJETTY_EIS0_LOG;
+      reqCd = RQC_EXP_JETLOG0;
+    } else if (res.equals(AJETTY_EIS1_LOG)) {
+      flNm = AJETTY_EIS1_LOG;
+      reqCd = RQC_EXP_JETLOG1;
+    } else if (res.equals(LOG_STD0)) {
+      flNm = LOG_STD0;
+      reqCd = RQC_EXP_LOGSTD0;
+    } else if (res.equals(LOG_STD1)) {
+      flNm = LOG_STD1;
+      reqCd = RQC_EXP_LOGSTD1;
+    } else if (res.equals(LOG_SEC0)) {
+      flNm = LOG_SEC0;
+      reqCd = RQC_EXP_LOGSEC0;
+    } else if (res.equals(LOG_SEC1)) {
+      flNm = LOG_SEC1;
+      reqCd = RQC_EXP_LOGSEC1;
+    }
+    if (flNm == null) {
+      return;
+    }
+    File fl = new File(getFilesDir().getAbsolutePath() + "/" + flNm);
+    if (fl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("text/plain");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, reqCd);
     }
   }
 
-  private static final int REQCD_IMP_SQLITE = 45;
+  private static final int RQC_EXP_LOGSTDEN0 = 60;
+
+  private static final int RQC_EXP_LOGSTDEN1 = 61;
+
+  private static final int RQC_EXP_LOGSECEN0 = 62;
+
+  private static final int RQC_EXP_LOGSECEN1 = 63;
+
+  private static final int RQC_EXP_LOGSTDENSG0 = 64;
+
+  private static final int RQC_EXP_LOGSTDENSG1 = 65;
+
+  private static final int RQC_EXP_LOGSECENSG0 = 66;
+
+  private static final int RQC_EXP_LOGSECENSG1 = 67;
+
+  private static final int RQC_EXP_LOGSTDENSK0 = 68;
+
+  private static final int RQC_EXP_LOGSTDENSK1 = 69;
+
+  private static final int RQC_EXP_LOGSECENSK0 = 70;
+
+  private static final int RQC_EXP_LOGSECENSK1 = 71;
+
+  private static final int RQC_EXP_LOGSTDENSKS0 = 72;
+
+  private static final int RQC_EXP_LOGSTDENSKS1 = 73;
+
+  private static final int RQC_EXP_LOGSECENSKS0 = 74;
+
+  private static final int RQC_EXP_LOGSECENSKS1 = 75;
+
+  private final void exportEnLog() {
+    String res = (String) cmbExpEnLog.getSelectedItem();
+    String flNm = null;
+    int reqCd = -1;
+    if (res.equals(LOG_STDEN0)) {
+      flNm = LOG_STDEN0;
+      reqCd = RQC_EXP_LOGSTDEN0;
+    } else if (res.equals(LOG_STDEN1)) {
+      flNm = LOG_STDEN1;
+      reqCd = RQC_EXP_LOGSTDEN1;
+    } else if (res.equals(LOG_SECEN0)) {
+      flNm = LOG_SECEN0;
+      reqCd = RQC_EXP_LOGSECEN0;
+    } else if (res.equals(LOG_SECEN1)) {
+      flNm = LOG_SECEN1;
+      reqCd = RQC_EXP_LOGSECEN1;
+    } else if (res.equals(LOG_STDENSG0)) {
+      flNm = LOG_STDENSG0;
+      reqCd = RQC_EXP_LOGSTDENSG0;
+    } else if (res.equals(LOG_STDENSG1)) {
+      flNm = LOG_STDENSG1;
+      reqCd = RQC_EXP_LOGSTDENSG1;
+    } else if (res.equals(LOG_SECENSG0)) {
+      flNm = LOG_SECENSG0;
+      reqCd = RQC_EXP_LOGSECENSG0;
+    } else if (res.equals(LOG_SECENSG1)) {
+      flNm = LOG_SECENSG1;
+      reqCd = RQC_EXP_LOGSECENSG1;
+    } else if (res.equals(LOG_STDENSK0)) {
+      flNm = LOG_STDENSK0;
+      reqCd = RQC_EXP_LOGSTDENSK0;
+    } else if (res.equals(LOG_STDENSK1)) {
+      flNm = LOG_STDENSK1;
+      reqCd = RQC_EXP_LOGSTDENSK1;
+    } else if (res.equals(LOG_SECENSK0)) {
+      flNm = LOG_SECENSK0;
+      reqCd = RQC_EXP_LOGSECENSK0;
+    } else if (res.equals(LOG_SECENSK1)) {
+      flNm = LOG_SECENSK1;
+      reqCd = RQC_EXP_LOGSECENSK1;
+    } else if (res.equals(LOG_STDENSKS0)) {
+      flNm = LOG_STDENSKS0;
+      reqCd = RQC_EXP_LOGSTDENSKS0;
+    } else if (res.equals(LOG_STDENSKS1)) {
+      flNm = LOG_STDENSKS1;
+      reqCd = RQC_EXP_LOGSTDENSKS1;
+    } else if (res.equals(LOG_SECENSKS0)) {
+      flNm = LOG_SECENSKS0;
+      reqCd = RQC_EXP_LOGSECENSKS0;
+    } else if (res.equals(LOG_SECENSKS1)) {
+      flNm = LOG_SECENSKS1;
+      reqCd = RQC_EXP_LOGSECENSKS1;
+    }
+    if (flNm == null) {
+      return;
+    }
+    File fl = new File(getFilesDir().getAbsolutePath() + "/" + flNm);
+    if (fl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("text/plain");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, reqCd);
+    }
+  }
+
+  private static final int RQC_EXP_SQLT = 76;
+
+  private final void exportSqlt() {
+    String flNm = (String) cmbExpSqlt.getSelectedItem();
+    if (flNm.equals("-")) {
+      return;
+    }
+    File fl = new File(getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/" + flNm);
+    if (fl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/octet-stream");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, RQC_EXP_SQLT);
+    }
+  }
+
+  private static final int RQC_EXP_ENSQLT = 77;
+
+  private final void exportEnSqlt() {
+    String flNm = (String) cmbExpEnSqlt.getSelectedItem();
+    if (flNm.equals("-")) {
+      return;
+    }
+    File fl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + flNm);
+    if (fl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/octet-stream");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, RQC_EXP_ENSQLT);
+    }
+  }
+
+  private static final int RQC_EXP_ENSQLTSG = 78;
+
+  private final void exportEnSqltSg() {
+    String flNm = (String) cmbExpEnSqltSg.getSelectedItem();
+    if (flNm.equals("-")) {
+      return;
+    }
+    File fl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + flNm);
+    if (fl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/octet-stream");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, RQC_EXP_ENSQLTSG);
+    }
+  }
+
+  private static final int RQC_IMP_SQLITE = 175;
 
   private final void impSqlite() {
     Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
     intent.addCategory(Intent.CATEGORY_OPENABLE);
     intent.setType("application/octet-stream");
     intent.putExtra(Intent.EXTRA_TITLE, "*.sqlite");
-    startActivityForResult(intent, REQCD_IMP_SQLITE);
+    startActivityForResult(intent, RQC_IMP_SQLITE);
+  }
+
+  private static final int RQC_IMP_PUBEXCH = 176;
+
+  private final void impPubExch() {
+    Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setType("application/octet-stream");
+    intent.putExtra(Intent.EXTRA_TITLE, "*.kpub");
+    startActivityForResult(intent, RQC_IMP_PUBEXCH);
   }
 
   @Override
@@ -628,37 +1110,161 @@ public class Bsa extends FragmentActivity
     if (pRsCd != Activity.RESULT_OK || pRsDt == null) {
       return;
     }
-    if (pRcCd == REQCD_SEND_CAPEM) {
-      Uri uri = pRsDt.getData();
-      String fileName = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
-      File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + fileName);
-      if (pemFl.exists()) {
-        copyFileTo(pemFl, uri);
+    Uri uri = pRsDt.getData();
+    String flNm = null;
+    int impCd = -1;
+    int expCd = -1;
+    if (pRcCd == RQC_EXP_CAPEM) {
+      expCd = RQC_EXP_CAPEM;
+      flNm = getFilesDir().getAbsolutePath()
+        + "/ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
+    } else if (pRcCd == RQC_EXP_PUBEXCH) {
+      expCd = RQC_EXP_PUBEXCH;
+      flNm = getFilesDir().getAbsolutePath()
+        + "/ajetty-file-exch" + this.srvState.getAjettyIn() + ".kpub";
+    } else if (pRcCd == RQC_EXP_JETLOG0) {
+      expCd = RQC_EXP_JETLOG0;
+      flNm = getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG;
+    } else if (pRcCd == RQC_EXP_JETLOG1) {
+      expCd = RQC_EXP_JETLOG1;
+      flNm = getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS1_LOG;
+    } else if (pRcCd == RQC_EXP_LOGEISST0) {
+      expCd = RQC_EXP_LOGEISST0;
+      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_BSEISST0;
+    } else if (pRcCd == RQC_EXP_LOGEISST1) {
+      expCd = RQC_EXP_LOGEISST1;
+      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_BSEISST1;
+    } else if (pRcCd == RQC_EXP_LOGSTD0) {
+      expCd = RQC_EXP_LOGSTD0;
+      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_STD0;
+    } else if (pRcCd == RQC_EXP_LOGSTD1) {
+      expCd = RQC_EXP_LOGSTD1;
+      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_STD1;
+    } else if (pRcCd == RQC_EXP_LOGSEC0) {
+      expCd = RQC_EXP_LOGSEC0;
+      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_SEC0;
+    } else if (pRcCd == RQC_EXP_LOGSEC1) {
+      expCd = RQC_EXP_LOGSEC1;
+      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_SEC1;
+    } else if (pRcCd == RQC_EXP_LOGSTDEN0) {
+      expCd = RQC_EXP_LOGSTDEN0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDEN0;
+    } else if (pRcCd == RQC_EXP_LOGSTDEN1) {
+      expCd = RQC_EXP_LOGSTDEN1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDEN1;
+    } else if (pRcCd == RQC_EXP_LOGSECEN0) {
+      expCd = RQC_EXP_LOGSECEN0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECEN0;
+    } else if (pRcCd == RQC_EXP_LOGSECEN1) {
+      expCd = RQC_EXP_LOGSECEN1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECEN1;
+    } else if (pRcCd == RQC_EXP_LOGSTDENSG0) {
+      expCd = RQC_EXP_LOGSTDENSG0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDENSG0;
+    } else if (pRcCd == RQC_EXP_LOGSTDENSG1) {
+      expCd = RQC_EXP_LOGSTDENSG1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDENSG1;
+    } else if (pRcCd == RQC_EXP_LOGSECENSG0) {
+      expCd = RQC_EXP_LOGSECENSG0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECENSG0;
+    } else if (pRcCd == RQC_EXP_LOGSECENSG1) {
+      expCd = RQC_EXP_LOGSECENSG1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECENSG1;
+    } else if (pRcCd == RQC_EXP_LOGSTDENSK0) {
+      expCd = RQC_EXP_LOGSTDENSK0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDENSK0;
+    } else if (pRcCd == RQC_EXP_LOGSTDENSK1) {
+      expCd = RQC_EXP_LOGSTDENSK1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDENSK1;
+    } else if (pRcCd == RQC_EXP_LOGSECENSK0) {
+      expCd = RQC_EXP_LOGSECENSK0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECENSK0;
+    } else if (pRcCd == RQC_EXP_LOGSECENSK1) {
+      expCd = RQC_EXP_LOGSECENSK1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECENSK1;
+    } else if (pRcCd == RQC_EXP_LOGSTDENSKS0) {
+      expCd = RQC_EXP_LOGSTDENSKS0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDENSKS0;
+    } else if (pRcCd == RQC_EXP_LOGSTDENSKS1) {
+      expCd = RQC_EXP_LOGSTDENSKS1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDENSKS1;
+    } else if (pRcCd == RQC_EXP_LOGSECENSKS0) {
+      expCd = RQC_EXP_LOGSECENSKS0;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECENSKS0;
+    } else if (pRcCd == RQC_EXP_LOGSECENSKS1) {
+      expCd = RQC_EXP_LOGSECENSKS1;
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_SECENSKS1;
+    } else if (pRcCd == RQC_EXP_SQLT) {
+      expCd = RQC_EXP_SQLT;
+      flNm = (String) cmbExpSqlt.getSelectedItem();
+      if (flNm.equals("-")) {
+        return;
       }
-    } else if (pRcCd == REQCD_SEND_JETLOG0) {
-      Uri uri = pRsDt.getData();
-      File fl = new File(getFilesDir().getAbsolutePath() + "/" + AJETTY_EIS0_LOG);
-      if (fl.exists()) {
-        copyFileTo(fl, uri);
+      flNm = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/" + flNm;
+    } else if (pRcCd == RQC_EXP_ENSQLT) {
+      expCd = RQC_EXP_ENSQLT;
+      flNm = (String) cmbExpEnSqlt.getSelectedItem();
+      if (flNm.equals("-")) {
+        return;
       }
-    } else if (pRcCd == REQCD_IMP_SQLITE) {
-      Uri uri = pRsDt.getData();
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + flNm;
+    } else if (pRcCd == RQC_EXP_ENSQLTSG) {
+      expCd = RQC_EXP_ENSQLTSG;
+      flNm = (String) cmbExpEnSqltSg.getSelectedItem();
+      if (flNm.equals("-")) {
+        return;
+      }
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + flNm;
+    } else if (pRcCd == RQC_IMP_SQLITE) {
+      impCd = RQC_IMP_SQLITE;
       String dbpth = getFilesDir().getAbsolutePath()
-        .replace("files", "databases"); //TODO 0 files maybe will do but upgrade?
+        .replace("files", "databases"); //this is Android's DB's hardcoded dir!
       Cursor retCu = getContentResolver().query(uri, null, null, null, null);
       int nmIdx = retCu.getColumnIndex(OpenableColumns.DISPLAY_NAME);
       retCu.moveToFirst();
-      File fl = new File(dbpth + "/" + retCu.getString(nmIdx));
-      copyFileFrom(uri, fl);
+      flNm = dbpth + "/" + retCu.getString(nmIdx);
+    } else if (pRcCd == RQC_IMP_PUBEXCH) {
+      impCd = RQC_IMP_PUBEXCH;
+      File dir = new File(getFilesDir() + "/Bseis/pub_exch");
+      if (!dir.exists() && !dir.mkdirs()) {
+        String msg = "Cant't create dir " + dir;
+        this.log.error(null, getClass(), msg);
+        return;
+      }
+      File[] fls = dir.listFiles();
+      if (fls != null) {
+        for (int i = 0; i < fls.length; i++) {
+          if (fls[i] != null && !fls[i].delete()) {
+            String msg = "Cant't delete file " + fls[i];
+            this.log.error(null, getClass(), msg);
+          }
+        }
+      }
+      Cursor retCu = getContentResolver().query(uri, null, null, null, null);
+      int nmIdx = retCu.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+      retCu.moveToFirst();
+      flNm = dir + "/" + retCu.getString(nmIdx);
     } else {
       this.log.error(null, getClass(), "Unknown activity request code:" + pRcCd);
     }
+    if (flNm != null) {
+      if (expCd != -1) {
+        File fl = new File(flNm);
+        if (fl.exists()) {
+          copyFileTo(fl, uri);
+        }
+      } else if (impCd != -1) {
+        File fl = new File(flNm);
+        copyFileFrom(uri, fl);
+      }
+    }
   }
 
-  private void copyFileTo(File pFile, Uri pUriTo) {
+  private boolean copyFileTo(File pFile, Uri pUriTo) {
     OutputStream outs = null;
     FileInputStream ins = null;
     ParcelFileDescriptor pfd = null;
+    boolean res = false;
     try {
       ins = new FileInputStream(pFile);
       pfd = getContentResolver().openFileDescriptor(pUriTo, "w");
@@ -670,7 +1276,9 @@ public class Bsa extends FragmentActivity
         outs.write(data, 0, count);
       }
       outs.flush();
+      res = true;
     } catch (Exception e) {
+      res = false;
       this.log.error(null, getClass(), null, e);
     } finally {
       if (pfd != null) {
@@ -695,6 +1303,7 @@ public class Bsa extends FragmentActivity
         }
       }
     }
+    return res;
   }
 
   private void copyFileFrom(Uri pUriFr, File pFile) {
@@ -815,7 +1424,7 @@ public class Bsa extends FragmentActivity
         }
       }
       if (certCa != null) {
-        File pemFl = new File(getFilesDir().getAbsolutePath() + "/Bseis/ajetty-ca"
+        File pemFl = new File(getFilesDir().getAbsolutePath() + "/ajetty-ca"
             + this.srvState.getAjettyIn() + ".pem");
         JcaPEMWriter pemWriter = null;
         try {
@@ -834,7 +1443,7 @@ public class Bsa extends FragmentActivity
           }
         }
         File pubFl = new File(getFilesDir().getAbsolutePath()
-          + "/Bseis/ajetty-file-exch"
+          + "/ajetty-file-exch"
             + this.srvState.getAjettyIn() + ".kpub");
         FileOutputStream fos = null;
         try {
@@ -983,10 +1592,10 @@ public class Bsa extends FragmentActivity
   private void copyAssets(final String pCurrDir) throws Exception {
     AssetManager assetManager = getAssets();
     String[] files = assetManager.list(pCurrDir);
-    for (String fileName : files) {
+    for (String flNm : files) {
       String createdPath = getFilesDir().getAbsolutePath()
-        + "/" + pCurrDir + "/" + fileName;
-      if (!fileName.contains(".")) {
+        + "/" + pCurrDir + "/" + flNm;
+      if (!flNm.contains(".")) {
         File subdir = new File(createdPath);
         if (!subdir.exists()) {
           if (!subdir.mkdirs()) {
@@ -998,12 +1607,12 @@ public class Bsa extends FragmentActivity
               "Created : " + subdir);
           }
         }
-        copyAssets(pCurrDir + "/" + fileName);
+        copyAssets(pCurrDir + "/" + flNm);
       } else {
         InputStream ins = null;
         OutputStream outs = null;
         try {
-          ins = getAssets().open(pCurrDir + "/" + fileName);
+          ins = getAssets().open(pCurrDir + "/" + flNm);
           outs = new BufferedOutputStream(
             new FileOutputStream(createdPath));
           byte[] data = new byte[1024];
@@ -1013,7 +1622,7 @@ public class Bsa extends FragmentActivity
           }
           outs.flush();
           this.log.info(null, getClass(),
-            "Copied: " + pCurrDir + "/" + fileName);
+            "Copied: " + pCurrDir + "/" + flNm);
         } finally {
           if (ins != null) {
             try {

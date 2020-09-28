@@ -313,11 +313,31 @@
     <finalName>${project.artifactId}</finalName>
     <!--
       Because progurad manually file and skipDependencies=true!!!
-      TODO 0 from dependent sources
     -->
     <resources>
       <resource>
         <directory>src${file.separator}main${file.separator}resources</directory>
+      </resource>
+      <resource>
+        <directory>..${file.separator}beige-accjet${file.separator}src${file.separator}main${file.separator}resources</directory>
+      </resource>
+      <resource>
+        <directory>..${file.separator}beige-acc${file.separator}src${file.separator}main${file.separator}resources</directory>
+      </resource>
+      <resource>
+        <directory>..${file.separator}beige-blc${file.separator}src${file.separator}main${file.separator}resources</directory>
+      </resource>
+      <resource>
+        <directory>..${file.separator}a-jetty-all${file.separator}a-jetty-base${file.separator}src${file.separator}main${file.separator}resources</directory>
+      </resource>
+      <resource>
+        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jsp${file.separator}src${file.separator}main${file.separator}resources</directory>
+      </resource>
+      <resource>
+        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jsp${file.separator}src${file.separator}main${file.separator}java</directory>
+        <includes>
+          <include>**/*.properties</include>
+        </includes>
       </resource>
     </resources>
     <plugins>

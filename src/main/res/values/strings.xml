@@ -2,7 +2,12 @@
 <resources>
 
   <string name="app_name">Beigesoft™ EIS</string>
+  <string name="expPubExch">Export exchange public key</string>
+  <string name="impPubExch">Import exchange public key</string>
   <string name="ImpSqlite">Import SQLITE DB</string>
+  <string name="expSqlt">Export SQLITE DB</string>
+  <string name="expEnSqlt">Export encrypted SQLITE DB</string>
+  <string name="expEnSqltSg">Export encrypted SQLITE DB\'s signature</string>
   <string name="fileImpd">File has been imported</string>
   <string name="alert_dialog_ok">OK</string>
   <string name="permGr">Permissions granted</string>
@@ -12,6 +17,7 @@
   <string name="perm">You need permission internet to run this application and to import data from cloud version! You also need permission foreground service to run server in background!</string>
   <string name="expCaCe">Export A-Jetty CA certificat</string>
   <string name="expLog">Export log file</string>
+  <string name="expEnLog">Export encrypted log file</string>
   <string name="port">Port:</string>
   <string name="start">Start</string>
   <string name="stop">Stop</string>

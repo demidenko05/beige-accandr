@@ -1,4 +1,0 @@
-select TAXID, TAX.NME as TAXNAME, sum(TOT) as TOTALTAX
-from (select TAX as TAXID, TOT from CARTITTXLN where DISAB=0 and SELID:CONDSEL and CARTID=:CARTID) as CTXL
-join TAX on CTXL.TAXID=TAX.IID
-group by TAXID, TAXNAME;
