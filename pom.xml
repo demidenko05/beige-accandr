@@ -312,7 +312,7 @@
   <build>
     <finalName>${project.artifactId}</finalName>
     <!--
-      Because progurad manually file and skipDependencies=true!!!
+      This is need because of progurad manually file and skipDependencies=true!!!
     -->
     <resources>
       <resource>
@@ -334,10 +334,7 @@
         <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jsp${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jsp${file.separator}src${file.separator}main${file.separator}java</directory>
-        <includes>
-          <include>**/*.properties</include>
-        </includes>
+        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jstl${file.separator}impl${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
     </resources>
     <plugins>

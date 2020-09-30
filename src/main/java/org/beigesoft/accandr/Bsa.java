@@ -218,6 +218,51 @@ public class Bsa extends FragmentActivity
   private Button btnExpEnSqltSg;
 
   /**
+   * <p>Combo-Box export SK of en. SQLITE DB.</p>
+   **/
+  private Spinner cmbExpEnSqltSk;
+
+  /**
+   * <p>Button export SK of en. SQLITE DB.</p>
+   **/
+  private Button btnExpEnSqltSk;
+
+  /**
+   * <p>Combo-Box export signature of SK of en. SQLITE DB.</p>
+   **/
+  private Spinner cmbExpEnSqltSks;
+
+  /**
+   * <p>Button export signature of SK of en. SQLITE DB.</p>
+   **/
+  private Button btnExpEnSqltSks;
+
+  /**
+   * <p>Button import SQLITE.</p>
+   **/
+  private Button btnImpSqlite;
+
+  /**
+   * <p>Button import encrypted SQLITE.</p>
+   **/
+  private Button btnImpEnSqlt;
+
+  /**
+   * <p>Button import signature of encrypted SQLITE.</p>
+   **/
+  private Button btnImpEnSqltSg;
+
+  /**
+   * <p>Button import SK of encrypted SQLITE.</p>
+   **/
+  private Button btnImpEnSqltSk;
+
+  /**
+   * <p>Button import signature of SK of encrypted SQLITE.</p>
+   **/
+  private Button btnImpEnSqltSks;
+
+  /**
    * <p>Combo-Box Port.</p>
    **/
   private Spinner cmbPort;
@@ -236,11 +281,6 @@ public class Bsa extends FragmentActivity
    * <p>KS password repeated.</p>
    **/
   private EditText etKsPasswRep;
-
-  /**
-   * <p>Button import SQLITE.</p>
-   **/
-  private Button btnImpSqlite;
 
   /**
    * <p>Button permissions.</p>
@@ -531,8 +571,48 @@ public class Bsa extends FragmentActivity
           }
         }
       }
+      this.btnExpEnSqltSk = (Button) findViewById(R.id.btnExpEnSqltSk);
+      this.btnExpEnSqltSk.setOnClickListener(this);
+      this.cmbExpEnSqltSk = (Spinner) findViewById(R.id.cmbExpEnSqltSk);
+      ArrayAdapter<String> cmpAdExEnSqltSk =
+        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+      cmpAdExEnSqltSk.add("-");
+      this.cmbExpEnSqltSk.setAdapter(cmpAdExEnSqltSk);
+      this.cmbExpEnSqltSk.setSelection(0);
+      fls = bsBkdir.listFiles();
+      if (fls != null) {
+        for (File fl : fls) {
+          if (fl.getName().endsWith(".sqlten.sken")) {
+            cmpAdExEnSqltSk.add(fl.getName());
+          }
+        }
+      }
+      this.btnExpEnSqltSks = (Button) findViewById(R.id.btnExpEnSqltSks);
+      this.btnExpEnSqltSks.setOnClickListener(this);
+      this.cmbExpEnSqltSks = (Spinner) findViewById(R.id.cmbExpEnSqltSks);
+      ArrayAdapter<String> cmpAdExEnSqltSks =
+        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+      cmpAdExEnSqltSks.add("-");
+      this.cmbExpEnSqltSks.setAdapter(cmpAdExEnSqltSks);
+      this.cmbExpEnSqltSks.setSelection(0);
+      fls = bsBkdir.listFiles();
+      if (fls != null) {
+        for (File fl : fls) {
+          if (fl.getName().endsWith(".sqlten.sken.sig")) {
+            cmpAdExEnSqltSks.add(fl.getName());
+          }
+        }
+      }
       this.btnImpSqlite = (Button) findViewById(R.id.btnImpSqlite);
       this.btnImpSqlite.setOnClickListener(this);
+      this.btnImpEnSqlt = (Button) findViewById(R.id.btnImpEnSqlt);
+      this.btnImpEnSqlt.setOnClickListener(this);
+      this.btnImpEnSqltSg = (Button) findViewById(R.id.btnImpEnSqltSg);
+      this.btnImpEnSqltSg.setOnClickListener(this);
+      this.btnImpEnSqltSk = (Button) findViewById(R.id.btnImpEnSqltSk);
+      this.btnImpEnSqltSk.setOnClickListener(this);
+      this.btnImpEnSqltSks = (Button) findViewById(R.id.btnImpEnSqltSks);
+      this.btnImpEnSqltSks.setOnClickListener(this);
       this.btnPerm = (Button) findViewById(R.id.btnPerm);
       this.btnPerm.setOnClickListener(this);
     } catch (Exception e) {
@@ -658,8 +738,20 @@ public class Bsa extends FragmentActivity
         exportEnSqlt();
       } else if (pTarget == this.btnExpEnSqltSg) {
         exportEnSqltSg();
+      } else if (pTarget == this.btnExpEnSqltSk) {
+        exportEnSqltSk();
+      } else if (pTarget == this.btnExpEnSqltSks) {
+        exportEnSqltSks();
       } else if (pTarget == this.btnImpSqlite) {
         impSqlite();
+      } else if (pTarget == this.btnImpEnSqlt) {
+        impEnSqlt();
+      } else if (pTarget == this.btnImpEnSqltSg) {
+        impEnSqltSg();
+      } else if (pTarget == this.btnImpEnSqltSk) {
+        impEnSqltSk();
+      } else if (pTarget == this.btnImpEnSqltSks) {
+        impEnSqltSks();
       } else if (pTarget == this.btnPerm) {
         revIsPermOk();
       }
@@ -1085,7 +1177,51 @@ public class Bsa extends FragmentActivity
     }
   }
 
-  private static final int RQC_IMP_SQLITE = 175;
+  private static final int RQC_EXP_ENSQLTSK = 79;
+
+  private final void exportEnSqltSk() {
+    String flNm = (String) cmbExpEnSqltSk.getSelectedItem();
+    if (flNm.equals("-")) {
+      return;
+    }
+    File fl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + flNm);
+    if (fl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/octet-stream");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, RQC_EXP_ENSQLTSK);
+    }
+  }
+
+  private static final int RQC_EXP_ENSQLTSKS = 80;
+
+  private final void exportEnSqltSks() {
+    String flNm = (String) cmbExpEnSqltSks.getSelectedItem();
+    if (flNm.equals("-")) {
+      return;
+    }
+    File fl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + flNm);
+    if (fl.exists()) {
+      Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/octet-stream");
+      intent.putExtra(Intent.EXTRA_TITLE, flNm);
+      startActivityForResult(intent, RQC_EXP_ENSQLTSKS);
+    }
+  }
+
+  private static final int RQC_IMP_PUBEXCH = 175;
+
+  private final void impPubExch() {
+    Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setType("application/octet-stream");
+    intent.putExtra(Intent.EXTRA_TITLE, "*.kpub");
+    startActivityForResult(intent, RQC_IMP_PUBEXCH);
+  }
+
+  private static final int RQC_IMP_SQLITE = 176;
 
   private final void impSqlite() {
     Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
@@ -1095,14 +1231,44 @@ public class Bsa extends FragmentActivity
     startActivityForResult(intent, RQC_IMP_SQLITE);
   }
 
-  private static final int RQC_IMP_PUBEXCH = 176;
+  private static final int RQC_IMP_ENSQLT = 177;
 
-  private final void impPubExch() {
+  private final void impEnSqlt() {
     Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
     intent.addCategory(Intent.CATEGORY_OPENABLE);
     intent.setType("application/octet-stream");
-    intent.putExtra(Intent.EXTRA_TITLE, "*.kpub");
-    startActivityForResult(intent, RQC_IMP_PUBEXCH);
+    intent.putExtra(Intent.EXTRA_TITLE, "*.sqlten");
+    startActivityForResult(intent, RQC_IMP_ENSQLT);
+  }
+
+  private static final int RQC_IMP_ENSQLTSG = 178;
+
+  private final void impEnSqltSg() {
+    Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setType("application/octet-stream");
+    intent.putExtra(Intent.EXTRA_TITLE, "*.sqlten.sig");
+    startActivityForResult(intent, RQC_IMP_ENSQLTSG);
+  }
+
+  private static final int RQC_IMP_ENSQLTSK = 179;
+
+  private final void impEnSqltSk() {
+    Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setType("application/octet-stream");
+    intent.putExtra(Intent.EXTRA_TITLE, "*.sqlten.sken");
+    startActivityForResult(intent, RQC_IMP_ENSQLTSK);
+  }
+
+  private static final int RQC_IMP_ENSQLTSKS = 180;
+
+  private final void impEnSqltSks() {
+    Intent intent = new Intent(SDK19ACTION_OPEN_DOCUMENT);
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    intent.setType("application/octet-stream");
+    intent.putExtra(Intent.EXTRA_TITLE, "*.sqlten.sken.sig");
+    startActivityForResult(intent, RQC_IMP_ENSQLTSKS);
   }
 
   @Override
@@ -1215,6 +1381,20 @@ public class Bsa extends FragmentActivity
         return;
       }
       flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + flNm;
+    } else if (pRcCd == RQC_EXP_ENSQLTSK) {
+      expCd = RQC_EXP_ENSQLTSK;
+      flNm = (String) cmbExpEnSqltSk.getSelectedItem();
+      if (flNm.equals("-")) {
+        return;
+      }
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + flNm;
+    } else if (pRcCd == RQC_EXP_ENSQLTSKS) {
+      expCd = RQC_EXP_ENSQLTSKS;
+      flNm = (String) cmbExpEnSqltSks.getSelectedItem();
+      if (flNm.equals("-")) {
+        return;
+      }
+      flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + flNm;
     } else if (pRcCd == RQC_IMP_SQLITE) {
       impCd = RQC_IMP_SQLITE;
       String dbpth = getFilesDir().getAbsolutePath()
@@ -1239,6 +1419,19 @@ public class Bsa extends FragmentActivity
             this.log.error(null, getClass(), msg);
           }
         }
+      }
+      Cursor retCu = getContentResolver().query(uri, null, null, null, null);
+      int nmIdx = retCu.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+      retCu.moveToFirst();
+      flNm = dir + "/" + retCu.getString(nmIdx);
+    } else if (pRcCd == RQC_IMP_ENSQLT || pRcCd == RQC_IMP_ENSQLTSG
+      || pRcCd == RQC_IMP_ENSQLTSK || pRcCd == RQC_IMP_ENSQLTSKS) {
+      impCd = pRcCd;
+      File dir = new File(getFilesDir() + "/Bseis");
+      if (!dir.exists() && !dir.mkdirs()) {
+        String msg = "Cant't create dir " + dir;
+        this.log.error(null, getClass(), msg);
+        return;
       }
       Cursor retCu = getContentResolver().query(uri, null, null, null, null);
       int nmIdx = retCu.getColumnIndex(OpenableColumns.DISPLAY_NAME);

@@ -101,13 +101,6 @@
       android:layout_height="wrap_content"
       android:text="@string/expPubExch" />
 
-    <Button
-      android:id="@+id/btnImpPubExch"
-      android:gravity="center_horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="@string/impPubExch" />
-
     <Spinner
       android:id="@+id/cmbExpLog"
       android:layout_width="fill_parent"
@@ -168,12 +161,71 @@
       android:layout_height="wrap_content"
       android:text="@string/expEnSqltSg" />
 
+    <Spinner
+      android:id="@+id/cmbExpEnSqltSk"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+
+    <Button
+      android:id="@+id/btnExpEnSqltSk"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/expEnSqltSk" />
+
+    <Spinner
+      android:id="@+id/cmbExpEnSqltSks"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content" />
+
+    <Button
+      android:id="@+id/btnExpEnSqltSks"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/expEnSqltSks" />
+
+    <Button
+      android:id="@+id/btnImpPubExch"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/impPubExch" />
+
     <Button
       android:id="@+id/btnImpSqlite"
       android:gravity="center_horizontal"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/ImpSqlite" />
+
+    <Button
+      android:id="@+id/btnImpEnSqlt"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/impEnSqlt" />
+
+    <Button
+      android:id="@+id/btnImpEnSqltSg"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/impEnSqltSg" />
+
+    <Button
+      android:id="@+id/btnImpEnSqltSk"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/impEnSqltSk" />
+
+    <Button
+      android:id="@+id/btnImpEnSqltSks"
+      android:gravity="center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/impEnSqltSks" />
 
     <Button
       android:id="@+id/btnPerm"
