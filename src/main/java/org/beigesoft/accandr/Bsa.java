@@ -528,9 +528,11 @@ public class Bsa extends FragmentActivity
       cmpAdExSqlt.add("-");
       this.cmbExpSqlt.setAdapter(cmpAdExSqlt);
       this.cmbExpSqlt.setSelection(0);
-      File appDr = new File(appDir);
-      if (appDr.exists()) {
-        File[] fls = appDr.listFiles();
+      String dbpth = getFilesDir().getAbsolutePath()
+        .replace("files", "databases"); //this is Android's DB's hardcoded dir!
+      File dbDr = new File(dbpth);
+      if (dbDr.exists()) {
+        File[] fls = dbDr.listFiles();
         if (fls != null) {
           for (File fl : fls) {
             if (fl.getName().endsWith(".sqlite")) {
@@ -945,8 +947,8 @@ public class Bsa extends FragmentActivity
   private static final int RQC_EXP_CAPEM = 43;
 
   private final void exportCaCe() {
-    String flNm = "/ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
-    File pemFl = new File(getFilesDir().getAbsolutePath() + flNm);
+    String flNm = "ajetty-ca" + this.srvState.getAjettyIn() + ".pem";
+    File pemFl = new File(getFilesDir().getAbsolutePath() + "/" + flNm);
     if (pemFl.exists()) {
       Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
       intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -959,8 +961,8 @@ public class Bsa extends FragmentActivity
   private static final int RQC_EXP_PUBEXCH = 44;
 
   private final void exportPubExch() {
-    String flNm = "/ajetty-file-exch" + this.srvState.getAjettyIn() + ".kpub";
-    File peFl = new File(getFilesDir().getAbsolutePath() + flNm);
+    String flNm = "ajetty-file-exch" + this.srvState.getAjettyIn() + ".kpub";
+    File peFl = new File(getFilesDir().getAbsolutePath() + "/" + flNm);
     if (peFl.exists()) {
       Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
       intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -988,37 +990,46 @@ public class Bsa extends FragmentActivity
 
   private final void exportLog() {
     String res = (String) cmbExpLog.getSelectedItem();
+    String flPth = null;
     String flNm = null;
     int reqCd = -1;
     if (res.equals(LOG_BSEISST0)) {
+      flPth = getFilesDir().getAbsolutePath() + "/";
       flNm = LOG_BSEISST0;
       reqCd = RQC_EXP_LOGEISST0;
     } else if (res.equals(LOG_BSEISST1)) {
+      flPth = getFilesDir().getAbsolutePath() + "/";
       flNm = LOG_BSEISST1;
       reqCd = RQC_EXP_LOGEISST1;
     } else if (res.equals(AJETTY_EIS0_LOG)) {
+      flPth = getFilesDir().getAbsolutePath() + "/";
       flNm = AJETTY_EIS0_LOG;
       reqCd = RQC_EXP_JETLOG0;
     } else if (res.equals(AJETTY_EIS1_LOG)) {
+      flPth = getFilesDir().getAbsolutePath() + "/";
       flNm = AJETTY_EIS1_LOG;
       reqCd = RQC_EXP_JETLOG1;
     } else if (res.equals(LOG_STD0)) {
+      flPth = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/";
       flNm = LOG_STD0;
       reqCd = RQC_EXP_LOGSTD0;
     } else if (res.equals(LOG_STD1)) {
+      flPth = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/";
       flNm = LOG_STD1;
       reqCd = RQC_EXP_LOGSTD1;
     } else if (res.equals(LOG_SEC0)) {
+      flPth = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/";
       flNm = LOG_SEC0;
       reqCd = RQC_EXP_LOGSEC0;
     } else if (res.equals(LOG_SEC1)) {
+      flPth = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/";
       flNm = LOG_SEC1;
       reqCd = RQC_EXP_LOGSEC1;
     }
     if (flNm == null) {
       return;
     }
-    File fl = new File(getFilesDir().getAbsolutePath() + "/" + flNm);
+    File fl = new File(flPth + flNm);
     if (fl.exists()) {
       Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
       intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -1302,16 +1313,16 @@ public class Bsa extends FragmentActivity
       flNm = getFilesDir().getAbsolutePath() + "/" + LOG_BSEISST1;
     } else if (pRcCd == RQC_EXP_LOGSTD0) {
       expCd = RQC_EXP_LOGSTD0;
-      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_STD0;
+      flNm = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/" + LOG_STD0;
     } else if (pRcCd == RQC_EXP_LOGSTD1) {
       expCd = RQC_EXP_LOGSTD1;
-      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_STD1;
+      flNm = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/" + LOG_STD1;
     } else if (pRcCd == RQC_EXP_LOGSEC0) {
       expCd = RQC_EXP_LOGSEC0;
-      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_SEC0;
+      flNm = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/" + LOG_SEC0;
     } else if (pRcCd == RQC_EXP_LOGSEC1) {
       expCd = RQC_EXP_LOGSEC1;
-      flNm = getFilesDir().getAbsolutePath() + "/" + LOG_SEC1;
+      flNm = getFilesDir().getAbsolutePath() + "/" + APP_BASE + "/" + LOG_SEC1;
     } else if (pRcCd == RQC_EXP_LOGSTDEN0) {
       expCd = RQC_EXP_LOGSTDEN0;
       flNm = getFilesDir().getAbsolutePath() + "/Bseis/" + LOG_STDEN0;
@@ -1405,7 +1416,8 @@ public class Bsa extends FragmentActivity
       flNm = dbpth + "/" + retCu.getString(nmIdx);
     } else if (pRcCd == RQC_IMP_PUBEXCH) {
       impCd = RQC_IMP_PUBEXCH;
-      File dir = new File(getFilesDir() + "/Bseis/pub_exch");
+      String dirPth = new File(getFilesDir().getAbsolutePath() + "/Bseis/pub_exch");
+      File dir = new File(dirPth);
       if (!dir.exists() && !dir.mkdirs()) {
         String msg = "Cant't create dir " + dir;
         this.log.error(null, getClass(), msg);
@@ -1423,11 +1435,12 @@ public class Bsa extends FragmentActivity
       Cursor retCu = getContentResolver().query(uri, null, null, null, null);
       int nmIdx = retCu.getColumnIndex(OpenableColumns.DISPLAY_NAME);
       retCu.moveToFirst();
-      flNm = dir + "/" + retCu.getString(nmIdx);
+      flNm = dirPth + "/" + retCu.getString(nmIdx);
     } else if (pRcCd == RQC_IMP_ENSQLT || pRcCd == RQC_IMP_ENSQLTSG
       || pRcCd == RQC_IMP_ENSQLTSK || pRcCd == RQC_IMP_ENSQLTSKS) {
       impCd = pRcCd;
-      File dir = new File(getFilesDir() + "/Bseis");
+      String dirPth = getFilesDir().getAbsolutePath() + "/Bseis";
+      File dir = new File(dirPth);
       if (!dir.exists() && !dir.mkdirs()) {
         String msg = "Cant't create dir " + dir;
         this.log.error(null, getClass(), msg);
@@ -1436,7 +1449,7 @@ public class Bsa extends FragmentActivity
       Cursor retCu = getContentResolver().query(uri, null, null, null, null);
       int nmIdx = retCu.getColumnIndex(OpenableColumns.DISPLAY_NAME);
       retCu.moveToFirst();
-      flNm = dir + "/" + retCu.getString(nmIdx);
+      flNm = dirPth + "/" + retCu.getString(nmIdx);
     } else {
       this.log.error(null, getClass(), "Unknown activity request code:" + pRcCd);
     }
