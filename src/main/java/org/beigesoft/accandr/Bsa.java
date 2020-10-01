@@ -1127,11 +1127,11 @@ public class Bsa extends FragmentActivity
     if (flNm == null) {
       return;
     }
-    File fl = new File(getFilesDir().getAbsolutePath() + "/" + flNm);
+    File fl = new File(getFilesDir().getAbsolutePath() + "/Bseis/" + flNm);
     if (fl.exists()) {
       Intent intent = new Intent(SDK19ACTION_CREATE_DOCUMENT);
       intent.addCategory(Intent.CATEGORY_OPENABLE);
-      intent.setType("text/plain");
+      intent.setType("application/octet-stream");
       intent.putExtra(Intent.EXTRA_TITLE, flNm);
       startActivityForResult(intent, reqCd);
     }
@@ -1416,7 +1416,7 @@ public class Bsa extends FragmentActivity
       flNm = dbpth + "/" + retCu.getString(nmIdx);
     } else if (pRcCd == RQC_IMP_PUBEXCH) {
       impCd = RQC_IMP_PUBEXCH;
-      String dirPth = new File(getFilesDir().getAbsolutePath() + "/Bseis/pub_exch");
+      String dirPth = getFilesDir().getAbsolutePath() + "/Bseis/pub-exch";
       File dir = new File(dirPth);
       if (!dir.exists() && !dir.mkdirs()) {
         String msg = "Cant't create dir " + dir;
