@@ -621,9 +621,6 @@ public class Bsa extends FragmentActivity
       this.log.error(null, getClass(),
         "Cant create interface", e);
     }
-    if (!lazPrivAgreed()) {
-      showPrivDlg();
-    }
     AppPlus appPlus = (AppPlus) getApplicationContext();
     if (appPlus.getBeansMap().size() > 0) { // onResume
       this.srvState = (SrvState) appPlus.getBeansMap()
@@ -657,6 +654,9 @@ public class Bsa extends FragmentActivity
           this.log.error(null, getClass(), "Cant create server", e);
         }
       }
+    }
+    if (!lazPrivAgreed()) {
+      showPrivDlg();
     }
   }
 
@@ -858,6 +858,7 @@ public class Bsa extends FragmentActivity
           throw new ExcCode(ExcCode.WR, msg);
         }
       } else if (!fileVersion.exists()) { // upgrade
+        onPrivSaveClick(false);
         //hard coded deleting jquery-3.3.1.min.js:
         File oldJquery = new File(getFilesDir().getAbsolutePath()
          + "/" + APP_BASE + "/js/" + "jquery-3.3.1.min.js");

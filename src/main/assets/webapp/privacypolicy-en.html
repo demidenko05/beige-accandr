@@ -43,7 +43,7 @@
 
 <h4 align="center">Beigesoft™ EIS on embedded A-Jetty for Android.</h4>
 <p>
-Your information (SQLite database), logStd.log, logSec.log, keystore are in the place that is inaccessible to other software. If you forget the keystore or the application password, then you will lose your information. Therefore, you need to periodically make  a copy of the database into Google Drive. In addition, you can use encryption for the database, but this is appropriate when you send an encrypted database into Beigesoft™ EIS that is installed on a computer in protected from light harmful software way.  
+Your information (SQLite database), logStd.log, logSec.log, keystore are in the place that is inaccessible to other software. If you forget the keystore or the application password, then you will lose your information. Therefore, you need to periodically make  a copy of the database into Google Drive. In addition, you can use encryption for the database, but this is appropriate when you send an encrypted database into Beigesoft™ EIS that is installed on a computer in protected from light harmful software way. Never use the shared storage for exporting or importing non-encrypted private information.
 </p>
 <p>
 This application has no direct  access to your files on Google Drive, that is it can not list or read them. It only asks Google Drive Application for sending or receiving a file interactively, that is with user (your) confirmation.  
@@ -58,7 +58,7 @@ When all Android applications will be forced to use "scoped storage", then they 
 When your browser will pass a PDF file to a PDF viewer via the secure transport (not via shared Download folder), then all other applications will have no access to your PDF files.
 </p>
 <p>
-This application has neither direct nor interactive access to files on the shared storage.
+This application has no direct access to files on the shared storage. You can use the shared storage (just choose it instead of Google Drive) for exporting and importing non-private information (such as ajetty-ca#.pem) or encrypted private one.
 </p>
 <p>
 You also need to set a screen lock, such as a PIN code.

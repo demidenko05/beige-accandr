@@ -18,4 +18,8 @@
   <issue id="SetTextI18n">
     <ignore path="src/main/java/org/beigesoft/accandr/Bsa.java" />
   </issue>
+  <!--This indexing requires exessive things like own web-site for publishing Digital Asset Links JSON file with exact location: https://domain.name/.well-known/assetlinks.json-->
+  <issue id="GoogleAppIndexingWarning">
+    <ignore path="src/main/AndroidManifest.xml" />
+  </issue>
 </lint>
