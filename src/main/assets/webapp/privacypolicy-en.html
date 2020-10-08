@@ -39,11 +39,12 @@
 <h4 align="center">Beigesoft™ EIS on embedded A-Jetty for a computer.</h4>
 <p>
   Your information is located in the database file, by default - "webapp/bseis.sqlite". You can copy the database file to any other place (closed from public access) by using a file manager. The keystore for encryption is located in the "ks" folder. This  keystore is protected by a strong password (which you also create). You must use a strong password for authorization in your operating system. It would be better, when you set a password for starting your computer.
+  You can not use the A-Jetty SSL (HTTPS) certificate for any Internet resource (site or WEB-service).
 </p>
 
 <h4 align="center">Beigesoft™ EIS on embedded A-Jetty for Android.</h4>
 <p>
-Your information (SQLite database), logStd.log, logSec.log, keystore are in the place that is inaccessible to other software. If you forget the keystore or the application password, then you will lose your information. Therefore, you need to periodically make  a copy of the database into Google Drive. In addition, you can use encryption for the database, but this is appropriate when you send an encrypted database into Beigesoft™ EIS that is installed on a computer in protected from light harmful software way. Never use the shared storage for exporting or importing non-encrypted private information.
+Your information (SQLite database), logStd.log, logSec.log, keystore are in the place that is inaccessible to other software. If you forget the keystore or the application password, then you will lose your information. Therefore, you need to periodically make  a copy of the database into Google Drive. In addition, you can use encryption for the database, but this is appropriate when you send an encrypted database into Beigesoft™ EIS that is installed on a computer in protected from light harmful software way, or for sharing the database between Android devices via the shared storage (not via Google Drive). Never use the shared storage for exporting or importing non-encrypted private information.
 </p>
 <p>
 This application has no direct  access to your files on Google Drive, that is it can not list or read them. It only asks Google Drive Application for sending or receiving a file interactively, that is with user (your) confirmation.  
