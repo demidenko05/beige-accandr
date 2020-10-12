@@ -1,6 +1,12 @@
 site: https://sites.google.com/site/beigesoftware
 
 -----------------------------------------------
+Version 1.3
+
+Application uses "scoped storage", i.e. it has only interactive access to files on the shared storage. New libraries versions (JQUERY, Bouncy Castle Crypto-provider, Bootstrap). WEB-store - fixed cart view, etc.
+
+Теперь приложение использует "SCOPED STORAGE", т.е. оно имеет только инерактивный доступ к файлам в общем хранилище. Новые версии библитек (JQUERY, Bouncy Castle Crypto-provider, Bootstrap). Веб-магазин - исправлен виджет корзина...
+
 Version 1.2
 It's second time when just uploaded APK is not shown in android console release management, and it refuses to upload again new APK with same version (version of just uploaded but not listed APK).
 So 1.2 is actually 1.1
@@ -107,8 +113,7 @@ There is Beigesoft™ EIS cloud version. You can check its abilities (features) 
 --------------------------------------------------------------------------------------------------------------
 
 On the 1-st application start:
-0. You should accept privacy policy to use this application. At the first start, if you allowed application to read and write storage (accepted permission), but when you pushed button "Start" and received message "No permissions!", then just restart application.
-  To restart application just push "Back", then push application start icon again. You can change given application permissions in "Settings - Applications and notifications"
+0. You should accept privacy policy to use this application.
 1. You should enter strong (see below) password to start Beigesoft EIS. Press "Start" button, then wait while server has been started
 2. A-Jetty CA certificate ajetty-ca.pem will be at the external storage. You have to install it
   as trusted Certificate Authority in the settings.
