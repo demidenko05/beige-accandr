@@ -11,7 +11,8 @@ if ( [ "$REPLY" == "yes" ] ) then
   read -p "Enter GPG keyname: " gpgkeynm
   read -p "Enter key alias to sign JAR/APK: " keyalias
   read -p "Enter encrypted pass-phrase to sign JAR/APK: " passw
-  mvn -Darguments="-Prelease -Dandroid.release=true -Dsignpass=$passw -Dsignalias=$keyalias -Dgpgkeyname=$gpgkeynm" release:clean release:prepare release:perform -B -e | tee maven-central-deploy.log
+  read -s -p "Enter pass-phrase to sign APK: " passwapk
+  mvn -Darguments="-Prelease -Dandroid.release=true -Dsignpassapk=$passwapk -Dsignpass=$passw -Dsignalias=$keyalias -Dgpgkeyname=$gpgkeynm" release:clean release:prepare release:perform -B -e | tee maven-central-deploy.log
   ssh-add -D
 else
   echo 'Exit without deploy'

@@ -18,6 +18,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.7</java.version>
     <android.platform>30</android.platform>
+    <android.build-tools>30.0.2</android.build-tools>
   </properties>
 
   <profiles>
@@ -86,12 +87,32 @@
             <version>3.0.0</version>
             <executions>
               <execution>
-                <id>remove-unaligned-apk</id>
+                <id>signing-apk</id>
                 <phase>verify</phase>
                 <goals>
                   <goal>run</goal>
                 </goals>
                 <configuration>
+                  <target>
+                    <exec executable="${env.ANDROID_HOME}${file.separator}build-tools${file.separator}${android.build-tools}${file.separator}apksigner">
+                      <arg value="sign"/>
+                      <arg value="--ks"/>
+                      <arg value="${user.home}${file.separator}.keystore"/>
+                      <arg value="--ks-key-alias"/>
+                      <arg value="${signalias}"/>
+                      <arg value="--ks-pass"/>
+                      <arg value="pass:${signpassapk}"/>
+                      <arg value="--key-pass"/>
+                      <arg value="pass:${signpassapk}"/>
+                      <arg value="--v2-signing-enabled"/>
+                      <arg value="true"/>
+                      <arg value="--min-sdk-version"/>
+                      <arg value="18"/>
+                      <arg value="--max-sdk-version"/>
+                      <arg value="30"/>
+                      <arg value="${project.build.directory}${file.separator}${project.artifactId}-sa.apk"/>
+                    </exec>
+                  </target>
                   <target>
                     <delete file="${project.build.directory}${file.separator}${project.artifactId}.apk" />
                   </target>
@@ -114,7 +135,7 @@
                 <configuration>
                   <archiveDirectory />
                   <includes>
-                    <include>target${file.separator}*.apk</include>
+                    <!--<include>target${file.separator}*.apk</include>-->
                     <include>target${file.separator}*.jar</include>
                   </includes>
                   <storepass>${signpass}</storepass>
@@ -334,7 +355,7 @@
         <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jsp${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jstl${file.separator}impl${file.separator}src${file.separator}main${file.separator}resources</directory>
+        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jstl${file.separator}impl${file.separator}src${file.separator}main${file.separator}resources${file.separator}org</directory>
       </resource>
     </resources>
     <plugins>
