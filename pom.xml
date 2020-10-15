@@ -112,8 +112,6 @@
                       <arg value="30"/>
                       <arg value="${project.build.directory}${file.separator}${project.artifactId}-sa.apk"/>
                     </exec>
-                  </target>
-                  <target>
                     <delete file="${project.build.directory}${file.separator}${project.artifactId}.apk" />
                   </target>
                 </configuration>
