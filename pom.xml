@@ -8,9 +8,9 @@
   <packaging>apk</packaging>
   <name>Beigesoft™ Enterprise Information System standalone WEB-application for Android.</name>
 
-  <description>Beigesoft™ Enterprise Information System is standalone JEE web application that runs on embedded A-Jetty for Android.
-    Web-Store is included for study and tests purposes and you are also able to make full DB copy from cloud version,
-    and you can make price lists (in different price categories) and export it in CSV file to your customers or POS.</description>
+  <description>Beigesoft™ Enterprise Information System is a standalone JEE web application that runs on the embedded A-Jetty for Android.
+    Web-Store is included for study and tests purposes, and you are also able to make a full DB copy from a cloud version,
+    and you can make price lists (in different price categories) and export them via CSV files to your customers and POS.</description>
   <url>https://sites.google.com/site/beigesoftware</url>
   <inceptionYear>2019</inceptionYear>
 
@@ -133,7 +133,6 @@
                 <configuration>
                   <archiveDirectory />
                   <includes>
-                    <!--<include>target${file.separator}*.apk</include>-->
                     <include>target${file.separator}*.jar</include>
                   </includes>
                   <storepass>${signpass}</storepass>
@@ -301,12 +300,6 @@
       <artifactId>android-activation</artifactId>
       <version>1.6.5</version>
     </dependency>
-    <!--<dependency>
-      <groupId>com.google.android</groupId>
-      <artifactId>android</artifactId>
-      <version>4.1.1.4</version>
-      <scope>provided</scope>
-    </dependency>-->
     <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android</artifactId>
@@ -331,7 +324,7 @@
   <build>
     <finalName>${project.artifactId}</finalName>
     <!--
-      This is need because of progurad manually file and skipDependencies=true!!!
+      This is needed because of proguard manually file and android-maven-plugin->skipDependencies=true!!!
     -->
     <resources>
       <resource>
@@ -362,7 +355,7 @@
         <artifactId>maven-resources-plugin</artifactId>
         <version>3.2.0</version>
       </plugin>
-      <!--Old plugins cause new maven install plugin gives error: "...NoFileAssignedException... Change packaging to 'pom'..."-->
+      <!--TODO Old plugins cause new maven install plugin gives error: "...NoFileAssignedException... Change packaging to 'pom'..."-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
@@ -374,7 +367,7 @@
         <version>2.8.2</version>
       </plugin>
       <plugin>
-        <groupId>com.simpligility.maven.plugins</groupId>
+        <groupId>com.simpligility.maven.plugins</groupId><!--TODO replace with antrun-->
         <artifactId>android-maven-plugin</artifactId>
         <version>4.6.0</version>
         <configuration>
