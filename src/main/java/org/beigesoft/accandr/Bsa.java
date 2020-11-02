@@ -682,80 +682,81 @@ public class Bsa extends FragmentActivity
     if (this.actionPerforming == NOACT) {
       if (this.srvState == null && pTarget == this.btnStart) {
         startMan();
-      } else if (pTarget == this.btnStart
-        && !this.srvState.getBootEmbd().getIsStarted()) {
-        /*if (!revIsPermOk()) {
-          return;
-        }*/
-        this.actionPerforming = STARTING;
-        if (!this.srvState.getIsKeystoreCreated()) {
-          try {
-            this.srvState.setAjettyIn(Integer
-              .parseInt(etAjettyIn.getText().toString()));
-          } catch (Exception e) {
-            this.log.error(null, getClass(), "Error!", e);
+      } else if (pTarget == this.btnStart) {
+        if (!this.srvState.getBootEmbd().getIsStarted()) {
+          this.actionPerforming = STARTING;
+          if (!this.srvState.getIsKeystoreCreated()) {
+            try {
+              this.srvState.setAjettyIn(Integer
+                .parseInt(etAjettyIn.getText().toString()));
+            } catch (Exception e) {
+              this.log.error(null, getClass(), "Error!", e);
+            }
           }
+          if (this.srvState.getAjettyIn() == null) {
+            Toast.makeText(getApplicationContext(), getResources()
+              .getString(R.string.EnterAjettyNumber), Toast.LENGTH_SHORT).show();
+            this.actionPerforming = NOACT;
+            return;
+          }
+          refreshView();
+          try {
+            startAjetty();
+          } catch (Exception e) {
+            String msg = getResources().getString(R.string.cantStart);
+            this.log.error(null, getClass(), msg, e);
+            Toast.makeText(getApplicationContext(), msg,
+              Toast.LENGTH_LONG).show();
+          }
+          refreshView();
         }
-        if (this.srvState.getAjettyIn() == null) {
-          Toast.makeText(getApplicationContext(), getResources()
-            .getString(R.string.EnterAjettyNumber), Toast.LENGTH_SHORT).show();
-          this.actionPerforming = NOACT;
-          return;
+      } else if (pTarget == this.btnStop) {
+        if (this.srvState.getBootEmbd().getIsStarted()) {
+          this.actionPerforming = STOPPING;
+          refreshView();
+          Intent intent = new Intent(this, SrvAccJet.class);
+          intent.setAction(SrvAccJet.ACTION_STOP);
+          ContextCompat.startForegroundService(this, intent);
+          refreshView();
         }
-        refreshView();
-        try {
-          startAjetty();
-        } catch (Exception e) {
-          String msg = getResources().getString(R.string.cantStart);
-          this.log.error(null, getClass(), msg, e);
-          Toast.makeText(getApplicationContext(), msg,
-            Toast.LENGTH_LONG).show();
-        }
-        refreshView();
-      } else if (pTarget == this.btnStop
-        && this.srvState.getBootEmbd().getIsStarted()) {
-        this.actionPerforming = STOPPING;
-        refreshView();
-        Intent intent = new Intent(this, SrvAccJet.class);
-        intent.setAction(SrvAccJet.ACTION_STOP);
-        ContextCompat.startForegroundService(this, intent);
-        refreshView();
       } else if (pTarget == this.btnStartBrowser) {
         startBrowser();
       } else if (pTarget == this.btnPrivacy) {
         showPrivDlg();
-      } else if (pTarget == this.btnExpCaCe) {
-        exportCaCe();
-      } else if (pTarget == this.btnExpPubExch) {
-        exportPubExch();
-      } else if (pTarget == this.btnImpPubExch) {
-        impPubExch();
-      } else if (pTarget == this.btnExpLog) {
-        exportLog();
-      } else if (pTarget == this.btnExpEnLog) {
-        exportEnLog();
-      } else if (pTarget == this.btnExpSqlt) {
-        exportSqlt();
-      } else if (pTarget == this.btnExpEnSqlt) {
-        exportEnSqlt();
-      } else if (pTarget == this.btnExpEnSqltSg) {
-        exportEnSqltSg();
-      } else if (pTarget == this.btnExpEnSqltSk) {
-        exportEnSqltSk();
-      } else if (pTarget == this.btnExpEnSqltSks) {
-        exportEnSqltSks();
-      } else if (pTarget == this.btnImpSqlite) {
-        impSqlite();
-      } else if (pTarget == this.btnImpEnSqlt) {
-        impEnSqlt();
-      } else if (pTarget == this.btnImpEnSqltSg) {
-        impEnSqltSg();
-      } else if (pTarget == this.btnImpEnSqltSk) {
-        impEnSqltSk();
-      } else if (pTarget == this.btnImpEnSqltSks) {
-        impEnSqltSks();
       } else if (pTarget == this.btnPerm) {
         revIsPermOk();
+      } else if (this.srvState.getBootEmbd().getIsStarted()) {
+        if (pTarget == this.btnExpCaCe) {
+          exportCaCe();
+        } else if (pTarget == this.btnExpPubExch) {
+          exportPubExch();
+        } else if (pTarget == this.btnImpPubExch) {
+          impPubExch();
+        } else if (pTarget == this.btnExpLog) {
+          exportLog();
+        } else if (pTarget == this.btnExpEnLog) {
+          exportEnLog();
+        } else if (pTarget == this.btnExpSqlt) {
+          exportSqlt();
+        } else if (pTarget == this.btnExpEnSqlt) {
+          exportEnSqlt();
+        } else if (pTarget == this.btnExpEnSqltSg) {
+          exportEnSqltSg();
+        } else if (pTarget == this.btnExpEnSqltSk) {
+          exportEnSqltSk();
+        } else if (pTarget == this.btnExpEnSqltSks) {
+          exportEnSqltSks();
+        } else if (pTarget == this.btnImpSqlite) {
+          impSqlite();
+        } else if (pTarget == this.btnImpEnSqlt) {
+          impEnSqlt();
+        } else if (pTarget == this.btnImpEnSqltSg) {
+          impEnSqltSg();
+        } else if (pTarget == this.btnImpEnSqltSk) {
+          impEnSqltSk();
+        } else if (pTarget == this.btnImpEnSqltSks) {
+          impEnSqltSks();
+        }
       }
     }
   }
@@ -1763,6 +1764,21 @@ public class Bsa extends FragmentActivity
           this.etKsPassw.setEnabled(false);
           this.etKsPasswRep.setEnabled(false);
           this.btnStop.setEnabled(true);
+          this.btnImpEnSqlt.setEnabled(true);
+          this.btnImpEnSqltSg.setEnabled(true);
+          this.btnImpEnSqltSk.setEnabled(true);
+          this.btnImpEnSqltSks.setEnabled(true);
+          this.btnImpPubExch.setEnabled(true);
+          this.btnImpSqlite.setEnabled(true);
+          this.btnExpCaCe.setEnabled(true);
+          this.btnExpEnLog.setEnabled(true);
+          this.btnExpEnSqlt.setEnabled(true);
+          this.btnExpEnSqltSg.setEnabled(true);
+          this.btnExpEnSqltSk.setEnabled(true);
+          this.btnExpEnSqltSks.setEnabled(true);
+          this.btnExpLog.setEnabled(true);
+          this.btnExpPubExch.setEnabled(true);
+          this.btnExpSqlt.setEnabled(true);
           this.btnStartBrowser.setEnabled(true);
           this.btnStartBrowser.setText("https://localhost:"
           + this.cmbPort.getSelectedItem() + "/bsa"
@@ -1784,6 +1800,21 @@ public class Bsa extends FragmentActivity
           this.cmbPort.setEnabled(prvAcp);
           this.btnStart.setEnabled(prvAcp);
           this.btnStop.setEnabled(false);
+          this.btnImpEnSqlt.setEnabled(false);
+          this.btnImpEnSqltSg.setEnabled(false);
+          this.btnImpEnSqltSk.setEnabled(false);
+          this.btnImpEnSqltSks.setEnabled(false);
+          this.btnImpPubExch.setEnabled(false);
+          this.btnImpSqlite.setEnabled(false);
+          this.btnExpCaCe.setEnabled(false);
+          this.btnExpEnLog.setEnabled(false);
+          this.btnExpEnSqlt.setEnabled(false);
+          this.btnExpEnSqltSg.setEnabled(false);
+          this.btnExpEnSqltSk.setEnabled(false);
+          this.btnExpEnSqltSks.setEnabled(false);
+          this.btnExpLog.setEnabled(false);
+          this.btnExpPubExch.setEnabled(false);
+          this.btnExpSqlt.setEnabled(false);
           this.btnStartBrowser.setEnabled(false);
           this.btnStartBrowser.setText("");
         }
