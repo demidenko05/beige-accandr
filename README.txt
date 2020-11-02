@@ -47,9 +47,9 @@ This application will never waste your time because of:
 * Tracking payments for sales/purchases in national and foreign currencies.
 * Payroll - automatic calculation of the taxes using withholding tax tables.
 * Production - automatic calculation of the cost of a product from used materials, direct labor cost and other costs.
-* Inventory - two dimensional (warehouse, place) registration, moving items inside warehouse, etc.
+* Inventory - three dimensional (warehouse, place, unit of measurement) registration, moving items inside warehouse, etc.
 * Multi-databases (organizations).
-* Embedded Web-Store. Pricing - multicurrency, price depends on buyer's category, exporting price list to CSV.
+* Embedded Web-Store. Pricing - multicurrency, price depends on buyer's category, exporting price list into CSV.
 * There is Beigesoft™ EIS version for MS Windows/Mac/*Nix and SQLite database, so you can work with the same database anywhere.
 
 You can check its functionality without installation by reading the articles (see above).
@@ -57,10 +57,10 @@ You can check its functionality without installation by reading the articles (se
   2. It's a reliable software:
 * All its parts are under truly free licenses.
 * It's open source software, so fixing an error or customizing is not a problem.
-* It will never be downgraded or disappeared. You always can find it (binary and source code) in Central Maven Repository.
+* It will never be downgraded or disappeared. You always can find it (binary and source code) in the Central Maven Repository.
 
 Web-Store is included for pricing, study, and tests purposes and you are also able to make full DB copy from cloud version.
-You can create price lists in different price categories and export them to a CSV file to your customers or POS.
+You can create price lists in different price categories and export them into a CSV file for your customers or POS.
 --------------------------------------------------------------------------------------------------------------
 Beigesoft™ EIS is a free, open source accounting software. This are local versions of Beigesoft™ EIS for Android and other operation systems.
 There is Beigesoft™ EIS cloud version. You can check its abilities (features) by reading the articles.
@@ -70,35 +70,35 @@ There is Beigesoft™ EIS cloud version. You can check its abilities (features) 
 --------------------------------------------------------------------------------------------------------------
 Беижсофт™ Информационная Система Предприятия
 
-Это первая версия преемника Беижсофт Бухгалтерии Все В Одном.
-Главная цель была достигнута, новое приложение работает заметно быстрее предшественника на слабых устройствах, таких как смартфон.
-
 Беижсофт™ ИСП это бесплатное бухгалтерское приложение.
 
-Вам лучше прочесть для начала Пример ведения коммерческого бухгалтерского учета в Беижсофт™ ИСП: https://sites.google.com/site/beigesoftware/eis-iv
-
+Вам лучше прочесть для начала: Пример ведения коммерческого бухгалтерского учета в Беижсофт™ ИСП: https://sites.google.com/site/beigesoftware/eis-iv
 
 Преимущества Беижсофт™ ИСП:
 
   Первое - это функциональность:
-* Оценить функциональность можно без установки, просто читая документацию данную выше.
-* Это готовое решение для ведения коммерческого учета методом двойной записи по рыночным правилам.
-* Отчеты - баланс, отчет по счету детальный, остатки склада...
-* НДС методы: по отгрузке/оплате, расчет построчно/по документу, НДС включен в цену.
-* Отслеживание платежей за покупки/продажи в нациннальной и иностранной валютах.
-* Автоматическое вычисление себестоимости методами ФИФО/ЛИФО и по стоимости единицы.
-* Производство - автоматическое вычисление себестоимости продукции из стоимости использованных материалов и других прямых затрат (труд).
-* Склад - двумерная регистрация хранения "Склад-Место".
-* Нет ограничения на количество баз данных (организаций).
-* Есть версия Беижсофт™ ИСП для МС Виндоус, Мак, Юникс-подобных ОС. Вы можете работать с одинаковой СКЛайт базой данных везде.
-* Веб-магазин включен в локальные версии для изучения, тренировки и возможности копирования полной базы данных из Интернет-версии.
- Вы также можете с помощью Веб-магазина создавать прайс листы с различными ценами (магазин в центре, оптовые покупатели А...) и экспортировать их в CSV файлах оптовым покупателям и в POS-терминалы.
+Оценить функциональность можно без установки, просто читая приведенную документацию
+Это готовое решение для ведения коммерческого учета по рыночным правилам.
+Склад - трехмерная регистрация хранения "Склад-Место-Единица Измерения".
+Автоматическое вычисление себестоимости методами ФИФО/ЛИФО и по стоимости единицы.
+НДС методы: по отгрузке/оплате, расчет построчно/по документу, НДС включен в цену.
+Отслеживание платежей за покупки/продажи в национальной и иностранной валютах.
+Производство - автоматическое вычисление себестоимости продукции из стоимости использованных материалов и других прямых затрат.
+Зарплата - автоматическое начисление налогов с работника/работодателя, полуавтоматичеки зачеты, автоматические проводки по ЗП (по статьям) и налогам.
+Импорт выписки банка из CSV файла по произвольной настройке.
+Импорт проводок из налоговой базы в коммерческую через ВЕБ-сервис.
+Есть версия Беижсофт™ ИСП для МС Виндоус, Мак, Юникс-подобных ОС. Вы можете работать с одинаковой СКЛайт базой данных везде.
+Импорт всей базы данных из интернет версии в локальную через ВЕБ-сервис.
+Веб-магазин: цена в зависимости от покупателя/магазина, каталог можно создать для любых товаров и услуг вводя динамически создаваемые характеристики (цвет, модель...), экспорт прайс листов в CSV файлах.
+Веб-магазин включен в локальные версии для изучения, прайсинга и возможности копирования полной базы данных из Интернет-версии.
+Нет ограничения на количество баз данных (организаций) в локальных версиях.
+Это решение "на вырост", рассчитано на большие нагрузки.
 ...
 
   Второе - это надежность, работоспособность:
-*Лицензии всех частей гарантируют отсутствие возможных проблем в будущем.
-*Открытый код - возможность доработки, исправление ошибок.
-*Дистрибутивы и исходный код находятся в центральном Мавен репозитории. Нет риска даунгрэйда, исчезновения.
+Лицензии всех частей гарантируют отсутствие возможных проблем в будущем.
+Открытый код - возможность доработки, исправление ошибок.
+Дистрибутивы и исходный код находятся в центральном Мавен репозитории. Нет риска даунгрэйда, исчезновения.
 
 
 --------------------------------------------------------------------------------------------------------------
