@@ -3,9 +3,9 @@ site: https://sites.google.com/site/beigesoftware
 -----------------------------------------------
 Version 1.3
 
-Application uses "scoped storage", i.e. it has only interactive access to files on the shared storage. New libraries versions (JQUERY, Bouncy Castle Crypto-provider, Bootstrap). WEB-store - fixed cart view, etc.
+Application uses "scoped storage", i.e. it has only interactive access to files on the shared storage. New libraries versions (JQUERY, Bouncy Castle Crypto-provider, Bootstrap). WEB-interface -fixed number filters, WEB-store - fixed cart view, etc.
 
-Теперь приложение использует "SCOPED STORAGE", т.е. оно имеет только инерактивный доступ к файлам в общем хранилище. Новые версии библитек (JQUERY, Bouncy Castle Crypto-provider, Bootstrap). Веб-магазин - исправлен виджет корзина...
+Теперь приложение использует "SCOPED STORAGE", т.е. оно имеет только инерактивный доступ к файлам в общем хранилище. Новые версии библитек (JQUERY, Bouncy Castle Crypto-provider, Bootstrap). Веб-интерфейс - исправлены числовые фильтры, Веб-магазин - исправлен виджет корзина...
 
 Version 1.2
 It's second time when just uploaded APK is not shown in android console release management, and it refuses to upload again new APK with same version (version of just uploaded but not listed APK).
