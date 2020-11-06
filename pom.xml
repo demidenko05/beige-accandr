@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.beigesoft</groupId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <artifactId>beige-accandr</artifactId>
   <packaging>apk</packaging>
   <name>Beigesoft™ Enterprise Information System standalone WEB-application for Android.</name>
@@ -95,22 +95,22 @@
                 <configuration>
                   <target>
                     <exec executable="${env.ANDROID_HOME}${file.separator}build-tools${file.separator}${android.build-tools}${file.separator}apksigner">
-                      <arg value="sign"/>
-                      <arg value="--ks"/>
-                      <arg value="${user.home}${file.separator}.keystore"/>
-                      <arg value="--ks-key-alias"/>
-                      <arg value="${signalias}"/>
-                      <arg value="--ks-pass"/>
-                      <arg value="pass:${signpassapk}"/>
-                      <arg value="--key-pass"/>
-                      <arg value="pass:${signpassapk}"/>
-                      <arg value="--v2-signing-enabled"/>
-                      <arg value="true"/>
-                      <arg value="--min-sdk-version"/>
-                      <arg value="18"/>
-                      <arg value="--max-sdk-version"/>
-                      <arg value="30"/>
-                      <arg value="${project.build.directory}${file.separator}${project.artifactId}-sa.apk"/>
+                      <arg value="sign" />
+                      <arg value="--ks" />
+                      <arg value="${user.home}${file.separator}.keystore" />
+                      <arg value="--ks-key-alias" />
+                      <arg value="${signalias}" />
+                      <arg value="--ks-pass" />
+                      <arg value="pass:${signpassapk}" />
+                      <arg value="--key-pass" />
+                      <arg value="pass:${signpassapk}" />
+                      <arg value="--v2-signing-enabled" />
+                      <arg value="true" />
+                      <arg value="--min-sdk-version" />
+                      <arg value="18" />
+                      <arg value="--max-sdk-version" />
+                      <arg value="30" />
+                      <arg value="${project.build.directory}${file.separator}${project.artifactId}-sa.apk" />
                     </exec>
                     <delete file="${project.build.directory}${file.separator}${project.artifactId}.apk" />
                   </target>
@@ -488,7 +488,7 @@
     <url>https://github.com/demidenko05/beige-accandr.git</url>
     <connection>scm:git:git@github.com:demidenko05/beige-accandr.git</connection>
     <developerConnection>scm:git:git@github.com:demidenko05/beige-accandr.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>beige-accandr-1.1</tag>
   </scm>
 
 </project>
