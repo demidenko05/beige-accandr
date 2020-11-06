@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.beigesoft</groupId>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <artifactId>beige-accandr</artifactId>
   <packaging>apk</packaging>
   <name>Beigesoft™ Enterprise Information System standalone WEB-application for Android.</name>
@@ -488,7 +488,7 @@
     <url>https://github.com/demidenko05/beige-accandr.git</url>
     <connection>scm:git:git@github.com:demidenko05/beige-accandr.git</connection>
     <developerConnection>scm:git:git@github.com:demidenko05/beige-accandr.git</developerConnection>
-    <tag>beige-accandr-1.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
 </project>
