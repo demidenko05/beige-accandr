@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.beigesoft</groupId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <artifactId>beige-accandr</artifactId>
   <packaging>apk</packaging>
   <name>Beigesoft™ Enterprise Information System standalone WEB-application for Android.</name>
@@ -326,28 +326,29 @@
     <finalName>${project.artifactId}</finalName>
     <!--
       This is needed because of proguard manually file and android-maven-plugin->skipDependencies=true!!!
+      ABSOLUTE PATH! because of target/checkout release dir 
     -->
     <resources>
       <resource>
         <directory>src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}beige-accjet${file.separator}src${file.separator}main${file.separator}resources</directory>
+        <directory>${user.home}${file.separator}git${file.separator}beige-accjet${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}beige-acc${file.separator}src${file.separator}main${file.separator}resources</directory>
+        <directory>${user.home}${file.separator}git${file.separator}beige-acc${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}beige-blc${file.separator}src${file.separator}main${file.separator}resources</directory>
+        <directory>${user.home}${file.separator}git${file.separator}beige-blc${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}a-jetty-all${file.separator}a-jetty-base${file.separator}src${file.separator}main${file.separator}resources</directory>
+        <directory>${user.home}${file.separator}git${file.separator}a-jetty-all${file.separator}a-jetty-base${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jsp${file.separator}src${file.separator}main${file.separator}resources</directory>
+        <directory>${user.home}${file.separator}git${file.separator}a-tomcat-all${file.separator}a-apache-jsp${file.separator}src${file.separator}main${file.separator}resources</directory>
       </resource>
       <resource>
-        <directory>..${file.separator}a-tomcat-all${file.separator}a-apache-jstl${file.separator}impl${file.separator}src${file.separator}main${file.separator}resources${file.separator}org</directory>
+        <directory>${user.home}${file.separator}git${file.separator}a-tomcat-all${file.separator}a-apache-jstl${file.separator}impl${file.separator}src${file.separator}main${file.separator}resources${file.separator}org</directory>
       </resource>
     </resources>
     <plugins>
