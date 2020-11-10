@@ -18,6 +18,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.7</java.version>
     <android.platform>30</android.platform>
+    <android.build-tools>30.0.2</android.build-tools>
   </properties>
 
   <profiles>
@@ -93,7 +94,26 @@
                 </goals>
                 <configuration>
                   <target>
+                    <exec executable="${env.ANDROID_HOME}${file.separator}build-tools${file.separator}${android.build-tools}${file.separator}apksigner">
+                      <arg value="sign" />
+                      <arg value="--ks" />
+                      <arg value="${user.home}${file.separator}.keystore" />
+                      <arg value="--ks-key-alias" />
+                      <arg value="${signalias}" />
+                      <arg value="--ks-pass" />
+                      <arg value="pass:${signpassapk}" />
+                      <arg value="--key-pass" />
+                      <arg value="pass:${signpassapk}" />
+                      <arg value="--v2-signing-enabled" />
+                      <arg value="true" />
+                      <arg value="--min-sdk-version" />
+                      <arg value="18" />
+                      <arg value="--max-sdk-version" />
+                      <arg value="30" />
+                      <arg value="${project.build.directory}${file.separator}${project.artifactId}-aligned.apk" />
+                    </exec>
                     <delete file="${project.build.directory}${file.separator}${project.artifactId}.apk" />
+                    <attachartifact file="${project.build.directory}${file.separator}${project.artifactId}-aligned.apk.idsig" classifier="aligned.apk" type="idsig" />
                   </target>
                 </configuration>
               </execution>
@@ -114,7 +134,6 @@
                 <configuration>
                   <archiveDirectory />
                   <includes>
-                    <include>target${file.separator}*.apk</include>
                     <include>target${file.separator}*.jar</include>
                   </includes>
                   <storepass>${signpass}</storepass>
@@ -367,7 +386,7 @@
           <undeployBeforeDeploy>true</undeployBeforeDeploy>
           <extractDuplicates>true</extractDuplicates>
           <includeLibsJarsFromAar>false</includeLibsJarsFromAar>
-          <attachJar>true</attachJar><!--this is shared dependency (jar) for reusing and testing see beigesoft-android-sqlite-test-->
+          <attachJar>false</attachJar>
           <includeJdkLibs>false</includeJdkLibs>
           <skipDependencies>true</skipDependencies><!--it works for proguard but there is no resources-->
           <proguard>
