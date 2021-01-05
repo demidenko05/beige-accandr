@@ -18,6 +18,10 @@ JQuery upgraded to 3.4.1 version. Previous 3.3.1 version is vulnerable to protot
 JQuery обновлен до версии 3.4.1. Предыдущая 3.3.1 версия уязвима для атаки "подмена прототипа". В любом случае, Беижсофт ИСП не была уязвима по причине использования HTTPS, то есть нет возможности внедрить вредоносный JavaScript код.
 
 ---------------------------------------------------------------------------------------------------------
+Build from source:
+JDK11 gives error: "...java.lang.ClassNotFoundException: javax.xml.bind.annotation.XmlSchema..."
+So, use JDK8, e.g. from Android Studio.
+---------------------------------------------------------------------------------------------------------
 Beigesoft™ Enterprise Information System is standalone JEE web application that runs on embedded A-Jetty.
 This is Android version.
 It requires Google Chrome browser.
